@@ -1,0 +1,107 @@
+---
+  mail:
+    username: localhost
+    password: dummyKey
+
+    host: localhost
+    port: 2525
+
+    javaMailProperties.subject: Online Probate Application
+    javaMailProperties.sender: dummySender@email.hmcts
+    javaMailProperties.recipient: dummyTest@gmail.com
+
+    javaMailProperties.mail.smtp.auth: false
+    javaMailProperties.mail.smtp.ssl.enable: false
+
+# THYMELEAF (ThymeleafAutoConfiguration)
+  spring:
+    thymeleaf.check-template-location: true
+    thymeleaf.prefix=classpath: /templates/
+    thymeleaf.excluded-view-names: # comma-separated list of view names   that should be excluded from resolution
+    thymeleaf.view-names: # comma-separated list of view names that can be resolved
+    thymeleaf.suffix: .html
+    thymeleaf.mode: HTML5
+    thymeleaf.encoding: UTF-8
+    thymeleaf.content-type: text/html # ;charset=<encoding> is added
+    thymeleaf.cache: false # set to false for hot refresh
+
+    messages:
+      basename: messages
+      cache-seconds: -1
+      encoding: UTF-8
+
+  server:
+    port: 8181
+
+  services:
+    persistence:
+      #service.url:  ${probate_persistence_service_url}:${probate_persistence_service_port}/formdata  #Till byron fixed side way communcation of app
+      formdata.url:  http://localhost:8282/formdata
+      #service.url:  ${probate_persistence_service_url}:${probate_persistence_service_port}/submissions  #Till byron fixed side way communcation of app
+      submissions.url:  http://localhost:8282/submissions
+
+    coreCaseData:
+      url: https://case-data-app.dev.ccd.reform.hmcts.net:4451/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
+      enabled: ${USE_CCD:false}
+
+  auth.provider.service.client:
+    baseUrl: http://localhost:4502
+    microservice: 'probate_backend'
+    key: dummyKey
+    tokenTimeToLiveInSeconds: '900'
+
+  ccd:
+    probate:
+      fullName: fullName
+      notApplyingKey: notApplyingKey
+    ccd:  
+      notApplyingExecutorName: notApplyingExecutorName    
+      notApplyingExecutorReason: notApplyingExecutorReason
+      value: value
+    reasonMap:
+      optionDiedBefore: DiedBefore
+      optionDiedAfter: DiedAfter
+      optionPowerReserved: PowerReserved
+      optionRenunciated: Renunciation
+    dateMap:
+      deceasedDob: deceasedDateOfBirth
+      deceasedDod: deceasedDateOfDeath
+      willDate: willDate
+      willCodicilsDate: willLatestCodicilDate
+    fieldMap:
+      applicantIsExecutor: primaryApplicantIsApplying
+      applicantFirstName: primaryApplicantForenames
+      applicantLastName: primaryApplicantSurname
+      applicantAddress: primaryApplicantAddress
+      applicantPhone: primaryApplicantPhoneNumber
+      applicantEmail: primaryApplicantEmailAddress
+      deceasedFirstname: deceasedForenames
+      deceasedSurname: deceasedSurname
+      deceasedAddress: deceasedAddress
+      willLeft: willExists
+      willOriginal: willAccessOriginal
+      willWithCodicils: willHasCodicils
+      noOfApplicants: numberOfApplicants
+      noOfExecutors: numberOfExecutors
+      ihtIdentifier: ihtReferenceNumber
+      copiesUK: extraCopiesOfGrant
+      copiesOverseas: outsideUKGrantCopies
+      paymentReference: paymentReferenceNumber
+      willCodicilsNumber: willNumberOfCodicils
+      willCodicilsWithDate: willLatestCodicilHasDate
+      deceasedAliasAssets: deceasedAnyOtherNames
+      willWithDate: willWithDate
+    monetaryValueMap:
+      ihtGrossValue: ihtGrossValue
+      ihtNetValue: ihtNetValue
+      totalFee: totalFee
+    multiLineStringMap:
+      declaration: declaration
+      legalStatement: legalStatement
+    executorMap:
+      executorsNotApplying: executorsNotApplying
+    aliasMap:  
+      deceasedOtherNames: deceasedAliasNameList
+    addressMap:
+      applicantAddress: primaryApplicantAddress
+      deceasedAddress: deceasedAddress

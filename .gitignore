@@ -1,0 +1,11 @@
+.idea/
+*.iml
+target/
+.sonar
+.gradle
+build/
+sonar-project.properties
+nbactions.xml
+/nbproject/
+nb-configuration.xml
+out/

@@ -1,0 +1,127 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    maven { url "http://artifactory.reform.hmcts.net/artifactory/libs-release" }
+    maven { url "http://repo1.maven.org/maven2/" }
+    maven { url "https://plugins.gradle.org/m2/" }
+  }
+  dependencies {
+    classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.5'
+  }
+  
+}
+
+plugins {
+  id 'application'
+  id 'org.springframework.boot' version '1.5.8.RELEASE'
+  id 'org.owasp.dependencycheck' version '3.0.2'
+  id 'com.github.ben-manes.versions' version '0.15.0'
+}
+
+apply plugin: 'org.sonarqube'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+
+group = 'uk.gov.hmcts.probate'
+version = "3.0.0"
+mainClassName = 'uk.gov.hmcts.probate.SubmitApplication'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+check.dependsOn dependencyCheckAnalyze
+
+jacoco {
+  toolVersion = '0.8.0'
+}
+
+jacocoTestReport {
+  group = "Reporting"
+  reports {
+    xml.enabled false
+    html.destination "${buildDir}/reports/jacoco"
+  }
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+dependencyCheck {
+  suppressionFiles = ['dependency-check-suppressions.xml']
+}
+
+findbugs{
+  ignoreFailures=true
+  reportLevel = "low"
+}
+
+sonarqube {
+  properties {
+    property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+    property "sonar.host.url", "https://sonar.reform.hmcts.net/"
+  }
+}
+
+test.finalizedBy jacocoTestReport
+
+// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
+dependencyCheck {
+  // Specifies if the build should be failed if a CVSS score above a specified level is identified.
+  // range of 0-10 fails the build, anything greater and it doesn't fail the build
+  failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
+  suppressionFile = 'dependency-check-suppressions.xml'
+}
+
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  jcenter()
+  maven { url "http://artifactory.reform.hmcts.net/artifactory/libs-release" }
+  maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+  maven { url "http://repo1.maven.org/maven2/" }
+  maven { url "https://plugins.gradle.org/m2/" }
+}
+
+dependencies {
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+  compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+  compile group: 'org.springframework.retry', name: 'spring-retry'
+
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: '1.2.1'
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: '1.2.1'
+  compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
+  compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
+
+  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+}
+
+compileJava {
+  options.compilerArgs << '-parameters'
+}
+
+jar {
+  manifest {
+
+    attributes 'Implementation-Title': project.name,
+      'Implementation-Version': project.version
+  }
+}
+
+task printVersion {
+  doLast {
+    print project.version
+  }
+}
+
+run {
+  if (debug == 'true') {
+    jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005']
+  }
+}

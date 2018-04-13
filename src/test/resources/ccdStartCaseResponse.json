@@ -1,0 +1,17 @@
+
+{
+    "token": "dummyToken",
+    "case_details": {
+        "id": null,
+        "jurisdiction": "PROBATE",
+        "state": null,
+        "case_type_id": "GrantOfRepresentation",
+        "created_date": null,
+        "last_modified": null,
+        "locked_by_user_id": null,
+        "security_level": null,
+        "case_data": {},
+        "security_classifications": null
+    },
+    "event_id": "applyForGrant"
+}

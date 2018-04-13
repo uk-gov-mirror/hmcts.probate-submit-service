@@ -1,0 +1,8 @@
+{
+  "primaryApplicantAddress": {
+    "AddressLine1": "my address\r\n"
+  },
+  "deceasedAddress": {
+    "AddressLine1": "their address\r\n"
+  }
+}

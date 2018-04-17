@@ -72,12 +72,10 @@
       applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
       applicantLastName: primaryApplicantSurname
-      applicantAddress: primaryApplicantAddress
       applicantPhone: primaryApplicantPhoneNumber
       applicantEmail: primaryApplicantEmailAddress
       deceasedFirstname: deceasedForenames
       deceasedSurname: deceasedSurname
-      deceasedAddress: deceasedAddress
       willLeft: willExists
       willOriginal: willAccessOriginal
       willWithCodicils: willHasCodicils

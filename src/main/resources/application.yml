@@ -90,7 +90,6 @@
       willCodicilsNumber: willNumberOfCodicils
       willCodicilsWithDate: willLatestCodicilHasDate
       deceasedAliasAssets: deceasedAnyOtherNames
-      willWithDate: willWithDate
     monetaryValueMap:
       ihtGrossValue: ihtGrossValue
       ihtNetValue: ihtNetValue

@@ -85,7 +85,12 @@ repositories {
   maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   maven { url "http://repo1.maven.org/maven2/" }
   maven { url "https://plugins.gradle.org/m2/" }
+  maven { url  "https://dl.bintray.com/hmcts/hmcts-maven" }
 }
+
+def versions = [
+        logging: '2.0.2'
+]
 
 dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
@@ -94,8 +99,9 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry'
 
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: '1.2.1'
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: '1.2.1'
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
   compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
 

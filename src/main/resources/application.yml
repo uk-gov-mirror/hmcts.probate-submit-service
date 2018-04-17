@@ -15,6 +15,8 @@
 
 # THYMELEAF (ThymeleafAutoConfiguration)
   spring:
+    application:
+      name: probate-submit-service
     thymeleaf.check-template-location: true
     thymeleaf.prefix=classpath: /templates/
     thymeleaf.excluded-view-names: # comma-separated list of view names   that should be excluded from resolution
@@ -105,3 +107,6 @@
     addressMap:
       applicantAddress: primaryApplicantAddress
       deceasedAddress: deceasedAddress
+
+  azure:
+    app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:false}

@@ -59,6 +59,8 @@ public class CoreCaseDataClient {
             logger.info("Response body:" + response.toString());
         } catch (HttpClientErrorException e) {
             logger.info("Exception while saving case", e);
+            logger.info("Status Code: ", e.getStatusText());
+            logger.info("Body: ", e.getResponseBodyAsString());
         }
     }
 }

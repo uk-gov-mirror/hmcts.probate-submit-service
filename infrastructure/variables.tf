@@ -5,7 +5,7 @@ variable "product" {
 }
 
 variable "microservice" {
-  default = "business-service"
+  default = "submit-service"
 }
 
 variable "location" {

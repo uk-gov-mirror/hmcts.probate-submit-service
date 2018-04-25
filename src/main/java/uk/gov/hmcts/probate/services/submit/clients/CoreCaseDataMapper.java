@@ -35,12 +35,32 @@ public class CoreCaseDataMapper {
 
     @Value("${ccd.probate.fullName}")
     private String fullName;
+    @Value("${ccd.probate.isApplying}")
+    private String isApplying;
+    @Value("${ccd.probate.address}")
+    private String address;
+    @Value("${ccd.probate.email}")
+    private String email;
+    @Value("${ccd.probate.hasOtherName}")
+    private String hasOtherName;
+    @Value("${ccd.probate.currentName}")
+    private String currentName;
     @Value("${ccd.probate.notApplyingKey}")
     private String notApplyingKey;
     @Value("${ccd.ccd.notApplyingExecutorName}")
     private String notApplyingExecutorName;
     @Value("${ccd.ccd.notApplyingExecutorReason}")
     private String notApplyingExecutorReason;
+    @Value("${ccd.ccd.applyingExecutorName}")
+    private String applyingExecutorName;
+    @Value("${ccd.ccd.applyingExecutorEmail")
+    private String applyingExecutorEmail;
+    @Value("${ccd.ccd.applyingExecutorPhoneNumber}")
+    private String applyingExecutorPhoneNumber;
+    @Value("${ccd.ccd.applyingExecutorAddress}")
+    private String applyingExecutorAddress;
+    @Value("${ccd.ccd.applyingExecutorOtherNames}")
+    private String applyingExecutorOtherNames;
     @NotNull
     private Map<String, String> reasonMap;
     @NotNull
@@ -204,10 +224,25 @@ public class CoreCaseDataMapper {
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         String executorName = executor.get(fullName).asText();
-        value.set(notApplyingExecutorName, new TextNode(executorName.trim()));
-        String reason = executor.get(notApplyingKey).asText();
-        JsonNode mappedReason = new TextNode(reasonMap.get(reason));
-        value.set(notApplyingExecutorReason, mappedReason);
+
+        if(!executor.get(isApplying).asBoolean()) {
+            value.set(notApplyingExecutorName, new TextNode(executorName.trim()));
+            String reason = executor.get(notApplyingKey).asText();
+            JsonNode mappedReason = new TextNode(reasonMap.get(reason));
+            value.set(notApplyingExecutorReason, mappedReason);
+        }
+
+        if(executor.get(isApplying).asBoolean()) {
+            value.set(applyingExecutorName, new TextNode(executorName.trim()));
+            String reason = executor.get(notApplyingKey).asText();
+            String executorAddress = executor.get(address).asText();
+            value.set(applyingExecutorAddress, new TextNode(executorAddress.trim()));
+            JsonNode mappedReason = new TextNode(reasonMap.get(reason));
+            value.set(notApplyingExecutorReason, mappedReason);
+        }
+
+
+
         ccdFormat.set("value", value);
         return Optional.of(ccdFormat);
     }

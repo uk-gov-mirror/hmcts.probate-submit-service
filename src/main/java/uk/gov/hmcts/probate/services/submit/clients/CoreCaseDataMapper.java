@@ -247,10 +247,6 @@ public class CoreCaseDataMapper {
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
         }
 
-
-
-
-
         ccdFormat.set("value", value);
         return Optional.of(ccdFormat);
     }

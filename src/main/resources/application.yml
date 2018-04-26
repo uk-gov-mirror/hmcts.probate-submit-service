@@ -54,10 +54,21 @@
     probate:
       fullName: fullName
       notApplyingKey: notApplyingKey
+      isApplying: isApplying
+      address: address
+      email: email
+      mobile: mobile
+      hasOtherName: hasOtherName
+      currentName: currentName
     ccd:  
       notApplyingExecutorName: notApplyingExecutorName    
       notApplyingExecutorReason: notApplyingExecutorReason
       value: value
+      applyingExecutorName: applyingExecutorName
+      applyingExecutorEmail: applyingExecutorEmail
+      applyingExecutorPhoneNumber: applyingExecutorPhoneNumber
+      applyingExecutorAddress: applyingExecutorAddress
+      applyingExecutorOtherNames: applyingExecutorOtherNames
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter

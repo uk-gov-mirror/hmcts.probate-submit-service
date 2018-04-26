@@ -215,6 +215,8 @@ public class CoreCaseDataMapperTest {
         JsonNode expected = testUtils.getJsonNodeFromFile("ccdExecutors.json");
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getExecutorMap(), coreCaseDataMapper::executorsMapper);
         assertEquals(expected, mappedData.get("executorsNotApplying"));
+        assertEquals(expected, mappedData.get("executorsApplying"));
+
     }
 
     @Test
@@ -228,8 +230,12 @@ public class CoreCaseDataMapperTest {
     public void mapExecutorTest() {
         Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdExecutors.json").at("/0"));
         JsonNode executor = submitdata.at("/executorsNotApplying/0");
+        JsonNode executorApplying = submitdata.at("/executorsApplying/0");
+
         Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
+        Optional<JsonNode> mappedDataApplying = coreCaseDataMapper.mapExecutor(executorApplying);
         assertEquals(expected, mappedData);
+        assertEquals(mappedDataApplying, mappedData);
     }
     
     @Test

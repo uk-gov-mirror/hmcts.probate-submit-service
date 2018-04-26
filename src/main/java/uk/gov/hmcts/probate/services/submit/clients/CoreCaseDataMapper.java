@@ -41,6 +41,8 @@ public class CoreCaseDataMapper {
     private String address;
     @Value("${ccd.probate.email}")
     private String email;
+    @Value("${ccd.probate.mobile}")
+    private String mobile;
     @Value("${ccd.probate.hasOtherName}")
     private String hasOtherName;
     @Value("${ccd.probate.currentName}")
@@ -234,12 +236,18 @@ public class CoreCaseDataMapper {
 
         if(executor.get(isApplying).asBoolean()) {
             value.set(applyingExecutorName, new TextNode(executorName.trim()));
-            String reason = executor.get(notApplyingKey).asText();
             String executorAddress = executor.get(address).asText();
             value.set(applyingExecutorAddress, new TextNode(executorAddress.trim()));
-            JsonNode mappedReason = new TextNode(reasonMap.get(reason));
-            value.set(notApplyingExecutorReason, mappedReason);
+            String executorPhoneNumber = executor.get(mobile).asText();
+            value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
         }
+
+        if(executor.get(hasOtherName).asBoolean()) {
+            String executorOtherName = executor.get(currentName).asText();
+            value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
+        }
+
+
 
 
 

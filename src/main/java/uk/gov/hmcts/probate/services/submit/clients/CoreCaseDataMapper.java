@@ -242,7 +242,7 @@ public class CoreCaseDataMapper {
             value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
         }
 
-        if(executor.get(hasOtherName).asBoolean()) {
+        if(executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
         }

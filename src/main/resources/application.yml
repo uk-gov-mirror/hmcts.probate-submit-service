@@ -107,3 +107,21 @@
 
   azure:
     app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:false}
+
+  registries:
+   - name: oxford
+     id: 0
+     email: weqfdsaf
+     address: |
+      Line 1 Ox
+      Line 2 Ox
+      Line 3 Ox
+      PostCode Ox
+   - name: birmingham
+     id: 1
+     email: asdvavv
+     address: |
+      Line 1 Bham
+      Line 2 Bham
+      Line 3 Bham
+      PostCode Bham

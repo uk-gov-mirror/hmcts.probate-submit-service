@@ -27,7 +27,7 @@ public class SubmitServiceTest {
     private MailClient mockMailClient;
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
-    private Calendar submissonTimestamp;
+    private Calendar submissionTimestamp;
     private JsonNode seqenceNumber;
 
     @Before
@@ -37,7 +37,7 @@ public class SubmitServiceTest {
         mockMailClient = mock(MailClient.class);
         coreCaseDataClient = mock(CoreCaseDataClient.class);
         submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient);
-        submissonTimestamp = Calendar.getInstance();
+        submissionTimestamp = Calendar.getInstance();
         seqenceNumber = new LongNode(123L);
     } 
 
@@ -48,7 +48,7 @@ public class SubmitServiceTest {
         JsonNode submitData = testUtils.getJsonNodeFromFile("formPayload.json");
         when(persistenceClient.loadFormData(anyString())).thenReturn(submitData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(submitData);
-        when(mockMailClient.execute(submitData, submitData.get("id").asLong(), submissonTimestamp)).thenReturn("12345678");
+        when(mockMailClient.execute(submitData, submitData.get("id").asLong(), submissionTimestamp)).thenReturn("12345678");
         JsonNode dummmyCcdStartCaseRespose =  testUtils.getJsonNodeFromFile("ccdStartCaseResponse.json");
 
 

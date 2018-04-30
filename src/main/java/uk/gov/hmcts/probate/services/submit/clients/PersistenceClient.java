@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -55,5 +56,11 @@ public class PersistenceClient {
         persistenceRequestBody.set("formdata", formData.get("formdata"));
         HttpEntity<JsonNode> persistenceRequest = builder.createPersistenceRequest(persistenceRequestBody);
         restTemplate.put(formDataPersistenceUrl + "/" + emailId, persistenceRequest);
+    }
+
+    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
+    public Long getNextSequenceNumber(String registryName){
+        ResponseEntity<Long> response = restTemplate.getForEntity(formDataPersistenceUrl + "/seq/" + registryName, Long.class);
+        return response.getBody();
     }
 }

@@ -21,6 +21,9 @@ public class PersistenceClient {
     @Value("${services.persistence.submissions.url}")
     private String submissionsPersistenceUrl;
 
+    @Value("${services.persistence.sequenceNumber.url}")
+    private String sequenceNumberPersistenceUrl;
+
     private RestTemplate restTemplate;
     private PersistenceEntityBuilder builder;
 
@@ -60,7 +63,7 @@ public class PersistenceClient {
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public Long getNextSequenceNumber(String registryName){
-        ResponseEntity<Long> response = restTemplate.getForEntity(formDataPersistenceUrl + "/seq/" + registryName, Long.class);
+        ResponseEntity<Long> response = restTemplate.getForEntity(sequenceNumberPersistenceUrl + "/" + registryName, Long.class);
         return response.getBody();
     }
 }

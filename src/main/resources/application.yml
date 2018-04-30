@@ -41,6 +41,7 @@
       formdata.url:  http://localhost:8282/formdata
       #service.url:  ${probate_persistence_service_url}:${probate_persistence_service_port}/submissions  #Till byron fixed side way communcation of app
       submissions.url:  http://localhost:8282/submissions
+      sequenceNumber.url:  http://localhost:8282/sequence-number
 
     coreCaseData:
       url: https://case-data-app.dev.ccd.reform.hmcts.net:4451/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation

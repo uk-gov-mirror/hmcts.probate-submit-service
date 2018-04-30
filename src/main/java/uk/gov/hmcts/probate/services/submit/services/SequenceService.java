@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.probate.services.submit.Registry;
@@ -16,17 +17,18 @@ public class SequenceService {
     Map<Integer, Registry> registryMap;
 
     private PersistenceClient persistenceClient;
-    private ObjectMapper mapper;
+    private ObjectMapper mapper = new ObjectMapper();
 
     private static int registryCounter = 1;
 
     public synchronized JsonNode nextRegistryDataObject(String sequenceNumber) {
-        Map<String, String> registryMapper = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode registryMapper = mapper.createObjectNode();
         Registry nextRegistry = identifyNextRegistry();
         registryMapper.put("sequenceNumber", sequenceNumber);
         registryMapper.put("registrySequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
         registryMapper.put("address", nextRegistry.getAddress());
-        return mapper.valueToTree(registryMapper);
+        return registryMapper;
     }
 
     long getRegistrySequenceNumber(Registry registry) {

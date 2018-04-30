@@ -3,12 +3,13 @@ package uk.gov.hmcts.probate.services.submit.services;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.Assert;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,54 +18,54 @@ import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest()
 public class SequenceServiceTest {
-
     @MockBean
     SubmitService submitService;
-    @MockBean
-    Map<Integer, Registry> registryMap;
     @Mock
     Registry mockRegistry;
-
-    private TestUtils testUtils;
+    @Mock
     private PersistenceClient persistenceClient;
+    @Mock
+    Map<Integer, Registry> registryMap;
+    @Mock
+    ObjectMapper mapper;
+    @InjectMocks
     private SequenceService sequenceService;
+    private TestUtils testUtils = new TestUtils();
 
     @Before
     public void setUp() throws Exception {
-        this.persistenceClient = mock(PersistenceClient.class);
-        this.testUtils = new TestUtils();
+        MockitoAnnotations.initMocks(this);
+        int mockRegistryCounter = 1;
+        when(registryMap.size()).thenReturn(2);
+        when(registryMap.get(mockRegistryCounter % registryMap.size()))
+                .thenReturn(mockRegistry);
     }
 
     @Test
-    public void nextRegistryDataObjectTest() {
+    public void nextRegistryDataObject() {
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
         String sequenceNumber = "1234";
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
+        when(mockRegistry.getName()).thenReturn("oxford");
+        when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
         when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(10001L);
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1 \n Test Address Line 2 \n Test Address Postcode");
 
-        JsonNode result = sequenceService.nextRegistryDataObject(sequenceNumber);
-        Assert.assertEquals(result, registryData);
+        JsonNode response = sequenceService.nextRegistryDataObject(sequenceNumber);
+        assertThat(response, is(equalTo(registryData)));
     }
 
     @Test
-    public void identifyNextRegistryTest() throws Exception {
-        when(this.registryMap.get(0)).thenReturn(mockRegistry);
-        when(this.mockRegistry.getName()).thenReturn("oxford");
-        Registry testResultOx = this.registryMap.get(0);
-        Assert.assertEquals(testResultOx.getName(), "oxford");
-
-        when(this.registryMap.get(1)).thenReturn(mockRegistry);
-        when(this.mockRegistry.getName()).thenReturn("birmingham");
-        Registry testResultBham = this.registryMap.get(1);
-        Assert.assertEquals(testResultBham.getName(), "birmingham");
+    public void identifyNextRegistry() {
+        Registry result = sequenceService.identifyNextRegistry();
+        assertThat(result, is(equalTo(mockRegistry)));
     }
 }

@@ -100,7 +100,11 @@ public class SubmitControllerTest {
                 .contentType(contentType));
 
         result.andExpect(status().isOk())
-                .andExpect(content().string("1234"));
+                .andExpect(content().string(
+                        "{\"sequenceNumber\":\"1234\"," +
+                                        "\"registrySequenceNumber\":\"10001\"," +
+                                        "\"address\":\"Test Address Line 1 \\n Test Address Line 2 \\n Test Address Postcode\"}"
+                                        ));
     }
 
     @Test

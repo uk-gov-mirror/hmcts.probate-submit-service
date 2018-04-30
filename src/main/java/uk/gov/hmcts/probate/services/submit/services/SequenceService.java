@@ -14,27 +14,29 @@ import java.util.Map;
 public class SequenceService {
     @Autowired
     Map<Integer, Registry> registryMap;
+
     private PersistenceClient persistenceClient;
-    private static int registryCounter = 1;
     private ObjectMapper mapper;
 
-    public long getRegistrySequenceNumber() {
-        String nextRegistryName = identifyNextRegistry();
-        return persistenceClient.getNextSequenceNumber(nextRegistryName);
+    private static int registryCounter = 1;
+
+    public synchronized JsonNode nextRegistryDataObject(String sequenceNumber) {
+        Map<String, String> registryMapper = new HashMap<>();
+        Registry nextRegistry = identifyNextRegistry();
+        registryMapper.put("sequenceNumber", sequenceNumber);
+        registryMapper.put("registrySequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
+        registryMapper.put("address", nextRegistry.getAddress());
+        return mapper.valueToTree(registryMapper);
     }
 
-    public String identifyNextRegistry() {
+    long getRegistrySequenceNumber(Registry registry) {
+        return persistenceClient.getNextSequenceNumber(registry.getName());
+    }
+
+    Registry identifyNextRegistry() {
         Registry nextRegistry =
                 registryMap.get(registryCounter % registryMap.size());
         registryCounter++;
-        return nextRegistry.getName();
-    }
-
-    public JsonNode getRegistryDataObject(Registry registry) {
-        Map<String, String> registryMapper = new HashMap<>();
-        registryMapper.put("name", registry.getName());
-        registryMapper.put("email", registry.getEmail());
-        registryMapper.put("address", registry.getAddress());
-        return mapper.valueToTree(registryMapper);
+        return nextRegistry;
     }
 }

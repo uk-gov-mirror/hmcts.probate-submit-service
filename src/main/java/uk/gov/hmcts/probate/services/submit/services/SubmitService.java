@@ -23,23 +23,27 @@ public class SubmitService {
     private MailClient mailClient;
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
+    private SequenceService sequenceService;
     @Value("${services.coreCaseData.enabled}")
     private boolean coreCaseDataEnabled;
 
     @Autowired
-    public SubmitService(MailClient mailClient, PersistenceClient persistenceClient, CoreCaseDataClient coreCaseDataClient) {
+    public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
+                         CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService) {
         this.mailClient = mailClient;
         this.persistenceClient = persistenceClient;
         this.coreCaseDataClient = coreCaseDataClient;
+        this.sequenceService = sequenceService;
     }
 
-    public String submit(JsonNode submitData, String userId, String authorization) {
+    public JsonNode submit(JsonNode submitData, String userId, String authorization) {
         String emailId = submitData.at("/submitdata/applicantEmail").asText();
         JsonNode formData = persistenceClient.loadFormData(emailId);
         if (formData.get("submissionReference").asLong() == 0) {
             String message = "Application submitted, payload version: " +  submitData.at("/submitdata/payloadVersion").asText() + ", number of executors: " + submitData.at("/submitdata/noOfExecutors").asText();
             JsonNode persistenceResponse = persistenceClient.saveSubmission(submitData);
             JsonNode sequenceNumber = persistenceResponse.get("id");
+            JsonNode registryData = sequenceService.nextRegistryDataObject(sequenceNumber.asText());
             Calendar submissonTimestamp = Calendar.getInstance();
             mailClient.execute(submitData, sequenceNumber.asLong(), submissonTimestamp);
             logger.info(append("tags","Analytics"), message);
@@ -57,9 +61,9 @@ public class SubmitService {
                     logger.error(e.getMessage());
                 }
             }
-            return sequenceNumber.asText();
+            return registryData;
         }
-        return new TextNode(DUPLICATE_SUBMISSION).toString();
+        return new TextNode(DUPLICATE_SUBMISSION);
     }
 
     public String resubmit(long sequenceId) {

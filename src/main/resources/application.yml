@@ -111,7 +111,7 @@
   registries:
    - name: oxford
      id: 0
-     email: weqfdsaf
+     email: oxford@email.com
      address: |
       Line 1 Ox
       Line 2 Ox
@@ -119,7 +119,7 @@
       PostCode Ox
    - name: birmingham
      id: 1
-     email: asdvavv
+     email: bhamn@email.com
      address: |
       Line 1 Bham
       Line 2 Bham

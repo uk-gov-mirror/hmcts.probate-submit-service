@@ -88,4 +88,14 @@ public class PersistenceClientTest {
 
         verify(restTemplate, times(1)).postForEntity(anyString(), any(), any());
     }
+
+    @Test
+    public void getNextSequenceNumber(){
+        ResponseEntity<Long> mockResponse = new ResponseEntity<>(1234l, HttpStatus.CREATED);
+        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/RegistryName"), eq(Long.class));
+
+        Long result = persistenceClient.getNextSequenceNumber("RegistryName");
+        verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
+        assertEquals(result, mockResponse.getBody());
+    }
 }

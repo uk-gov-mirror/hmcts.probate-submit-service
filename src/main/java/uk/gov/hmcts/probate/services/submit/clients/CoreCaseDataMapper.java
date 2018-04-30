@@ -236,10 +236,11 @@ public class CoreCaseDataMapper {
 
         if(executor.get(isApplying).asBoolean()) {
             value.set(applyingExecutorName, new TextNode(executorName.trim()));
-            String executorAddress = executor.get(address).asText();
-            value.set(applyingExecutorAddress, new TextNode(executorAddress.trim()));
             String executorPhoneNumber = executor.get(mobile).asText();
             value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
+            JsonNode executorAddress = executor.get(address);
+            ObjectNode ccdExecutorAddressObject = mapper.createObjectNode();
+            ccdExecutorAddressObject.set("AddressLine1", executorAddress);
         }
 
         if(executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {

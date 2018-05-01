@@ -25,7 +25,7 @@ public class SequenceService {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode registryMapper = mapper.createObjectNode();
         Registry nextRegistry = identifyNextRegistry();
-        registryMapper.put("sequenceNumber", sequenceNumber);
+        registryMapper.put("submissionReference", sequenceNumber);
         registryMapper.put("registrySequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
         registryMapper.put("address", nextRegistry.getAddress());
         return registryMapper;

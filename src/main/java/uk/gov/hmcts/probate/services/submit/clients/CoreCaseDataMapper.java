@@ -226,9 +226,6 @@ public class CoreCaseDataMapper {
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         String executorName = executor.get(fullName).asText();
-
-
-
         if(executor.get(isApplying).asBoolean()) {
             value.set(applyingExecutorName, new TextNode(executorName.trim()));
             String executorPhoneNumber = executor.get(mobile).asText();

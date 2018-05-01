@@ -246,7 +246,7 @@ public class CoreCaseDataMapper {
             value.set(notApplyingExecutorReason, mappedReason);
         }
 
-        if(executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
+        if(executor.get(hasOtherName).asBoolean()) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
         }

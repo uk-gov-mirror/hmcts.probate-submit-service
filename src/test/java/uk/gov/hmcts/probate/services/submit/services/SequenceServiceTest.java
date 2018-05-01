@@ -57,7 +57,7 @@ public class SequenceServiceTest {
         when(mockRegistry.getName()).thenReturn("oxford");
         when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
         when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(10001L);
-        when(mockRegistry.getAddress()).thenReturn("Test Address Line 1<br>Test Address Line 2<br>Test PostCode");
+        when(mockRegistry.getAddress()).thenReturn("Test Address Line 1 \n Test Address Line 2 \n Test Address Postcode");
 
         JsonNode response = sequenceService.nextRegistryDataObject(sequenceNumber);
         assertThat(response, is(equalTo(registryData)));

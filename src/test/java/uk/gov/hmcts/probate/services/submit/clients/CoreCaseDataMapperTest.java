@@ -212,9 +212,12 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapExecutorsTest() {
-        JsonNode expected = testUtils.getJsonNodeFromFile("ccdExecutors.json");
+        Map<String, JsonNode> expected = new HashMap<>();
+        expected.put("executorsNotApplying", testUtils.getJsonNodeFromFile("ccdNotApplyingExecutors.json"));
+        expected.put("executorsApplying", testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json"));
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getExecutorMap(), coreCaseDataMapper::executorsMapper);
-        assertEquals(expected, mappedData.get("executorsNotApplying"));
+        assertEquals(expected, mappedData);
+
     }
 
     @Test
@@ -223,15 +226,30 @@ public class CoreCaseDataMapperTest {
         Optional<JsonNode> mappedData = coreCaseDataMapper.executorsMapper(submitdata, "noSuchField");
         assertEquals(expected, mappedData);
     }
-    
-    @Test
-    public void mapExecutorTest() {
-        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdExecutors.json").at("/0"));
+
+    public void mapNotApplyingExecutorTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdNotApplyingExecutors.json").at("/0"));
         JsonNode executor = submitdata.at("/executorsNotApplying/0");
         Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
         assertEquals(expected, mappedData);
     }
-    
+
+    @Test
+    public void mapApplyingExecutorTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json").at("/0"));
+        JsonNode executor = submitdata.at("/executorsApplying/0");
+        Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
+        assertEquals(expected, mappedData);
+    }
+
+    @Test
+    public void mapApplyingExecutorWithNewNameTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json").at("/1"));
+        JsonNode executor = submitdata.at("/executorsApplying/1");
+        Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
+        assertEquals(expected, mappedData);
+    }
+
     @Test
     public void mapDatesTest() {
         Map<String, JsonNode> expectedDates = new HashMap<>();

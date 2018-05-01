@@ -91,7 +91,8 @@ public class SubmitControllerTest {
     @Test
     public void submitSuccessfully() throws Exception {
         JsonNode validApplication = testUtils.getJsonNodeFromFile("formPayload.json");
-        when(mockSubmitService.submit(eq(validApplication), eq(userId), eq(authorizationToken))).thenReturn("1234");
+        JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
+        when(mockSubmitService.submit(eq(validApplication), eq(userId), eq(authorizationToken))).thenReturn(registryData);
 
         ResultActions result = mockMvc.perform(post(SUBMIT_SERVICE_URL)
                 .headers(httpHeaders)
@@ -99,7 +100,7 @@ public class SubmitControllerTest {
                 .contentType(contentType));
 
         result.andExpect(status().isOk())
-                .andExpect(content().string("1234"));
+                .andExpect(content().string(registryData.toString()));
     }
 
     @Test

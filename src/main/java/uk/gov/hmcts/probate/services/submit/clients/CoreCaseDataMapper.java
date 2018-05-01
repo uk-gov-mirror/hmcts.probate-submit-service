@@ -233,6 +233,8 @@ public class CoreCaseDataMapper {
             value.set(applyingExecutorName, new TextNode(executorName.trim()));
             String executorPhoneNumber = executor.get(mobile).asText();
             value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
+            String executorEmail= executor.get(email).asText();
+            value.set(applyingExecutorEmail, new TextNode(executorEmail.trim()));
             JsonNode executorAddress = executor.get(address);
             ObjectNode ccdExecutorAddressObject = mapper.createObjectNode();
             ccdExecutorAddressObject.set("AddressLine1", executorAddress);

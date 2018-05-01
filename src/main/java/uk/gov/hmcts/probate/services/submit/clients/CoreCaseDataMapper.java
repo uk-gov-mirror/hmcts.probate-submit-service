@@ -55,7 +55,7 @@ public class CoreCaseDataMapper {
     private String notApplyingExecutorReason;
     @Value("${ccd.ccd.applyingExecutorName}")
     private String applyingExecutorName;
-    @Value("${ccd.ccd.applyingExecutorEmail")
+    @Value("${ccd.ccd.applyingExecutorEmail}")
     private String applyingExecutorEmail;
     @Value("${ccd.ccd.applyingExecutorPhoneNumber}")
     private String applyingExecutorPhoneNumber;
@@ -246,7 +246,7 @@ public class CoreCaseDataMapper {
             value.set(notApplyingExecutorReason, mappedReason);
         }
 
-        if(executor.get(hasOtherName).asBoolean()) {
+        if(executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
         }

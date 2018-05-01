@@ -5,7 +5,8 @@
       "applyingExecutorAddress": {
         "AddressLine1": "exec_6_address\r\n"
       },
-      "applyingExecutorPhoneNumber": "11111111111"
+      "applyingExecutorPhoneNumber": "11111111111",
+      "applyingExecutorEmail": "hello@hotmail.co.uk"
     }
   },
   {
@@ -15,6 +16,7 @@
         "AddressLine1": "exec_7_address\r\n"
       },
       "applyingExecutorPhoneNumber": "2222222222",
+      "applyingExecutorEmail": "hi@hotmail.co.uk",
       "applyingExecutorOtherNames": "exec_7_new_name"
     }
   }

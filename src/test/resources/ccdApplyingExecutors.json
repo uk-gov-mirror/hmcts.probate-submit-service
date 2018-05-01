@@ -1,17 +1,21 @@
 [
   {
-    "value":{
-      "applyingExecutorName":"Sixth Executor Name",
-      "applyingExecutorAddress":"exec_6_address",
-      "applyingExecutorPhoneNumber":"11111111111"
+    "value": {
+      "applyingExecutorName": "Sixth Executor Name",
+      "applyingExecutorAddress": {
+        "AddressLine1": "exec_6_address\r\n"
+      },
+      "applyingExecutorPhoneNumber": "11111111111"
     }
   },
   {
-    "value":{
-      "applyingExecutorName":"Seventh Executor Name",
-      "applyingExecutorAddress":"exec_7_address",
-      "applyingExecutorPhoneNumber":"2222222222",
-      "applyingExecutorOtherNames":"exec_7_new_name"
+    "value": {
+      "applyingExecutorName": "Seventh Executor Name",
+      "applyingExecutorAddress": {
+        "AddressLine1": "exec_7_address\r\n"
+      },
+      "applyingExecutorPhoneNumber": "2222222222",
+      "applyingExecutorOtherNames": "exec_7_new_name"
     }
   }
 ]

@@ -227,12 +227,7 @@ public class CoreCaseDataMapper {
         ObjectNode value = mapper.createObjectNode();
         String executorName = executor.get(fullName).asText();
 
-        if(!executor.get(isApplying).asBoolean()) {
-            value.set(notApplyingExecutorName, new TextNode(executorName.trim()));
-            String reason = executor.get(notApplyingKey).asText();
-            JsonNode mappedReason = new TextNode(reasonMap.get(reason));
-            value.set(notApplyingExecutorReason, mappedReason);
-        }
+
 
         if(executor.get(isApplying).asBoolean()) {
             value.set(applyingExecutorName, new TextNode(executorName.trim()));
@@ -241,6 +236,12 @@ public class CoreCaseDataMapper {
             JsonNode executorAddress = executor.get(address);
             ObjectNode ccdExecutorAddressObject = mapper.createObjectNode();
             ccdExecutorAddressObject.set("AddressLine1", executorAddress);
+            value.set(applyingExecutorAddress, ccdExecutorAddressObject);
+        } else {
+            value.set(notApplyingExecutorName, new TextNode(executorName.trim()));
+            String reason = executor.get(notApplyingKey).asText();
+            JsonNode mappedReason = new TextNode(reasonMap.get(reason));
+            value.set(notApplyingExecutorReason, mappedReason);
         }
 
         if(executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {

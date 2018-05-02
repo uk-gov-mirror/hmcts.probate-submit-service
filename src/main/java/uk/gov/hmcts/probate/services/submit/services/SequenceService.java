@@ -16,6 +16,7 @@ public class SequenceService {
     @Autowired
     Map<Integer, Registry> registryMap;
 
+    @Autowired
     private PersistenceClient persistenceClient;
     private ObjectMapper mapper = new ObjectMapper();
 

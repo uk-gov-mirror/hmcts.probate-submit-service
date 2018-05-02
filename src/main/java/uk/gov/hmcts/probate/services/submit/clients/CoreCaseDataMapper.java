@@ -167,7 +167,7 @@ public class CoreCaseDataMapper {
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
-        ccdData.put("registryLocation", registryData.get("address"));
+        ccdData.put("registryLocation", registryData.get("registryName"));
         ccdData.put("applicationType", "Personal");
 
         ccdData.setAll(map(probateData, fieldMap, this::fieldMapper));

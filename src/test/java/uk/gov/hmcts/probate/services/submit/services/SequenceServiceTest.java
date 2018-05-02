@@ -54,7 +54,7 @@ public class SequenceServiceTest {
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
         String sequenceNumber = "1234";
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
-        when(mockRegistry.getName()).thenReturn("oxford");
+        when(mockRegistry.getName()).thenReturn("Oxford");
         when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
         when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(10001L);
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1 \n Test Address Line 2 \n Test Address Postcode");

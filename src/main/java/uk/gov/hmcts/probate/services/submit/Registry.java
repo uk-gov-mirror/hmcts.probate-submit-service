@@ -24,7 +24,8 @@ public class Registry {
     }
 
     public String getName() {
-        return name;
+        return name.substring(0,1).toUpperCase()
+                + name.substring(1).toLowerCase();
     }
 
     public int getId() {

@@ -144,7 +144,7 @@ public class CoreCaseDataMapper {
         this.addressMap = addressMap;
     }
 
-    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissonTimestamp, JsonNode sequenceNumber) {
+    public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissonTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
@@ -154,19 +154,21 @@ public class CoreCaseDataMapper {
         formattedData.set("event", event);
         formattedData.put("ignore_warning", true);
         formattedData.set("event_token", ccdToken);
-        formattedData.set("data", mapData(probateData, submissonTimestamp, sequenceNumber));
+        formattedData.set("data", mapData(probateData, submissonTimestamp, registryData));
         return formattedData;
     }
 
-    public ObjectNode mapData(JsonNode probateData, Calendar submissonTimestamp, JsonNode sequenceNumber) {
+    public ObjectNode mapData(JsonNode probateData, Calendar submissonTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdData = mapper.createObjectNode();
-        ccdData.set("applicationID", sequenceNumber);
+        ccdData.set("applicationID", registryData.get("submissionReference"));
         LocalDate localDate = LocalDateTime.ofInstant(submissonTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
+        ccdData.put("registryLocation", registryData.get("address"));
+        ccdData.put("applicationType", "Personal");
 
         ccdData.setAll(map(probateData, fieldMap, this::fieldMapper));
         ccdData.setAll(map(probateData, dateMap, this::dateMapper));

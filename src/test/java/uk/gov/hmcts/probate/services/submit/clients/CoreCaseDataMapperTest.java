@@ -40,7 +40,7 @@ public class CoreCaseDataMapperTest {
 
     @Autowired
     private CoreCaseDataMapper coreCaseDataMapper;
-    private JsonNode sequenceNumber, ccdToken;
+    private JsonNode registryData, ccdToken;
     private Calendar submissonTimestamp;
     private String ccdEventId;
     private JsonNode submitdata;
@@ -79,7 +79,7 @@ public class CoreCaseDataMapperTest {
 
     @Before
     public void setup() throws ParseException {
-        sequenceNumber = new LongNode(123L);
+        registryData = testUtils.getJsonNodeFromFile("registryData.json");
         submissonTimestamp = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS");
         submissonTimestamp.setTime(sdf.parse("2017-08-24 11:37:07.221"));
@@ -90,7 +90,7 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void createCcdDataTest() {
-        JsonNode mappedData = coreCaseDataMapper.createCcdData(submitdata, ccdEventId, ccdToken, submissonTimestamp, sequenceNumber);
+        JsonNode mappedData = coreCaseDataMapper.createCcdData(submitdata, ccdEventId, ccdToken, submissonTimestamp, registryData);
         assertEquals(mappedData.get("event").get("id").asText(), ccdEventId);
         assertEquals(mappedData.get("event_token"), ccdToken);
         assertNotNull (mappedData.get("data"));       
@@ -98,14 +98,16 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapDataTest() {
-        JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, sequenceNumber);  
+        JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, registryData);
         assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
-        assertTrue(mappedData.get("applicationID").equals(sequenceNumber));
+        assertTrue(mappedData.get("applicationID").equals(registryData.get("submissionReference")));
+        assertTrue(mappedData.get("registryLocation").equals(registryData.get("address")));
         assertNotNull(mappedData.get("primaryApplicantForenames"));
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("executorsNotApplying"));
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("declaration"));
+        assertNotNull(mappedData.get("applicationType"));
     }
 
     @Test

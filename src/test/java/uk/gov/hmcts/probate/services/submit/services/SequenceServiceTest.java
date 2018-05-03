@@ -38,10 +38,11 @@ public class SequenceServiceTest {
     ObjectMapper mapper;
     @InjectMocks
     private SequenceService sequenceService;
-    private TestUtils testUtils = new TestUtils();
+    private TestUtils testUtils;
 
     @Before
     public void setUp() throws Exception {
+        testUtils = new TestUtils();
         MockitoAnnotations.initMocks(this);
         int mockRegistryCounter = 1;
         when(registryMap.size()).thenReturn(2);
@@ -57,6 +58,7 @@ public class SequenceServiceTest {
         when(mockRegistry.capitalizeRegistryName()).thenReturn("Oxford");
         when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
         when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(10001L);
+        when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1 \n Test Address Line 2 \n Test Address Postcode");
 
         JsonNode response = sequenceService.nextRegistryDataObject(sequenceNumber);

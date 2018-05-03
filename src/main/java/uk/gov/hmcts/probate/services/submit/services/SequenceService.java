@@ -29,7 +29,8 @@ public class SequenceService {
         registryMapper.put("submissionReference", sequenceNumber);
         registryMapper.put("registryName", nextRegistry.capitalizeRegistryName());
         registryMapper.put("registrySequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
-        registryMapper.put("address", nextRegistry.getAddress());
+        registryMapper.put("registryEmail", nextRegistry.getEmail());
+        registryMapper.put("registryAddress", nextRegistry.getAddress());
         return registryMapper;
     }
 

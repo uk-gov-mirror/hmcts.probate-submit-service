@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -27,7 +28,7 @@ public class PersistenceClientTest {
     private PersistenceClient persistenceClient;
     @Mock
     private RestTemplate restTemplate;
-
+    
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -64,7 +65,7 @@ public class PersistenceClientTest {
         HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
         when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
 
-        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"),new TextNode("requestBody"));
+        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
 
         verify(restTemplate, times(1)).put(endsWith("/emailId"), eq(persistenceReq));
     }

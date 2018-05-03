@@ -56,7 +56,7 @@ module "probate-submit-service" {
   ilbIp = "${var.ilbIp}"
   is_frontend  = false
   subscription = "${var.subscription}"
-  asp_name     = ${var.product}-${var.env}-asp 
+  asp_name     = "${var.product}-${var.env}-asp"
 
   app_settings = {
 

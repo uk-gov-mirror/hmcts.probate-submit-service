@@ -61,6 +61,11 @@ variable "services_persistence_submissions_url" {
   default = "./submissions"
 }
 
+variable "services_persistence_sequenceNumber_url" {
+  default = "./sequenceNumber"
+}
+
+
 variable "idam_service_api" {
   type = "string"
 }

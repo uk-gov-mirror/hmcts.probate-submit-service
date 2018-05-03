@@ -37,6 +37,10 @@ data "vault_generic_secret" "idam_backend_service_key" {
   path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/probate-backend"
 }
 
+data "vault_generic_secret" "spring_application_json_submit_service" {
+  path = "secret/${var.vault_section}/probate/spring_application_json_submit_service"
+}
+
 locals {
   aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
@@ -71,6 +75,7 @@ module "probate-submit-service" {
     MAIL_JAVAMAILPROPERTIES_SENDER = "${data.vault_generic_secret.probate_mail_sender.data["value"]}"
     MAIL_JAVAMAILPROPERTIES_RECIPIENT = "${data.vault_generic_secret.probate_mail_recipient.data["value"]}"
     AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.idam_backend_service_key.data["value"]}"
+    SPRING_APPLICATION_JSON = "${data.vault_generic_secret.spring_application_json_submit_service.data["value"]}"
 
     MAIL_JAVAMAILPROPERTIES_SUBJECT = "${var.probate_mail_subject}"
     MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_AUTH = "${var.probate_mail_use_auth}"
@@ -80,6 +85,7 @@ module "probate-submit-service" {
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${var.idam_service_api}"
     SERVICES_CORECASEDATA_URL = "${var.ccd_url}"
     SERVICES_CORECASEDATA_ENABLED = "${var.ccd_enabled}"
+    SERVICES_PERSISTENCE_SEQUENCENUMBER_URL = "${var.services_persistence_sequenceNumber_url}"
    
     java_app_name = "${var.microservice}"
     LOG_LEVEL = "${var.log_level}"

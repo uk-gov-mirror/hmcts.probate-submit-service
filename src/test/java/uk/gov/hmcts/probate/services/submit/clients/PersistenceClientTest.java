@@ -28,9 +28,7 @@ public class PersistenceClientTest {
     private PersistenceClient persistenceClient;
     @Mock
     private RestTemplate restTemplate;
-
-    private TestUtils testUtils = new TestUtils();
-
+    
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -65,10 +63,9 @@ public class PersistenceClientTest {
     @Test
     public void updateFormDataSuccessTest() {
         HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
         when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
 
-        persistenceClient.updateFormData("emailId", registryData ,new TextNode("requestBody"));
+        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
 
         verify(restTemplate, times(1)).put(endsWith("/emailId"), eq(persistenceReq));
     }

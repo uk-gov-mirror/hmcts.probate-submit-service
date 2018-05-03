@@ -122,12 +122,20 @@
     app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:false}
 
   registries:
-   - name: ${registry_one_name}
-     id:  ${registry_one_id}
-     email: ${registry_one_email}
-     address:  ${registry_one_address}
-   - name: ${registry_two_name}
-     id:  ${registry_two_id}
-     email: ${registry_two_email}
-     address:  ${registry_two_address}
+    - name: oxford
+      id: 0
+      email: oxford@email.com
+      address: |
+        Line 1 Ox
+        Line 2 Ox
+        Line 3 Ox
+        PostCode Ox
+    - name: birmingham
+      id: 1
+      email: birmingham@email.com
+      address: |
+        Line 1 Bham
+        Line 2 Bham
+        Line 3 Bham
+        PostCode Bham
 

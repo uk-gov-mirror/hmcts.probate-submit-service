@@ -47,7 +47,7 @@ public class SubmitService {
             Calendar submissonTimestamp = Calendar.getInstance();
             mailClient.execute(submitData, registryData, submissonTimestamp);
             logger.info(append("tags","Analytics"), message);
-            persistenceClient.updateFormData(emailId, registryData, formData);
+            persistenceClient.updateFormData(emailId, submissionReference.asLong(), formData);
             if (coreCaseDataEnabled) {
                 try {
                     JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(userId, authorization);
@@ -61,10 +61,6 @@ public class SubmitService {
                     logger.error(e.getMessage());
                 }
             }
-
-            System.out.println(formData);
-            System.out.println(registryData);
-
             return registryData;
         }
         return new TextNode(DUPLICATE_SUBMISSION);

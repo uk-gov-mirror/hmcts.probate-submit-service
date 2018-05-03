@@ -35,6 +35,7 @@ public class SubmitServiceTest {
     private CoreCaseDataClient coreCaseDataClient;
     private SequenceService sequenceService;
     private Calendar submissionTimestamp;
+    private JsonNode registryData;
 
     @Before
     public void setUp() throws Exception {
@@ -45,6 +46,7 @@ public class SubmitServiceTest {
         sequenceService = mock(SequenceService.class);
         submitService = new SubmitService(mockMailClient, persistenceClient, coreCaseDataClient, sequenceService);
         submissionTimestamp = Calendar.getInstance();
+        registryData = testUtils.getJsonNodeFromFile("registryData.json");
     }
 
     @Test
@@ -52,11 +54,9 @@ public class SubmitServiceTest {
         String userId = "123";
         String authorizationToken = "dummyAuthToken";
         JsonNode submitData = testUtils.getJsonNodeFromFile("formPayload.json");
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
-
         when(persistenceClient.loadFormData(anyString())).thenReturn(submitData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(submitData);
-        when(mockMailClient.execute(submitData, submitData.get("id").asLong(), submissionTimestamp)).thenReturn("12345678");
+        when(mockMailClient.execute(submitData, registryData, submissionTimestamp)).thenReturn("12345678");
         when(sequenceService.nextRegistryDataObject(submitData.get("id").asText())).thenReturn(registryData);
         JsonNode dummmyCcdStartCaseRespose =  testUtils.getJsonNodeFromFile("ccdStartCaseResponse.json");
 
@@ -68,8 +68,9 @@ public class SubmitServiceTest {
     @Test
     public void testResubmitWithSuccess() {
         JsonNode resubmitData = testUtils.getJsonNodeFromFile("formPayload.json");
+
         when(persistenceClient.loadSubmission(Long.parseLong("112233"))).thenReturn(resubmitData);
-        when(mockMailClient.execute(eq(resubmitData), eq(112233L), any(Calendar.class) )).thenReturn("12345678");
+        when(mockMailClient.execute(eq(resubmitData), any(JsonNode.class), any(Calendar.class) )).thenReturn("12345678");
 
         String response = submitService.resubmit(Long.parseLong("112233"));
 

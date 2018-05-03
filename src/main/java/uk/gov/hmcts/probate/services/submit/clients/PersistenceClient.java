@@ -53,10 +53,11 @@ public class PersistenceClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public void updateFormData(String emailId, long sequenceNumber, JsonNode formData) {
+    public void updateFormData(String emailId, JsonNode registryData, JsonNode formData) {
         ObjectNode persistenceRequestBody = new ObjectMapper().createObjectNode();
-        persistenceRequestBody.put("submissionReference", sequenceNumber);
+        persistenceRequestBody.put("submissionReference", registryData.get("submissionReference").asLong());
         persistenceRequestBody.set("formdata", formData.get("formdata"));
+        persistenceRequestBody.set("registryData", registryData);
         HttpEntity<JsonNode> persistenceRequest = builder.createPersistenceRequest(persistenceRequestBody);
         restTemplate.put(formDataPersistenceUrl + "/" + emailId, persistenceRequest);
     }

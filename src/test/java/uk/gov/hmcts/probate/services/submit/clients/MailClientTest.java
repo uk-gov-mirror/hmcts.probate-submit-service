@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.spring4.SpringTemplateEngine;
+import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -39,24 +40,28 @@ public class MailClientTest {
     private MimeMessage mimeMessageMock;
         
     private Calendar submissonTimestamp;
+    private JsonNode registryData;
+    private TestUtils testUtils;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mailClient = new MailClient(mailSenderMock, mailMessageBuilderMock);
         submissonTimestamp = Calendar.getInstance();
+        testUtils = new TestUtils();
+        registryData = testUtils.getJsonNodeFromFile("registryData.json");
     }
     
 
         @Test
     public void testProcessSuccess() throws MessagingException {
         doNothing().when(mailSenderMock).send(any(MimeMessage.class));
-        when(mailMessageBuilderMock.buildMessage(any(JsonNode.class), anyLong(), any(Properties.class), any(Calendar.class))).thenReturn(mimeMessageMock);
-        when(mimeMessageMock.getHeader(anyString(),any())).thenReturn("123456789");
+        when(mailMessageBuilderMock.buildMessage(any(JsonNode.class), any(JsonNode.class), any(Properties.class), any(Calendar.class))).thenReturn(mimeMessageMock);
+        when(mimeMessageMock.getHeader(anyString(),any())).thenReturn("1234");
 
-        String response = mailClient.execute(NullNode.getInstance(), 123456789, submissonTimestamp);
+        String response = mailClient.execute(NullNode.getInstance(), registryData, submissonTimestamp);
 
-        assertThat(response, is("123456789"));
+        assertThat(response, is("1234"));
     }
 
 }

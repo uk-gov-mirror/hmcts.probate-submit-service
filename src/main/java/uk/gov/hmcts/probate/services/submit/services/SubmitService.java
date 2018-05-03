@@ -45,9 +45,9 @@ public class SubmitService {
             JsonNode submissionReference = persistenceResponse.get("id");
             JsonNode registryData = sequenceService.nextRegistryDataObject(submissionReference.asText());
             Calendar submissonTimestamp = Calendar.getInstance();
-            mailClient.execute(submitData, submissionReference.asLong(), submissonTimestamp);
+            mailClient.execute(submitData, registryData, submissonTimestamp);
             logger.info(append("tags","Analytics"), message);
-            persistenceClient.updateFormData(emailId, submissionReference.asLong(), formData);
+            persistenceClient.updateFormData(emailId, registryData, formData);
             if (coreCaseDataEnabled) {
                 try {
                     JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(userId, authorization);
@@ -61,14 +61,19 @@ public class SubmitService {
                     logger.error(e.getMessage());
                 }
             }
+
+            System.out.println(formData);
+            System.out.println(registryData);
+
             return registryData;
         }
         return new TextNode(DUPLICATE_SUBMISSION);
     }
 
-    public String resubmit(long sequenceId) {
-        JsonNode resubmitData = persistenceClient.loadSubmission(sequenceId);
+    public String resubmit(long submissionId) {
+        JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
+        JsonNode registryData = resubmitData.get("registryData");
         Calendar submissonTimestamp = Calendar.getInstance();
-        return mailClient.execute(resubmitData, sequenceId, submissonTimestamp);
+        return mailClient.execute(resubmitData, registryData, submissonTimestamp);
     }
 }

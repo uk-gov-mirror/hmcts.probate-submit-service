@@ -38,20 +38,20 @@ public class SubmitService {
 
     public JsonNode submit(JsonNode submitData, String userId, String authorization) {
         String emailId = submitData.at("/submitdata/applicantEmail").asText();
-        JsonNode formData = persistenceClient.loadFormData(emailId);
+        JsonNode formData = persistenceClient.loadFormDataById(emailId);
         if (formData.get("submissionReference").asLong() == 0) {
             String message = "Application submitted, payload version: " +  submitData.at("/submitdata/payloadVersion").asText() + ", number of executors: " + submitData.at("/submitdata/noOfExecutors").asText();
             JsonNode persistenceResponse = persistenceClient.saveSubmission(submitData);
             JsonNode submissionReference = persistenceResponse.get("id");
-            JsonNode registryData = sequenceService.nextRegistryDataObject(submissionReference.asText());
-            Calendar submissonTimestamp = Calendar.getInstance();
-            mailClient.execute(submitData, registryData, submissonTimestamp);
+            JsonNode registryData = sequenceService.nextRegistryData(submissionReference.asLong());
+            Calendar submissionTimestamp = Calendar.getInstance();
+            mailClient.execute(submitData, registryData, submissionTimestamp);
             logger.info(append("tags","Analytics"), message);
             persistenceClient.updateFormData(emailId, submissionReference.asLong(), formData);
             if (coreCaseDataEnabled) {
                 try {
                     JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(userId, authorization);
-                    coreCaseDataClient.saveCase(submitData.get("submitdata"), userId, authorization, ccdStartCaseResponse, submissonTimestamp, registryData);
+                    coreCaseDataClient.saveCase(submitData.get("submitdata"), userId, authorization, ccdStartCaseResponse, submissionTimestamp, registryData);
                 } catch (HttpClientErrorException e) {
                     logger.error ("Exception while talking to ccd: ", e);
                     logger.error(e.getMessage());
@@ -68,7 +68,8 @@ public class SubmitService {
 
     public String resubmit(long submissionId) {
         JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
-        JsonNode registryData = resubmitData.get("registryData");
+        JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
+        JsonNode registryData = sequenceService.createRegistryDataObject(submissionId, formData);
         Calendar submissonTimestamp = Calendar.getInstance();
         return mailClient.execute(resubmitData, registryData, submissonTimestamp);
     }

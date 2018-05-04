@@ -161,13 +161,14 @@ public class CoreCaseDataMapper {
     public ObjectNode mapData(JsonNode probateData, Calendar submissonTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdData = mapper.createObjectNode();
+        JsonNode registry = registryData.get("registry");
         ccdData.set("applicationID", registryData.get("submissionReference"));
         LocalDate localDate = LocalDateTime.ofInstant(submissonTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         ccdData.put("ihtFormCompletedOnline", "online".equalsIgnoreCase(probateData.get("ihtForm").asText()) ? "Yes" : "No");
         ccdData.put("softStop", "True".equalsIgnoreCase(probateData.get("softStop").asText()) ? "Yes" : "No");
-        ccdData.put("registryLocation", registryData.get("registryName"));
+        ccdData.set("registryLocation", registry.get("name"));
         ccdData.put("applicationType", "Personal");
 
         ccdData.setAll(map(probateData, fieldMap, this::fieldMapper));

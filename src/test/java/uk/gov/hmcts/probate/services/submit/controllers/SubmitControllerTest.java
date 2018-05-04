@@ -91,7 +91,7 @@ public class SubmitControllerTest {
     @Test
     public void submitSuccessfully() throws Exception {
         JsonNode validApplication = testUtils.getJsonNodeFromFile("formPayload.json");
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
+        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
         when(mockSubmitService.submit(eq(validApplication), eq(userId), eq(authorizationToken))).thenReturn(registryData);
 
         ResultActions result = mockMvc.perform(post(SUBMIT_SERVICE_URL)

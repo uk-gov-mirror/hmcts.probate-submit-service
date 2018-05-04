@@ -15,23 +15,34 @@ import java.util.Map;
 public class SequenceService {
     @Autowired
     Map<Integer, Registry> registryMap;
-
     @Autowired
     private PersistenceClient persistenceClient;
-    private ObjectMapper mapper = new ObjectMapper();
 
     private static int registryCounter = 1;
 
-    public synchronized JsonNode nextRegistryDataObject(String sequenceNumber) {
+    public synchronized JsonNode nextRegistryData(long sequenceNumber) {
         ObjectMapper mapper = new ObjectMapper();
+        ObjectNode registryDataObject = mapper.createObjectNode();
         ObjectNode registryMapper = mapper.createObjectNode();
         Registry nextRegistry = identifyNextRegistry();
-        registryMapper.put("submissionReference", sequenceNumber);
-        registryMapper.put("registryName", nextRegistry.capitalizeRegistryName());
-        registryMapper.put("registrySequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
-        registryMapper.put("registryEmail", nextRegistry.getEmail());
-        registryMapper.put("registryAddress", nextRegistry.getAddress());
-        return registryMapper;
+
+        registryDataObject.put("submissionReference", Long.toString(sequenceNumber));
+        registryMapper.put("name", nextRegistry.capitalizeRegistryName());
+        registryMapper.put("sequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
+        registryMapper.put("email", nextRegistry.getEmail());
+        registryMapper.put("address", nextRegistry.getAddress());
+        registryDataObject.set("registry", registryMapper);
+
+        return registryDataObject;
+    }
+
+    public JsonNode createRegistryDataObject(long submissionReference, JsonNode formData) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode registryData = mapper.createObjectNode();
+        registryData.put("submissionReference", Long.toString(submissionReference));
+        registryData.set("registry", formData.get("formdata").get("registry"));
+
+        return registryData;
     }
 
     long getRegistrySequenceNumber(Registry registry) {

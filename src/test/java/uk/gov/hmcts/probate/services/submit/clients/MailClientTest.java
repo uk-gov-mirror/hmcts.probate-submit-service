@@ -49,7 +49,7 @@ public class MailClientTest {
         mailClient = new MailClient(mailSenderMock, mailMessageBuilderMock);
         submissonTimestamp = Calendar.getInstance();
         testUtils = new TestUtils();
-        registryData = testUtils.getJsonNodeFromFile("registryData.json");
+        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
     
 

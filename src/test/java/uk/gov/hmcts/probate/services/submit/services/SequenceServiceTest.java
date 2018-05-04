@@ -48,20 +48,30 @@ public class SequenceServiceTest {
         when(registryMap.size()).thenReturn(2);
         when(registryMap.get(mockRegistryCounter % registryMap.size()))
                 .thenReturn(mockRegistry);
+
     }
 
     @Test
-    public void nextRegistryDataObject() {
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryData.json");
-        String sequenceNumber = "1234";
+    public void nextRegistryData() {
+        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        long sequenceNumber = 1234L;
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
         when(mockRegistry.capitalizeRegistryName()).thenReturn("Oxford");
         when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
-        when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(10001L);
+        when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(20013L);
         when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
-        when(mockRegistry.getAddress()).thenReturn("Test Address Line 1 \n Test Address Line 2 \n Test Address Postcode");
+        when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
-        JsonNode response = sequenceService.nextRegistryDataObject(sequenceNumber);
+        JsonNode response = sequenceService.nextRegistryData(sequenceNumber);
+        assertThat(response, is(equalTo(registryData)));
+    }
+
+    @Test
+    public void createRegistryDataObject() {
+        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmit.json");
+        JsonNode formData = testUtils.getJsonNodeFromFile("formData.json");
+        long submissionReference = 1234;
+        JsonNode response = sequenceService.createRegistryDataObject(submissionReference, formData);
         assertThat(response, is(equalTo(registryData)));
     }
 

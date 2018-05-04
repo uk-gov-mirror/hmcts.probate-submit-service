@@ -39,7 +39,7 @@ public class MailMessageBuilderTest {
     public void setUp() throws Exception {
         mailMessageBuilder = new MailMessageBuilder(templateEngine);
         submissonTimestamp = Calendar.getInstance();
-        registryData = testUtils.getJsonNodeFromFile("registryData.json");
+        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
 
     @Test
@@ -49,8 +49,9 @@ public class MailMessageBuilderTest {
         messageProperties.put("sender", "sender");
         messageProperties.put("recipient", "recipient");
         JsonNode emailData = testUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode registry = registryData.get("registry");
 
-        MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registryData, messageProperties, submissonTimestamp);
+        MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registry, messageProperties, submissonTimestamp);
         String mailContent = mimeMessage.getContent().toString();
         System.out.println(mailContent);
         assertThat(mimeMessage.getSubject(), is("subject"));

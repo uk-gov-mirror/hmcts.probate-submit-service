@@ -1,7 +1,8 @@
 {
   "submissionReference":"1234",
   "registry":{
-    "email":"oxford@email.com",
-    "sequenceNumber":"1234"
+    "sequenceNumber":"1234",
+    "email":"oxford@email.com"
+
   }
 }

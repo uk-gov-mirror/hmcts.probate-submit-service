@@ -54,7 +54,7 @@ public class SequenceService {
             registryMapper.set("sequenceNumber", formData.get("registry").get("sequenceNumber"));
             registryMapper.set( "email", formData.get("registry").get("email"));
         } else {
-            registryMapper.put("sequenceNumber", submissionReference);
+            registryMapper.put("sequenceNumber", String.valueOf(submissionReference));
             registryMapper.put( "email", mailSender.getJavaMailProperties().getProperty("recipient"));
         }
 

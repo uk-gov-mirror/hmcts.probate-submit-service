@@ -60,11 +60,6 @@
       "dob_formattedDate":"1 January 1930",
       "dod_formattedDate":"1 January 2018"
     },
-    "registry":{
-      "email":"birmingham@email.com",
-      "address":"Line 1 Bham\nLine 2 Bham\nLine 3 Bham\nPostCode Bham\n",
-      "sequenceNumber":"20009"
-    },
     "applicant":{
       "address":"dfasfasfsa",
       "executor":"Yes",

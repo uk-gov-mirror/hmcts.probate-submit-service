@@ -51,7 +51,7 @@ public class SubmitServiceTest {
         when(persistenceClient.loadFormDataById(anyString())).thenReturn(submitData);
         when(persistenceClient.saveSubmission(submitData)).thenReturn(submitData);
         when(mockMailClient.execute(submitData, registryData, submissionTimestamp)).thenReturn("12345678");
-        when(sequenceService.nextRegistryData(submitData.get("id").asLong())).thenReturn(registryData);
+        when(sequenceService.nextRegistry(submitData.get("id").asLong())).thenReturn(registryData);
         JsonNode dummmyCcdStartCaseRespose =  testUtils.getJsonNodeFromFile("ccdStartCaseResponse.json");
 
         JsonNode response = submitService.submit(submitData, userId, authorizationToken);
@@ -63,10 +63,10 @@ public class SubmitServiceTest {
     public void testResubmitWithSuccess() {
         JsonNode resubmitData = testUtils.getJsonNodeFromFile("formPayload.json");
         JsonNode formData = testUtils.getJsonNodeFromFile("formData.json");
-        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmit.json");
+        JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
         when(persistenceClient.loadSubmission(Long.parseLong("112233"))).thenReturn(resubmitData);
         when(persistenceClient.loadFormDataBySubmissionReference(Long.parseLong("112233"))).thenReturn(formData);
-        when(sequenceService.createRegistryDataObject(Long.parseLong("112233"), formData)).thenReturn(registryData);
+        when(sequenceService.populateRegistryResubmitData(Long.parseLong("112233"), formData)).thenReturn(registryData);
         when(mockMailClient.execute(eq(resubmitData), eq(registryData), any(Calendar.class) )).thenReturn("12345678");
 
         String response = submitService.resubmit(Long.parseLong("112233"));

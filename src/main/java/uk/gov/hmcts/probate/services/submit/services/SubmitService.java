@@ -43,7 +43,7 @@ public class SubmitService {
             String message = "Application submitted, payload version: " +  submitData.at("/submitdata/payloadVersion").asText() + ", number of executors: " + submitData.at("/submitdata/noOfExecutors").asText();
             JsonNode persistenceResponse = persistenceClient.saveSubmission(submitData);
             JsonNode submissionReference = persistenceResponse.get("id");
-            JsonNode registryData = sequenceService.nextRegistryData(submissionReference.asLong());
+            JsonNode registryData = sequenceService.nextRegistry(submissionReference.asLong());
             Calendar submissionTimestamp = Calendar.getInstance();
             mailClient.execute(submitData, registryData, submissionTimestamp);
             logger.info(append("tags","Analytics"), message);
@@ -69,8 +69,8 @@ public class SubmitService {
     public String resubmit(long submissionId) {
         JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
         JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
-        JsonNode registryData = sequenceService.createRegistryDataObject(submissionId, formData);
-        Calendar submissonTimestamp = Calendar.getInstance();
-        return mailClient.execute(resubmitData, registryData, submissonTimestamp);
+        JsonNode registryData = sequenceService.populateRegistryResubmitData(submissionId, formData);
+        Calendar submissionTimestamp = Calendar.getInstance();
+        return mailClient.execute(resubmitData, registryData, submissionTimestamp);
     }
 }

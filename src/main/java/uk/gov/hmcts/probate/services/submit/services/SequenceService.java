@@ -1,15 +1,15 @@
 package uk.gov.hmcts.probate.services.submit.services;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.probate.services.submit.Registry;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class SequenceService {
@@ -17,32 +17,49 @@ public class SequenceService {
     Map<Integer, Registry> registryMap;
     @Autowired
     private PersistenceClient persistenceClient;
+    @Autowired
+    private JavaMailSenderImpl mailSender;
 
     private static int registryCounter = 1;
 
-    public synchronized JsonNode nextRegistryData(long sequenceNumber) {
+    public synchronized JsonNode nextRegistry(long submissionReference) {
+        Registry nextRegistry = identifyNextRegistry();
+        return populateRegistrySubmitData(submissionReference, nextRegistry);
+    }
+
+    JsonNode populateRegistrySubmitData(long submissionReference, Registry registry) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode registryDataObject = mapper.createObjectNode();
         ObjectNode registryMapper = mapper.createObjectNode();
-        Registry nextRegistry = identifyNextRegistry();
 
-        registryDataObject.put("submissionReference", Long.toString(sequenceNumber));
-        registryMapper.put("name", nextRegistry.capitalizeRegistryName());
-        registryMapper.put("sequenceNumber", Long.toString(getRegistrySequenceNumber(nextRegistry)));
-        registryMapper.put("email", nextRegistry.getEmail());
-        registryMapper.put("address", nextRegistry.getAddress());
+        registryDataObject.put("submissionReference", Long.toString(submissionReference));
+        registryMapper.put("name", registry.capitalizeRegistryName());
+        registryMapper.put("sequenceNumber", Long.toString(getRegistrySequenceNumber(registry)));
+        registryMapper.put("email", registry.getEmail());
+        registryMapper.put("address", registry.getAddress());
         registryDataObject.set("registry", registryMapper);
 
         return registryDataObject;
     }
 
-    public JsonNode createRegistryDataObject(long submissionReference, JsonNode formData) {
+    JsonNode populateRegistryResubmitData(long submissionReference, JsonNode formDataObject) {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode registryData = mapper.createObjectNode();
-        registryData.put("submissionReference", Long.toString(submissionReference));
-        registryData.set("registry", formData.get("formdata").get("registry"));
+        ObjectNode registryDataObject = mapper.createObjectNode();
+        ObjectNode registryMapper = mapper.createObjectNode();
 
-        return registryData;
+        JsonNode formData = formDataObject.get("formdata");
+        registryDataObject.put("submissionReference", Long.toString(submissionReference));
+
+        if(formData.has("registry")) {
+            registryMapper.set("sequenceNumber", formData.get("registry").get("sequenceNumber"));
+            registryMapper.set( "email", formData.get("registry").get("email"));
+        } else {
+            registryMapper.put("sequenceNumber", submissionReference);
+            registryMapper.put( "email", mailSender.getJavaMailProperties().getProperty("recipient"));
+        }
+
+        registryDataObject.set("registry", registryMapper);
+        return registryDataObject;
     }
 
     long getRegistrySequenceNumber(Registry registry) {

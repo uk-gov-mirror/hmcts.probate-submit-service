@@ -97,8 +97,6 @@ public class SequenceServiceTest {
     @Test
     public void populateRegistryResubmitDataOldApplication() {
         Properties messageProperties = new Properties();
-        messageProperties.put("subject", "subject");
-        messageProperties.put("sender", "sender");
         messageProperties.put("recipient", "oxford@email.com");
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmitOldApplication.json");
         JsonNode formData = testUtils.getJsonNodeFromFile("formDataOldApplication.json");

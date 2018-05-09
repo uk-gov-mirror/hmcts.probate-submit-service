@@ -71,7 +71,6 @@ public class SubmitService {
         JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
         JsonNode registryData = sequenceService.populateRegistryResubmitData(submissionId, formData);
         Calendar submissionTimestamp = Calendar.getInstance();
-        logger.info("Re-submitting application with Sequence Number" + registryData.get("sequenceNumber").asText() + " to " + registryData.get("name").asText());
         return mailClient.execute(resubmitData, registryData, submissionTimestamp);
     }
 }

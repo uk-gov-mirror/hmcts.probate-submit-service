@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -29,29 +30,29 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest()
+@RunWith(MockitoJUnitRunner.class)
 public class SequenceServiceTest {
-    @MockBean
-    SubmitService submitService;
     @Mock
-    JavaMailSenderImpl mailSenderMock;
-    @Mock
-    Registry mockRegistry;
-    @Mock
-    PersistenceClient persistenceClient;
-    @Mock
-    Map<Integer, Registry> registryMap;
-    @InjectMocks
+    private Map<Integer, Registry> registryMap;
+    private SubmitService submitService;
+    private PersistenceClient persistenceClient;
+    private JavaMailSenderImpl mailSender;
+    private ObjectMapper mapper;
+    private Registry mockRegistry;
     private SequenceService sequenceService;
     private TestUtils testUtils;
     private long submissionReference;
 
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        submitService = mock(SubmitService.class);
+        persistenceClient = mock(PersistenceClient.class);
+        mailSender = mock(JavaMailSenderImpl.class);
+        mockRegistry = mock(Registry.class);
+        mapper = new ObjectMapper();
         testUtils = new TestUtils();
+        sequenceService = new SequenceService(registryMap, persistenceClient, mailSender, mapper);
         int mockRegistryCounter = 1;
         submissionReference = 1234L;
         when(registryMap.size()).thenReturn(2);
@@ -100,7 +101,7 @@ public class SequenceServiceTest {
         messageProperties.put("recipient", "oxford@email.com");
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmitOldApplication.json");
         JsonNode formData = testUtils.getJsonNodeFromFile("formDataOldApplication.json");
-        when(mailSenderMock.getJavaMailProperties()).thenReturn(messageProperties);
+        when(mailSender.getJavaMailProperties()).thenReturn(messageProperties);
 
         JsonNode response = sequenceService.populateRegistryResubmitData(submissionReference, formData);
         assertThat(response, is(equalTo(registryData)));

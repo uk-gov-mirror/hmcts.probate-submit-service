@@ -46,14 +46,16 @@ public class SequenceService {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode registryDataObject = mapper.createObjectNode();
         ObjectNode registryMapper = mapper.createObjectNode();
-
         JsonNode formData = formDataObject.get("formdata");
-        registryDataObject.put("submissionReference", Long.toString(submissionReference));
 
+        registryDataObject.put("submissionReference", Long.toString(submissionReference));
+        
         if(formData.has("registry")) {
+            registryMapper.set("name", formData.get("registry").get("name"));
             registryMapper.set("sequenceNumber", formData.get("registry").get("sequenceNumber"));
             registryMapper.set( "email", formData.get("registry").get("email"));
         } else {
+            registryMapper.put("name", "Oxford");
             registryMapper.put("sequenceNumber", String.valueOf(submissionReference));
             registryMapper.put( "email", mailSender.getJavaMailProperties().getProperty("recipient"));
         }

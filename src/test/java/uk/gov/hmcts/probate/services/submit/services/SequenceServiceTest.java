@@ -12,22 +12,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.probate.services.submit.Registry;
-import uk.gov.hmcts.probate.services.submit.clients.MailClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
-import javax.mail.internet.MimeMessage;
-
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +48,7 @@ public class SequenceServiceTest {
         testUtils = new TestUtils();
         sequenceService = new SequenceService(registryMap, persistenceClient, mailSender, mapper);
         int mockRegistryCounter = 1;
-        submissionReference = 1234L;
+        submissionReference = 1234;
         when(registryMap.size()).thenReturn(2);
         when(registryMap.get(mockRegistryCounter % registryMap.size()))
                 .thenReturn(mockRegistry);
@@ -70,7 +64,7 @@ public class SequenceServiceTest {
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
         JsonNode result = sequenceService.populateRegistrySubmitData(submissionReference, mockRegistry);
-        assertThat(result, is(equalTo(registryData)));
+        assertEquals(result.toString(), registryData.toString());
     }
 
     @Test
@@ -84,7 +78,7 @@ public class SequenceServiceTest {
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
         JsonNode response = sequenceService.populateRegistrySubmitData(submissionReference, mockRegistry);
-        assertThat(response, is(equalTo(registryData)));
+        assertEquals(response.toString(), registryData.toString());
     }
 
     @Test
@@ -92,7 +86,7 @@ public class SequenceServiceTest {
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
         JsonNode formData = testUtils.getJsonNodeFromFile("formData.json");
         JsonNode response = sequenceService.populateRegistryResubmitData(submissionReference, formData);
-        assertThat(response, is(equalTo(registryData)));
+        assertEquals(response.toString(), registryData.toString());
     }
 
     @Test
@@ -104,7 +98,7 @@ public class SequenceServiceTest {
         when(mailSender.getJavaMailProperties()).thenReturn(messageProperties);
 
         JsonNode response = sequenceService.populateRegistryResubmitData(submissionReference, formData);
-        assertThat(response, is(equalTo(registryData)));
+        assertEquals(response.toString(), registryData.toString());
     }
 
     @Test

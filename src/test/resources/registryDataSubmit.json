@@ -1,8 +1,8 @@
 {
-  "submissionReference":"1234",
+  "submissionReference":1234,
   "registry": {
     "name":"Oxford",
-    "sequenceNumber":"20013",
+    "sequenceNumber":20013,
     "email":"oxford@email.com",
     "address":"Test Address Line 1\nTest Address Line 2\nTest Address Postcode"
   }

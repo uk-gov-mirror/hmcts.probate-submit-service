@@ -120,6 +120,6 @@
     "payloadVersion":"3.0.0",
     "paymentPending":"false",
     "creatingPayment":"false",
-    "submissionReference":"17"
+    "submissionReference":17
   }
 }

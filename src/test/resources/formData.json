@@ -63,7 +63,7 @@
     "registry":{
       "email":"birmingham@email.com",
       "address":"Line 1 Bham\nLine 2 Bham\nLine 3 Bham\nPostCode Bham\n",
-      "sequenceNumber":"20009"
+      "sequenceNumber":20009
     },
     "applicant":{
       "address":"dfasfasfsa",
@@ -125,6 +125,6 @@
     "payloadVersion":"3.0.0",
     "paymentPending":"false",
     "creatingPayment":"false",
-    "submissionReference":"17"
+    "submissionReference":17
   }
 }

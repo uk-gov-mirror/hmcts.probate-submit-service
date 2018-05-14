@@ -42,9 +42,9 @@ public class SequenceService {
         ObjectNode registryDataObject = mapper.createObjectNode();
         ObjectNode registryMapper = mapper.createObjectNode();
 
-        registryDataObject.put(SUBMISSION_REFERENCE, Long.toString(submissionReference));
+        registryDataObject.put(SUBMISSION_REFERENCE, submissionReference);
         registryMapper.put("name", registry.capitalizeRegistryName());
-        registryMapper.put(SEQUENCE_NUMBER, Long.toString(getRegistrySequenceNumber(registry)));
+        registryMapper.put(SEQUENCE_NUMBER, getRegistrySequenceNumber(registry));
         registryMapper.put(EMAIL, registry.getEmail());
         registryMapper.put("address", registry.getAddress());
         registryDataObject.set(REGISTRY, registryMapper);
@@ -57,13 +57,13 @@ public class SequenceService {
         ObjectNode registryMapper = mapper.createObjectNode();
 
         JsonNode formData = formDataObject.get("formdata");
-        registryDataObject.put(SUBMISSION_REFERENCE, Long.toString(submissionReference));
+        registryDataObject.put(SUBMISSION_REFERENCE, submissionReference);
 
         if(formData.has(REGISTRY)) {
             registryMapper.set(SEQUENCE_NUMBER, formData.get(REGISTRY).get(SEQUENCE_NUMBER));
             registryMapper.set( EMAIL, formData.get(REGISTRY).get(EMAIL));
         } else {
-            registryMapper.put(SEQUENCE_NUMBER, String.valueOf(submissionReference));
+            registryMapper.put(SEQUENCE_NUMBER, submissionReference);
             registryMapper.put( EMAIL, mailSender.getJavaMailProperties().getProperty("recipient"));
         }
 

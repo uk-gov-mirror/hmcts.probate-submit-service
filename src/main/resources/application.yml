@@ -106,8 +106,9 @@
       ihtGrossValue: ihtGrossValue
       ihtNetValue: ihtNetValue
       totalFee: totalFee
-    multiLineStringMap:
+    declarationMap:
       declaration: declaration
+    legalStatmentMap:
       legalStatement: legalStatement
     executorMap:
       executorsNotApplying: executorsNotApplying

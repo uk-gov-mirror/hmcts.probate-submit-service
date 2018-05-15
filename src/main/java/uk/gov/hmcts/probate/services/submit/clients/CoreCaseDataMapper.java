@@ -71,12 +71,14 @@ public class CoreCaseDataMapper {
     private Map<String, String> fieldMap;
     @NotNull
     private Map<String, String> monetaryValueMap;
-    @NotNull
-    private Map<String, String> multiLineStringMap;
+    /*@NotNull
+    private Map<String, String> multiLineStringMap;*/
     @NotNull
     private Map<String, String> executorMap;
     @NotNull
     private Map<String, String> aliasMap;
+    @NotNull
+    private Map<String, String> declarationMap;
     @NotNull
     private Map<String, String> addressMap;
 
@@ -112,13 +114,13 @@ public class CoreCaseDataMapper {
         this.monetaryValueMap = monetaryValueMap;
     }
 
-    public Map<String, String> getMultiLineStringMap() {
+    /*public Map<String, String> getMultiLineStringMap() {
         return multiLineStringMap;
     }
 
     public void setMultiLineStringMap(Map<String, String> multiLineStringMap) {
         this.multiLineStringMap = multiLineStringMap;
-    }
+    }*/
 
     public Map<String, String> getExecutorMap() {
         return executorMap;
@@ -134,6 +136,14 @@ public class CoreCaseDataMapper {
 
     public void setAliasMap(Map<String, String> aliasMap) {
         this.aliasMap = aliasMap;
+    }
+
+    public Map<String, String> getDeclarationMap() {
+        return declarationMap;
+    }
+
+    public void setDeclarationMap(Map<String, String> declarationMap) {
+        this.declarationMap = declarationMap;
     }
 
     public Map<String, String> getAddressMap() {
@@ -174,8 +184,9 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, dateMap, this::dateMapper));
         ccdData.setAll(map(probateData, executorMap, this::executorsMapper));
         ccdData.setAll(map(probateData, monetaryValueMap, this::monetaryValueMapper));
-        ccdData.setAll(map(probateData, multiLineStringMap, this::multiLineStringMapper));
+        //ccdData.setAll(map(probateData, multiLineStringMap, this::multiLineStringMapper));
         ccdData.setAll(map(probateData, aliasMap, this::aliasesMapper));
+        ccdData.setAll(map(probateData, declarationMap, this::declarationMapper ));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
         return ccdData;
     }
@@ -281,7 +292,7 @@ public class CoreCaseDataMapper {
         return ret;
     }
 
-    public Optional<JsonNode> multiLineStringMapper(JsonNode probateData, String fieldname) {
+    /*public Optional<JsonNode> multiLineStringMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> field = Optional.ofNullable(probateData.get(fieldname));
         if (field.isPresent()) {
@@ -293,7 +304,7 @@ public class CoreCaseDataMapper {
             }
         }
         return ret;
-    }
+    }*/
         
     public Optional<JsonNode> aliasesMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
@@ -311,6 +322,21 @@ public class CoreCaseDataMapper {
         return ret;
     }
 
+/*    public Optional<JsonNode> declarationMapper(JsonNode probateData, String fieldname) {
+
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayNode declarationCcdFormat = mapper.createArrayNode();
+
+            probateData.get(fieldname)
+                    .elements().forEachRemaining(declarationItem -> mapDeclaration(declarationItem).ifPresent(declarationCcdFormat::add)
+            );
+
+            return Optional.of(declarationCcdFormat);
+
+
+    }*/
+
+
     public Optional<JsonNode> mapAlias(JsonNode alias) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
@@ -321,6 +347,28 @@ public class CoreCaseDataMapper {
         return Optional.of(ccdFormat);
     }
 
+ /*   public Optional<JsonNode> mapDeclaration(JsonNode declaration) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode ccdDeclarationFormat = mapper.createObjectNode();
+        ObjectNode value = mapper.createObjectNode();
+        value.set("confirm", declaration.get("confirm"));
+        value.set("confirmItem1", declaration.get("confirmItem1"));
+        value.set("confirmItem2", declaration.get("confirmItem2"));
+        value.set("confirmItem3", declaration.get("confirmItem3"));
+        value.set("requests", declaration.get("requests"));
+        value.set("requestsItem1", declaration.get("requestsItem1"));
+        value.set("requestsItem2", declaration.get("requestsItem2"));
+        value.set("understand", declaration.get("understand"));
+        value.set("understandItem1", declaration.get("understandItem1"));
+        value.set("understandItem2", declaration.get("understandItem2"));
+        value.set("accept", declaration.get("accept"));
+        value.set("submitWarning", declaration.get("submitWarning"));
+        ccdDeclarationFormat.set("value", value);
+        return Optional.of(ccdDeclarationFormat);
+    }
+*/
+
+
     public Optional<JsonNode> addressMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> address = Optional.ofNullable(probateData.get(fieldname));
@@ -330,6 +378,32 @@ public class CoreCaseDataMapper {
             ccdAddressObject.set("AddressLine1", address.get());
             return Optional.of(ccdAddressObject);
         }
+        return ret;
+    }
+
+    public Optional<JsonNode> declarationMapper(JsonNode probateData, String fieldname) {
+
+        Optional<JsonNode> declaration = Optional.ofNullable(probateData.get(fieldname));
+        Optional<JsonNode> ret = Optional.empty();
+        if(declaration.isPresent()) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode ccdDeclaration = mapper.createObjectNode();
+            ccdDeclaration.set("confirm", declaration.get().get("confirm"));
+            ccdDeclaration.set("confirmItem1", declaration.get().get("confirmItem1"));
+            ccdDeclaration.set("confirmItem2", declaration.get().get("confirmItem2"));
+            ccdDeclaration.set("confirmItem3", declaration.get().get("confirmItem3"));
+            ccdDeclaration.set("requests", declaration.get().get("requests"));
+            ccdDeclaration.set("requestsItem1", declaration.get().get("requestsItem1"));
+            ccdDeclaration.set("requestsItem2", declaration.get().get("requestsItem2"));
+            ccdDeclaration.set("understand", declaration.get().get("understand"));
+            ccdDeclaration.set("understandItem1", declaration.get().get("understandItem1"));
+            ccdDeclaration.set("understandItem2", declaration.get().get("understandItem2"));
+            ccdDeclaration.set("accept", declaration.get().get("accept"));
+            //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
+
+            return Optional.of(ccdDeclaration);
+        }
+
         return ret;
     }
 }

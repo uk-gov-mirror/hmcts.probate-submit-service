@@ -47,8 +47,8 @@ public class CoreCaseDataMapperTest {
 
     @NotNull
     private Map<String, String> fieldMap;
-    @NotNull
-    private Map<String, String> multiLineStringMap;
+    /*@NotNull
+    private Map<String, String> multiLineStringMap;*/
 
     public Map<String, String> getFieldMap() {
         return fieldMap;
@@ -69,13 +69,13 @@ public class CoreCaseDataMapperTest {
         this.monetaryValueMap = monetaryValueMap;
     }
 
-    public Map<String, String> getMultiLineStringMap() {
+    /*public Map<String, String> getMultiLineStringMap() {
         return multiLineStringMap;
     }
 
     public void setMultiLineStringMap(Map<String, String> multiLineStringMap) {
         this.multiLineStringMap = multiLineStringMap;
-    }
+    }*/
 
     @Before
     public void setup() throws ParseException {
@@ -110,7 +110,7 @@ public class CoreCaseDataMapperTest {
         assertNotNull(mappedData.get("applicationType"));
     }
 
-    @Test
+    /*@Test
     public void mapMultiLineStringsTest() {
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getMultiLineStringMap(), coreCaseDataMapper::multiLineStringMapper);
         multiLineStringMap
@@ -119,8 +119,8 @@ public class CoreCaseDataMapperTest {
                         e -> assertTrue(e + " is not found in the mapped data", mappedData.containsKey(e))
                 );
     }
-
-    @Test
+*/
+    /*@Test
     public void mapMultiLineStringTest() {
         Optional<JsonNode> statement = coreCaseDataMapper.multiLineStringMapper(submitdata, "declaration");
         Assert.assertTrue(statement.isPresent());
@@ -131,14 +131,14 @@ public class CoreCaseDataMapperTest {
         Optional<JsonNode> expected = Optional.empty();
         Optional<JsonNode> mappedData = coreCaseDataMapper.multiLineStringMapper(submitdata, "noSuchField");
         assertEquals(expected, mappedData);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void mapUnmappableMultiLineStringTest() {
         Optional<JsonNode> expected = Optional.empty();
         Optional<JsonNode> mappedData = coreCaseDataMapper.multiLineStringMapper(submitdata, "ihtGrossValue");
         assertEquals(expected, mappedData);
-    }
+    }*/
 
     @Test
     public void mapMonetaryValuesTest() {
@@ -306,6 +306,13 @@ public class CoreCaseDataMapperTest {
         JsonNode alias = submitdata.at("/deceasedOtherNames/name_0");
         Optional<JsonNode> mappedData = coreCaseDataMapper.mapAlias(alias);
         assertEquals(expected, mappedData);
+    }
+
+    @Test
+    public void mapDeclarationTest() {
+        JsonNode expected = testUtils.getJsonNodeFromFile("ccdDeclaration.json");
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getDeclarationMap(), coreCaseDataMapper::declarationMapper);
+        assertEquals(expected, mappedData.get("declaration"));
     }
 
     @Test

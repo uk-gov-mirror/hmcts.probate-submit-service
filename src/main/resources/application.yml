@@ -108,7 +108,7 @@
       totalFee: totalFee
     declarationMap:
       declaration: declaration
-    legalStatmentMap:
+    legalStatementMap:
       legalStatement: legalStatement
     executorMap:
       executorsNotApplying: executorsNotApplying

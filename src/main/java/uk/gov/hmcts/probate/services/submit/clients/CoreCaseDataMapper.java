@@ -80,6 +80,8 @@ public class CoreCaseDataMapper {
     @NotNull
     private Map<String, String> declarationMap;
     @NotNull
+    private Map<String, String> legalStatementMap;
+    @NotNull
     private Map<String, String> addressMap;
 
     public Map<String, String> getReasonMap() {
@@ -146,6 +148,14 @@ public class CoreCaseDataMapper {
         this.declarationMap = declarationMap;
     }
 
+    public Map<String, String> getLegalStatementMap() {
+        return legalStatementMap;
+    }
+
+    public void setLegalStatementMap(Map<String, String> legalStatementMap) {
+        this.legalStatementMap = legalStatementMap;
+    }
+
     public Map<String, String> getAddressMap() {
         return addressMap;
     }
@@ -187,6 +197,7 @@ public class CoreCaseDataMapper {
         //ccdData.setAll(map(probateData, multiLineStringMap, this::multiLineStringMapper));
         ccdData.setAll(map(probateData, aliasMap, this::aliasesMapper));
         ccdData.setAll(map(probateData, declarationMap, this::declarationMapper ));
+        ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper ));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
         return ccdData;
     }
@@ -402,6 +413,35 @@ public class CoreCaseDataMapper {
             //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
 
             return Optional.of(ccdDeclaration);
+        }
+
+        return ret;
+    }
+
+    public Optional<JsonNode> legalStatementMapper(JsonNode probateData, String fieldname) {
+
+        Optional<JsonNode> legalStatement = Optional.ofNullable(probateData.get(fieldname));
+        Optional<JsonNode> ret = Optional.empty();
+        if(legalStatement.isPresent()) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode ccdLegalStatement = mapper.createObjectNode();
+            ObjectNode value = mapper.createObjectNode();
+            ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
+            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+            ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
+            ccdLegalStatement.set("applicant", legalStatement.get().get("applicant"));
+            ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+            ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateValue"));
+            if(legalStatement.get().has("deceasedOtherNames") ) {
+                ccdLegalStatement.set("deceasedOtherNames", legalStatement.get().get("deceasedOtherNames"));
+            }
+
+
+            value.set("executorsNotApplying", legalStatement.get().get("executorsNotApplying"));
+
+            //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
+
+            return Optional.of(ccdLegalStatement);
         }
 
         return ret;

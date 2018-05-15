@@ -47,8 +47,15 @@ public class PersistenceClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode loadFormData(String emailId) {
+    public JsonNode loadFormDataById(String emailId) {
         HttpEntity<JsonNode> loadResponse = restTemplate.getForEntity(formDataPersistenceUrl + "/" + emailId, JsonNode.class);
+        return loadResponse.getBody();
+    }
+
+    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
+    public JsonNode loadFormDataBySubmissionReference(long submissionReference) {
+        HttpEntity<JsonNode> loadResponse =
+                restTemplate.getForEntity(formDataPersistenceUrl + "/search/findBySubmissionReference?submissionReference=" + submissionReference, JsonNode.class);
         return loadResponse.getBody();
     }
 

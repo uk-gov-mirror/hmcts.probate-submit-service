@@ -28,9 +28,9 @@ class MailMessageBuilder {
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
         messageHelper.setSubject(messageProperties.getProperty("subject"));
         messageHelper.setFrom(messageProperties.getProperty("sender"));
-        messageHelper.setTo(registryData.get("registryEmail").asText());
+        messageHelper.setTo(registryData.get("email").asText());
 
-        String messageText = templateEngine.process("email-template", createTemplateContext(submitData, registryData.get("registrySequenceNumber").asLong(), submissonTimestamp));
+        String messageText = templateEngine.process("email-template", createTemplateContext(submitData, registryData.get("sequenceNumber").asLong(), submissonTimestamp));
 
         messageHelper.setText(messageText, true);
         return mailMessage;

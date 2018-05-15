@@ -2,7 +2,6 @@ package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -79,7 +78,7 @@ public class CoreCaseDataMapperTest {
 
     @Before
     public void setup() throws ParseException {
-        registryData = testUtils.getJsonNodeFromFile("registryData.json");
+        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
         submissonTimestamp = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS");
         submissonTimestamp.setTime(sdf.parse("2017-08-24 11:37:07.221"));
@@ -99,9 +98,10 @@ public class CoreCaseDataMapperTest {
     @Test
     public void mapDataTest() {
         JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, registryData);
+        JsonNode registry = registryData.get("registry");
         assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
         assertTrue(mappedData.get("applicationID").equals(registryData.get("submissionReference")));
-        assertTrue(mappedData.get("registryLocation").equals(registryData.get("registryName")));
+        assertTrue(mappedData.get("registryLocation").equals(registry.get("name")));
         assertNotNull(mappedData.get("primaryApplicantForenames"));
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("executorsNotApplying"));

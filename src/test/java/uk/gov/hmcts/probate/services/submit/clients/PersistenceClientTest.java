@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -71,13 +70,24 @@ public class PersistenceClientTest {
     }
 
     @Test
-    public void loadFormDataSuccessTest() {
+    public void loadFormDataByIdSuccessTest() {
         ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("response"), HttpStatus.CREATED);
         doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
 
-        JsonNode actualResponse = persistenceClient.loadFormData("emailId");
+        JsonNode actualResponse = persistenceClient.loadFormDataById("emailId");
 
         verify(restTemplate, times(1)).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
+        assertEquals(actualResponse, mockResponse.getBody());
+    }
+
+    @Test
+    public void loadFormDataBySubmissionReferenceSuccessTest() {
+        ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("response"), HttpStatus.CREATED);
+        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/search/findBySubmissionReference?submissionReference=1234"), eq(JsonNode.class));
+
+        JsonNode actualResponse = persistenceClient.loadFormDataBySubmissionReference(1234);
+
+        verify(restTemplate, times(1)).getForEntity(endsWith("/search/findBySubmissionReference?submissionReference=1234"), eq(JsonNode.class));
         assertEquals(actualResponse, mockResponse.getBody());
     }
 

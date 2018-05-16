@@ -439,7 +439,12 @@ public class CoreCaseDataMapper {
             ArrayNode executorsNotApplying = mapper.createArrayNode();
             legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
 
+            ArrayNode executorsApplying = mapper.createArrayNode();
+            legalStatement.get().get("executorsApplying").elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
+
+
             ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
+            ccdLegalStatement.set("executorsApplying", executorsApplying);
 
             ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
 
@@ -458,6 +463,16 @@ public class CoreCaseDataMapper {
         value.set("executor", executor);
         ccdExecutorsNotApplying.set("value", value);
         return Optional.of(ccdExecutorsNotApplying);
+    }
+
+    public Optional<JsonNode> mapExecApplying(JsonNode executorApplying) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode ccdExecutorsApplying = mapper.createObjectNode();
+        ObjectNode value = mapper.createObjectNode();
+        value.set("name", executorApplying.get("name"));
+        value.set("sign", executorApplying.get("sign"));
+        ccdExecutorsApplying.set("value", value);
+        return Optional.of(ccdExecutorsApplying);
     }
 
 

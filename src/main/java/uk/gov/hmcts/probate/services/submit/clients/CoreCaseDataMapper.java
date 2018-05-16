@@ -196,8 +196,8 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, monetaryValueMap, this::monetaryValueMapper));
         //ccdData.setAll(map(probateData, multiLineStringMap, this::multiLineStringMapper));
         ccdData.setAll(map(probateData, aliasMap, this::aliasesMapper));
-        ccdData.setAll(map(probateData, declarationMap, this::declarationMapper ));
-        ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper ));
+        ccdData.setAll(map(probateData, declarationMap, this::declarationMapper));
+        ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
         return ccdData;
     }
@@ -230,7 +230,7 @@ public class CoreCaseDataMapper {
         }
         return ret;
     }
-    
+
     public Optional<JsonNode> executorsMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> executors = Optional.ofNullable(probateData.get(fieldname));
@@ -238,23 +238,23 @@ public class CoreCaseDataMapper {
             ArrayNode executorsCcdFormat = new ObjectMapper().createArrayNode();
             executors.get()
                     .elements().forEachRemaining(
-                            executor -> mapExecutor(executor).ifPresent(executorsCcdFormat::add)
-                    );
+                    executor -> mapExecutor(executor).ifPresent(executorsCcdFormat::add)
+            );
             ret = Optional.of(executorsCcdFormat);
         }
         return ret;
     }
-    
+
     public Optional<JsonNode> mapExecutor(JsonNode executor) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         String executorName = executor.get(fullName).asText();
-        if(executor.get(isApplying).asBoolean()) {
+        if (executor.get(isApplying).asBoolean()) {
             value.set(applyingExecutorName, new TextNode(executorName.trim()));
             String executorPhoneNumber = executor.get(mobile).asText();
             value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
-            String executorEmail= executor.get(email).asText();
+            String executorEmail = executor.get(email).asText();
             value.set(applyingExecutorEmail, new TextNode(executorEmail.trim()));
             JsonNode executorAddress = executor.get(address);
             ObjectNode ccdExecutorAddressObject = mapper.createObjectNode();
@@ -267,7 +267,7 @@ public class CoreCaseDataMapper {
             value.set(notApplyingExecutorReason, mappedReason);
         }
 
-        if(executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
+        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
         }
@@ -316,7 +316,7 @@ public class CoreCaseDataMapper {
         }
         return ret;
     }*/
-        
+
     public Optional<JsonNode> aliasesMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> aliases = Optional.ofNullable(probateData.get(fieldname));
@@ -326,7 +326,7 @@ public class CoreCaseDataMapper {
 
             probateData.get(fieldname)
                     .elements().forEachRemaining(alias -> mapAlias(alias).ifPresent(aliasesCcdFormat::add)
-                    );
+            );
 
             ret = Optional.of(aliasesCcdFormat);
         }
@@ -396,7 +396,7 @@ public class CoreCaseDataMapper {
 
         Optional<JsonNode> declaration = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
-        if(declaration.isPresent()) {
+        if (declaration.isPresent()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdDeclaration = mapper.createObjectNode();
             ccdDeclaration.set("confirm", declaration.get().get("confirm"));
@@ -422,7 +422,7 @@ public class CoreCaseDataMapper {
 
         Optional<JsonNode> legalStatement = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
-        if(legalStatement.isPresent()) {
+        if (legalStatement.isPresent()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdLegalStatement = mapper.createObjectNode();
             ObjectNode value = mapper.createObjectNode();
@@ -432,12 +432,17 @@ public class CoreCaseDataMapper {
             ccdLegalStatement.set("applicant", legalStatement.get().get("applicant"));
             ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
             ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateValue"));
-            if(legalStatement.get().has("deceasedOtherNames") ) {
+            if (legalStatement.get().has("deceasedOtherNames")) {
                 ccdLegalStatement.set("deceasedOtherNames", legalStatement.get().get("deceasedOtherNames"));
             }
 
+            ArrayNode executorsNotApplying = mapper.createArrayNode();
+            legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
 
-            value.set("executorsNotApplying", legalStatement.get().get("executorsNotApplying"));
+            ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
+
+
+            value.set("executor", legalStatement.get().get("executorsNotApplying"));
 
             //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
 
@@ -446,4 +451,15 @@ public class CoreCaseDataMapper {
 
         return ret;
     }
+
+    public Optional<JsonNode> mapExecNotApplying(JsonNode executor) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode ccdExecutorsNotApplying = mapper.createObjectNode();
+        ObjectNode value = mapper.createObjectNode();
+        value.set("executor", executor);
+        ccdExecutorsNotApplying.set("value", value);
+        return Optional.of(ccdExecutorsNotApplying);
+    }
+
+
 }

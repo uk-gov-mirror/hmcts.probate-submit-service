@@ -316,6 +316,13 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
+    public void mapLegalStatementTest() {
+        JsonNode expected = testUtils.getJsonNodeFromFile("ccdLegalStatement.json");
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getLegalStatementMap(), coreCaseDataMapper::legalStatementMapper);
+        assertEquals(expected, mappedData.get("legalStatement"));
+    }
+
+    @Test
     public void mapAddressesTest() {
        Map<String, JsonNode> expected = testUtils.getJsonMapFromFile("ccdAddresses.json");
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getAddressMap(), coreCaseDataMapper::addressMapper);

@@ -426,23 +426,22 @@ public class CoreCaseDataMapper {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdLegalStatement = mapper.createObjectNode();
             ObjectNode value = mapper.createObjectNode();
-            ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
-            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
-            ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
             ccdLegalStatement.set("applicant", legalStatement.get().get("applicant"));
-            ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
-            ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateValue"));
+            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
             if (legalStatement.get().has("deceasedOtherNames")) {
                 ccdLegalStatement.set("deceasedOtherNames", legalStatement.get().get("deceasedOtherNames"));
             }
+            ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+            ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+            ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+            ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
 
             ArrayNode executorsNotApplying = mapper.createArrayNode();
             legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
 
             ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
 
-
-            value.set("executor", legalStatement.get().get("executorsNotApplying"));
+            ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
 
             //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
 

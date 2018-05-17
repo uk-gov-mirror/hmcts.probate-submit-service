@@ -348,11 +348,9 @@ public class CoreCaseDataMapper {
             ccdDeclaration.set("understandItem1", declaration.get().get("understandItem1"));
             ccdDeclaration.set("understandItem2", declaration.get().get("understandItem2"));
             ccdDeclaration.set("accept", declaration.get().get("accept"));
-            //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
 
             return Optional.of(ccdDeclaration);
         }
-
         return ret;
     }
 

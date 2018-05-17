@@ -351,6 +351,7 @@ public class CoreCaseDataMapper {
 
             return Optional.of(ccdDeclaration);
         }
+
         return ret;
     }
 
@@ -386,9 +387,7 @@ public class CoreCaseDataMapper {
             }
 
             ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
-
-            //ccdDeclaration.set("submitWarning", declaration.get().get("submitWarning"));
-
+            
             return Optional.of(ccdLegalStatement);
         }
 

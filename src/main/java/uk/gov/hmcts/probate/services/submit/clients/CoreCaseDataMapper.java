@@ -71,8 +71,6 @@ public class CoreCaseDataMapper {
     private Map<String, String> fieldMap;
     @NotNull
     private Map<String, String> monetaryValueMap;
-    /*@NotNull
-    private Map<String, String> multiLineStringMap;*/
     @NotNull
     private Map<String, String> executorMap;
     @NotNull

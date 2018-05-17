@@ -277,11 +277,26 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
+    public void mapNonExistentDeclarationTest() {
+        Optional<JsonNode> expected = Optional.empty();
+        Optional<JsonNode> mappedData = coreCaseDataMapper.declarationMapper(submitdata, "noSuchField");
+        assertEquals(expected, mappedData);
+    }
+
+    @Test
     public void mapLegalStatementTest() {
         JsonNode expected = testUtils.getJsonNodeFromFile("ccdLegalStatement.json");
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getLegalStatementMap(), coreCaseDataMapper::legalStatementMapper);
         assertEquals(expected, mappedData.get("legalStatement"));
     }
+
+    @Test
+    public void mapNonExistentLegalStatementTest() {
+        Optional<JsonNode> expected = Optional.empty();
+        Optional<JsonNode> mappedData = coreCaseDataMapper.legalStatementMapper(submitdata, "noSuchField");
+        assertEquals(expected, mappedData);
+    }
+
 
     @Test
     public void mapAddressesTest() {

@@ -6,6 +6,8 @@ import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import uk.gov.hmcts.probate.services.submit.clients.MailClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
@@ -15,6 +17,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
@@ -72,5 +75,12 @@ public class SubmitServiceTest {
         String response = submitService.resubmit(Long.parseLong("112233"));
 
         assertThat(response, is("12345678"));
+    }
+
+    @Test
+    public void testResubmitWithFailure() {
+        doThrow(HttpClientErrorException.class).when(persistenceClient).loadSubmission(999);
+        String response = submitService.resubmit(Long.parseLong("999"));
+        assertThat(response, is("Invalid submission reference entered.  Please enter a valid submission reference."));
     }
 }

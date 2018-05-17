@@ -371,8 +371,14 @@ public class CoreCaseDataMapper {
             }
 
             ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
-            ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
-            ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
+
+            if (legalStatement.get().has("deceasedEstateValue")) {
+                ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+            }
+
+            if (legalStatement.get().has("deceasedEstateLand")) {
+                ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
+            }
 
             if (legalStatement.get().has("executorsNotApplying")) {
                 ArrayNode executorsNotApplying = mapper.createArrayNode();

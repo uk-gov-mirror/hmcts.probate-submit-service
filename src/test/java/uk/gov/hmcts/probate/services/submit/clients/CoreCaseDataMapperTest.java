@@ -284,13 +284,6 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
-    public void mapUnmappableDeclarationTest() {
-        Optional<JsonNode> expected = Optional.empty();
-        Optional<JsonNode> mappedData = coreCaseDataMapper.declarationMapper(submitdata, "applicantFirstName");
-        assertEquals(expected, mappedData);
-    }
-
-    @Test
     public void mapLegalStatementTest() {
         JsonNode expected = testUtils.getJsonNodeFromFile("ccdLegalStatement.json");
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getLegalStatementMap(), coreCaseDataMapper::legalStatementMapper);

@@ -184,7 +184,6 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, dateMap, this::dateMapper));
         ccdData.setAll(map(probateData, executorMap, this::executorsMapper));
         ccdData.setAll(map(probateData, monetaryValueMap, this::monetaryValueMapper));
-        //ccdData.setAll(map(probateData, multiLineStringMap, this::multiLineStringMapper));
         ccdData.setAll(map(probateData, aliasMap, this::aliasesMapper));
         ccdData.setAll(map(probateData, declarationMap, this::declarationMapper));
         ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));

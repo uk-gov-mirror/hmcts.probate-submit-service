@@ -116,14 +116,6 @@ public class CoreCaseDataMapper {
         this.monetaryValueMap = monetaryValueMap;
     }
 
-    /*public Map<String, String> getMultiLineStringMap() {
-        return multiLineStringMap;
-    }
-
-    public void setMultiLineStringMap(Map<String, String> multiLineStringMap) {
-        this.multiLineStringMap = multiLineStringMap;
-    }*/
-
     public Map<String, String> getExecutorMap() {
         return executorMap;
     }
@@ -303,20 +295,6 @@ public class CoreCaseDataMapper {
         return ret;
     }
 
-    /*public Optional<JsonNode> multiLineStringMapper(JsonNode probateData, String fieldname) {
-        Optional<JsonNode> ret = Optional.empty();
-        Optional<JsonNode> field = Optional.ofNullable(probateData.get(fieldname));
-        if (field.isPresent()) {
-            StringBuilder builder = new StringBuilder();
-            Iterator<JsonNode> elements = field.get().elements();
-            elements.forEachRemaining(j -> builder.append(j.asText()).append(System.lineSeparator()));
-            if (!builder.toString().isEmpty()) {
-                ret = Optional.of(new TextNode(builder.toString()));
-            }
-        }
-        return ret;
-    }*/
-
     public Optional<JsonNode> aliasesMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> aliases = Optional.ofNullable(probateData.get(fieldname));
@@ -333,21 +311,6 @@ public class CoreCaseDataMapper {
         return ret;
     }
 
-/*    public Optional<JsonNode> declarationMapper(JsonNode probateData, String fieldname) {
-
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayNode declarationCcdFormat = mapper.createArrayNode();
-
-            probateData.get(fieldname)
-                    .elements().forEachRemaining(declarationItem -> mapDeclaration(declarationItem).ifPresent(declarationCcdFormat::add)
-            );
-
-            return Optional.of(declarationCcdFormat);
-
-
-    }*/
-
-
     public Optional<JsonNode> mapAlias(JsonNode alias) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
@@ -357,28 +320,6 @@ public class CoreCaseDataMapper {
         ccdFormat.set("value", value);
         return Optional.of(ccdFormat);
     }
-
- /*   public Optional<JsonNode> mapDeclaration(JsonNode declaration) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode ccdDeclarationFormat = mapper.createObjectNode();
-        ObjectNode value = mapper.createObjectNode();
-        value.set("confirm", declaration.get("confirm"));
-        value.set("confirmItem1", declaration.get("confirmItem1"));
-        value.set("confirmItem2", declaration.get("confirmItem2"));
-        value.set("confirmItem3", declaration.get("confirmItem3"));
-        value.set("requests", declaration.get("requests"));
-        value.set("requestsItem1", declaration.get("requestsItem1"));
-        value.set("requestsItem2", declaration.get("requestsItem2"));
-        value.set("understand", declaration.get("understand"));
-        value.set("understandItem1", declaration.get("understandItem1"));
-        value.set("understandItem2", declaration.get("understandItem2"));
-        value.set("accept", declaration.get("accept"));
-        value.set("submitWarning", declaration.get("submitWarning"));
-        ccdDeclarationFormat.set("value", value);
-        return Optional.of(ccdDeclarationFormat);
-    }
-*/
-
 
     public Optional<JsonNode> addressMapper(JsonNode probateData, String fieldname) {
         Optional<JsonNode> ret = Optional.empty();

@@ -369,23 +369,26 @@ public class CoreCaseDataMapper {
             ObjectNode value = mapper.createObjectNode();
             ccdLegalStatement.set("applicant", legalStatement.get().get("applicant"));
             ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
+
             if (legalStatement.get().has("deceasedOtherNames")) {
                 ccdLegalStatement.set("deceasedOtherNames", legalStatement.get().get("deceasedOtherNames"));
             }
-            ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
+
             ccdLegalStatement.set("deceased", legalStatement.get().get("deceased"));
             ccdLegalStatement.set("deceasedEstateValue", legalStatement.get().get("deceasedEstateValue"));
             ccdLegalStatement.set("deceasedEstateLand", legalStatement.get().get("deceasedEstateLand"));
 
-            ArrayNode executorsNotApplying = mapper.createArrayNode();
-            legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
+            if (legalStatement.get().has("executorsNotApplying")) {
+                ArrayNode executorsNotApplying = mapper.createArrayNode();
+                legalStatement.get().get("executorsNotApplying").elements().forEachRemaining(executor -> mapExecNotApplying(executor).ifPresent(executorsNotApplying::add));
+                ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
+            }
 
-            ArrayNode executorsApplying = mapper.createArrayNode();
-            legalStatement.get().get("executorsApplying").elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
-
-
-            ccdLegalStatement.set("executorsNotApplying", executorsNotApplying);
-            ccdLegalStatement.set("executorsApplying", executorsApplying);
+            if (legalStatement.get().has("executorsApplying")) {
+                ArrayNode executorsApplying = mapper.createArrayNode();
+                legalStatement.get().get("executorsApplying").elements().forEachRemaining(executorApplying -> mapExecApplying(executorApplying).ifPresent(executorsApplying::add));
+                ccdLegalStatement.set("executorsApplying", executorsApplying);
+            }
 
             ccdLegalStatement.set("intro", legalStatement.get().get("intro"));
 

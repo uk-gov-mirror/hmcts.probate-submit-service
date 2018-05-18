@@ -2,7 +2,6 @@ package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,15 +39,13 @@ public class CoreCaseDataMapperTest {
 
     @Autowired
     private CoreCaseDataMapper coreCaseDataMapper;
-    private JsonNode sequenceNumber, ccdToken;
+    private JsonNode registryData, ccdToken;
     private Calendar submissonTimestamp;
     private String ccdEventId;
     private JsonNode submitdata;
 
     @NotNull
     private Map<String, String> fieldMap;
-    @NotNull
-    private Map<String, String> multiLineStringMap;
 
     public Map<String, String> getFieldMap() {
         return fieldMap;
@@ -69,17 +66,10 @@ public class CoreCaseDataMapperTest {
         this.monetaryValueMap = monetaryValueMap;
     }
 
-    public Map<String, String> getMultiLineStringMap() {
-        return multiLineStringMap;
-    }
-
-    public void setMultiLineStringMap(Map<String, String> multiLineStringMap) {
-        this.multiLineStringMap = multiLineStringMap;
-    }
 
     @Before
     public void setup() throws ParseException {
-        sequenceNumber = new LongNode(123L);
+        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
         submissonTimestamp = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS");
         submissonTimestamp.setTime(sdf.parse("2017-08-24 11:37:07.221"));
@@ -90,7 +80,7 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void createCcdDataTest() {
-        JsonNode mappedData = coreCaseDataMapper.createCcdData(submitdata, ccdEventId, ccdToken, submissonTimestamp, sequenceNumber);
+        JsonNode mappedData = coreCaseDataMapper.createCcdData(submitdata, ccdEventId, ccdToken, submissonTimestamp, registryData);
         assertEquals(mappedData.get("event").get("id").asText(), ccdEventId);
         assertEquals(mappedData.get("event_token"), ccdToken);
         assertNotNull (mappedData.get("data"));       
@@ -98,44 +88,17 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapDataTest() {
-        JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, sequenceNumber);  
+        JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, registryData);
+        JsonNode registry = registryData.get("registry");
         assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
-        assertTrue(mappedData.get("applicationID").equals(sequenceNumber));
+        assertTrue(mappedData.get("applicationID").equals(registryData.get("submissionReference")));
+        assertTrue(mappedData.get("registryLocation").equals(registry.get("name")));
         assertNotNull(mappedData.get("primaryApplicantForenames"));
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("executorsNotApplying"));
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("declaration"));
-    }
-
-    @Test
-    public void mapMultiLineStringsTest() {
-        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getMultiLineStringMap(), coreCaseDataMapper::multiLineStringMapper);
-        multiLineStringMap
-                .values()
-                .forEach(
-                        e -> assertTrue(e + " is not found in the mapped data", mappedData.containsKey(e))
-                );
-    }
-
-    @Test
-    public void mapMultiLineStringTest() {
-        Optional<JsonNode> statement = coreCaseDataMapper.multiLineStringMapper(submitdata, "declaration");
-        Assert.assertTrue(statement.isPresent());
-    }
-
-    @Test
-    public void mapNonExistentMultiLineStringTest() {
-        Optional<JsonNode> expected = Optional.empty();
-        Optional<JsonNode> mappedData = coreCaseDataMapper.multiLineStringMapper(submitdata, "noSuchField");
-        assertEquals(expected, mappedData);
-    }
-
-    @Test
-    public void mapUnmappableMultiLineStringTest() {
-        Optional<JsonNode> expected = Optional.empty();
-        Optional<JsonNode> mappedData = coreCaseDataMapper.multiLineStringMapper(submitdata, "ihtGrossValue");
-        assertEquals(expected, mappedData);
+        assertNotNull(mappedData.get("applicationType"));
     }
 
     @Test
@@ -212,9 +175,12 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapExecutorsTest() {
-        JsonNode expected = testUtils.getJsonNodeFromFile("ccdExecutors.json");
+        Map<String, JsonNode> expected = new HashMap<>();
+        expected.put("executorsNotApplying", testUtils.getJsonNodeFromFile("ccdNotApplyingExecutors.json"));
+        expected.put("executorsApplying", testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json"));
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getExecutorMap(), coreCaseDataMapper::executorsMapper);
-        assertEquals(expected, mappedData.get("executorsNotApplying"));
+        assertEquals(expected, mappedData);
+
     }
 
     @Test
@@ -223,15 +189,30 @@ public class CoreCaseDataMapperTest {
         Optional<JsonNode> mappedData = coreCaseDataMapper.executorsMapper(submitdata, "noSuchField");
         assertEquals(expected, mappedData);
     }
-    
-    @Test
-    public void mapExecutorTest() {
-        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdExecutors.json").at("/0"));
+
+    public void mapNotApplyingExecutorTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdNotApplyingExecutors.json").at("/0"));
         JsonNode executor = submitdata.at("/executorsNotApplying/0");
         Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
         assertEquals(expected, mappedData);
     }
-    
+
+    @Test
+    public void mapApplyingExecutorTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json").at("/0"));
+        JsonNode executor = submitdata.at("/executorsApplying/0");
+        Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
+        assertEquals(expected, mappedData);
+    }
+
+    @Test
+    public void mapApplyingExecutorWithNewNameTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json").at("/1"));
+        JsonNode executor = submitdata.at("/executorsApplying/1");
+        Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
+        assertEquals(expected, mappedData);
+    }
+
     @Test
     public void mapDatesTest() {
         Map<String, JsonNode> expectedDates = new HashMap<>();
@@ -287,6 +268,35 @@ public class CoreCaseDataMapperTest {
         Optional<JsonNode> mappedData = coreCaseDataMapper.mapAlias(alias);
         assertEquals(expected, mappedData);
     }
+
+    @Test
+    public void mapDeclarationTest() {
+        JsonNode expected = testUtils.getJsonNodeFromFile("ccdDeclaration.json");
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getDeclarationMap(), coreCaseDataMapper::declarationMapper);
+        assertEquals(expected, mappedData.get("declaration"));
+    }
+
+    @Test
+    public void mapNonExistentDeclarationTest() {
+        Optional<JsonNode> expected = Optional.empty();
+        Optional<JsonNode> mappedData = coreCaseDataMapper.declarationMapper(submitdata, "noSuchField");
+        assertEquals(expected, mappedData);
+    }
+
+    @Test
+    public void mapLegalStatementTest() {
+        JsonNode expected = testUtils.getJsonNodeFromFile("ccdLegalStatement.json");
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getLegalStatementMap(), coreCaseDataMapper::legalStatementMapper);
+        assertEquals(expected, mappedData.get("legalStatement"));
+    }
+
+    @Test
+    public void mapNonExistentLegalStatementTest() {
+        Optional<JsonNode> expected = Optional.empty();
+        Optional<JsonNode> mappedData = coreCaseDataMapper.legalStatementMapper(submitdata, "noSuchField");
+        assertEquals(expected, mappedData);
+    }
+
 
     @Test
     public void mapAddressesTest() {

@@ -33,11 +33,13 @@ public class MailMessageBuilderTest {
 
     private MailMessageBuilder mailMessageBuilder;
     private Calendar submissonTimestamp;
+    private JsonNode registryData;
     
     @Before
     public void setUp() throws Exception {
         mailMessageBuilder = new MailMessageBuilder(templateEngine);
         submissonTimestamp = Calendar.getInstance();
+        registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
     }
 
     @Test
@@ -47,13 +49,14 @@ public class MailMessageBuilderTest {
         messageProperties.put("sender", "sender");
         messageProperties.put("recipient", "recipient");
         JsonNode emailData = testUtils.getJsonNodeFromFile("formPayload.json");
+        JsonNode registry = registryData.get("registry");
 
-        MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, Long.parseLong("123456789"), messageProperties, submissonTimestamp);
+        MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registry, messageProperties, submissonTimestamp);
         String mailContent = mimeMessage.getContent().toString();
         System.out.println(mailContent);
         assertThat(mimeMessage.getSubject(), is("subject"));
         assertThat(mimeMessage.getFrom(), arrayContaining(new InternetAddress("sender")));
-        assertThat(mimeMessage.getRecipients(Message.RecipientType.TO), arrayContaining(new InternetAddress("recipient")));
+        assertThat(mimeMessage.getRecipients(Message.RecipientType.TO), arrayContaining(new InternetAddress("oxford@email.com")));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantFirstName").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantLastName").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/applicantAddress").asText()));

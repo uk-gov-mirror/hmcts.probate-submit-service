@@ -23,31 +23,35 @@ public class SubmitService {
     private MailClient mailClient;
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
+    private SequenceService sequenceService;
     @Value("${services.coreCaseData.enabled}")
     private boolean coreCaseDataEnabled;
 
     @Autowired
-    public SubmitService(MailClient mailClient, PersistenceClient persistenceClient, CoreCaseDataClient coreCaseDataClient) {
+    public SubmitService(MailClient mailClient, PersistenceClient persistenceClient,
+                         CoreCaseDataClient coreCaseDataClient, SequenceService sequenceService) {
         this.mailClient = mailClient;
         this.persistenceClient = persistenceClient;
         this.coreCaseDataClient = coreCaseDataClient;
+        this.sequenceService = sequenceService;
     }
 
-    public String submit(JsonNode submitData, String userId, String authorization) {
+    public JsonNode submit(JsonNode submitData, String userId, String authorization) {
         String emailId = submitData.at("/submitdata/applicantEmail").asText();
-        JsonNode formData = persistenceClient.loadFormData(emailId);
+        JsonNode formData = persistenceClient.loadFormDataById(emailId);
         if (formData.get("submissionReference").asLong() == 0) {
             String message = "Application submitted, payload version: " +  submitData.at("/submitdata/payloadVersion").asText() + ", number of executors: " + submitData.at("/submitdata/noOfExecutors").asText();
             JsonNode persistenceResponse = persistenceClient.saveSubmission(submitData);
-            JsonNode sequenceNumber = persistenceResponse.get("id");
-            Calendar submissonTimestamp = Calendar.getInstance();
-            mailClient.execute(submitData, sequenceNumber.asLong(), submissonTimestamp);
+            JsonNode submissionReference = persistenceResponse.get("id");
+            JsonNode registryData = sequenceService.nextRegistry(submissionReference.asLong());
+            Calendar submissionTimestamp = Calendar.getInstance();
+            mailClient.execute(submitData, registryData, submissionTimestamp);
             logger.info(append("tags","Analytics"), message);
-            persistenceClient.updateFormData(emailId, sequenceNumber.asLong(), formData);
+            persistenceClient.updateFormData(emailId, submissionReference.asLong(), formData);
             if (coreCaseDataEnabled) {
                 try {
                     JsonNode ccdStartCaseResponse = coreCaseDataClient.createCase(userId, authorization);
-                    coreCaseDataClient.saveCase(submitData.get("submitdata"), userId, authorization, ccdStartCaseResponse, submissonTimestamp, sequenceNumber);
+                    coreCaseDataClient.saveCase(submitData.get("submitdata"), userId, authorization, ccdStartCaseResponse, submissionTimestamp, registryData);
                 } catch (HttpClientErrorException e) {
                     logger.error ("Exception while talking to ccd: ", e);
                     logger.error(e.getMessage());
@@ -57,14 +61,23 @@ public class SubmitService {
                     logger.error(e.getMessage());
                 }
             }
-            return sequenceNumber.asText();
+            return registryData;
         }
-        return new TextNode(DUPLICATE_SUBMISSION).toString();
+        return new TextNode(DUPLICATE_SUBMISSION);
     }
 
-    public String resubmit(long sequenceId) {
-        JsonNode resubmitData = persistenceClient.loadSubmission(sequenceId);
-        Calendar submissonTimestamp = Calendar.getInstance();
-        return mailClient.execute(resubmitData, sequenceId, submissonTimestamp);
+    public String resubmit(long submissionId) {
+        try {
+            JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
+            JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
+            JsonNode registryData = sequenceService.populateRegistryResubmitData(submissionId, formData);
+            Calendar submissionTimestamp = Calendar.getInstance();
+            logger.info("Application re-submitted, registry data payload: " + registryData);
+            return mailClient.execute(resubmitData, registryData, submissionTimestamp);
+        }
+        catch (HttpClientErrorException e) {
+            logger.error("Invalid Submission Reference Exception: ", e);
+            return "Invalid submission reference entered.  Please enter a valid submission reference.";
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class PersistenceClient {
 
     @Value("${services.persistence.submissions.url}")
     private String submissionsPersistenceUrl;
+
+    @Value("${services.persistence.sequenceNumber.url}")
+    private String sequenceNumberPersistenceUrl;
 
     private RestTemplate restTemplate;
     private PersistenceEntityBuilder builder;
@@ -43,8 +47,15 @@ public class PersistenceClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode loadFormData(String emailId) {
+    public JsonNode loadFormDataById(String emailId) {
         HttpEntity<JsonNode> loadResponse = restTemplate.getForEntity(formDataPersistenceUrl + "/" + emailId, JsonNode.class);
+        return loadResponse.getBody();
+    }
+
+    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
+    public JsonNode loadFormDataBySubmissionReference(long submissionReference) {
+        HttpEntity<JsonNode> loadResponse =
+                restTemplate.getForEntity(formDataPersistenceUrl + "/search/findBySubmissionReference?submissionReference=" + submissionReference, JsonNode.class);
         return loadResponse.getBody();
     }
 
@@ -55,5 +66,11 @@ public class PersistenceClient {
         persistenceRequestBody.set("formdata", formData.get("formdata"));
         HttpEntity<JsonNode> persistenceRequest = builder.createPersistenceRequest(persistenceRequestBody);
         restTemplate.put(formDataPersistenceUrl + "/" + emailId, persistenceRequest);
+    }
+
+    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
+    public Long getNextSequenceNumber(String registryName){
+        ResponseEntity<Long> response = restTemplate.getForEntity(sequenceNumberPersistenceUrl + "/" + registryName, Long.class);
+        return response.getBody();
     }
 }

@@ -1,5 +1,23 @@
-# Probate submit service 
+# Probate Submit Service 
 Microservice to handle submissions to probate registries
+
+## Getting Started
+### Prerequisites
+- Java 8
+- Gradle
+- Docker
+
+### Running the application
+#### Building and Running the Submit Service
+Install dependencies and build the service by executing the following command:  
+```
+$ ./gradlew clean build
+```
+
+Once the build has completed, you will find the new *.jar* in `build/libs`. You can run the *.jar* with the following command:  
+```
+$ java -jar build/libs/submit-service-0.0.1.jar
+```
 
 ## Developing
 

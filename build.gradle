@@ -23,7 +23,7 @@ apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 
 group = 'uk.gov.hmcts.probate'
-version = "3.0.0"
+version = "4.1.0"
 mainClassName = 'uk.gov.hmcts.probate.SubmitApplication'
 
 sourceCompatibility = 1.8

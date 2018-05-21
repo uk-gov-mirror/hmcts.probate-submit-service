@@ -90,7 +90,7 @@ module "probate-submit-service" {
    
     java_app_name = "${var.microservice}"
     LOG_LEVEL = "${var.log_level}"
-    ROOT_APPENDER = "JSON_CONSOLE"
+    //ROOT_APPENDER = "JSON_CONSOLE" //Remove json logging
 
   }
 }

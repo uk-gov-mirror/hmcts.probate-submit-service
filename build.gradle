@@ -90,8 +90,8 @@ repositories {
 }
 
 def versions = [
+    logging: '2.2.1'
 ]
-logging: '2.2.1'
 
 dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'

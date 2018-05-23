@@ -16,11 +16,18 @@ plugins {
   id 'org.springframework.boot' version '1.5.8.RELEASE'
   id 'org.owasp.dependencycheck' version '3.0.2'
   id 'com.github.ben-manes.versions' version '0.15.0'
+  id 'com.gorylenko.gradle-git-properties' version '1.4.21'
 }
 
 apply plugin: 'org.sonarqube'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
+
+gitProperties {
+    keys = ['git.commit.id','git.commit.time']
+    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+    dateFormatTimeZone = "GMT"
+}
 
 group = 'uk.gov.hmcts.probate'
 version = "4.1.0"

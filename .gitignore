@@ -3,9 +3,14 @@
 target/
 .sonar
 .gradle
+.settings
+.project
+.classpath
 build/
 sonar-project.properties
+git.properties
 nbactions.xml
 /nbproject/
 nb-configuration.xml
 out/
+bin/

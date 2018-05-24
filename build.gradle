@@ -106,16 +106,20 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry'
-  compile group: 'org.springframework.security', name: 'spring-security-config'
-  
+
+    
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
   compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
   
-  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'  
+  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
+//  testCompile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.3.RELEASE'
+//  testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '4.2.3.RELEASE'
+  testCompile group: 'org.springframework.security', name: 'spring-security-config'
   testCompile group: 'org.springframework.security', name: 'spring-security-test'
+  
 }
 
 compileJava {

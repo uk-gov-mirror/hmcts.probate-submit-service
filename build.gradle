@@ -107,6 +107,10 @@ dependencies {
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
 
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
+  testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+  smokeTestCompile sourceSets.main.runtimeClasspath
+  smokeTestCompile sourceSets.test.runtimeClasspath
 }
 
 compileJava {
@@ -150,6 +154,13 @@ sourceSets {
     resources.srcDir file('src/smokeTest/resources')
   }
 }
+
+task smoke(type: Test) {
+  description = "Runs Smoke Tests"
+  testClassesDirs = sourceSets.smokeTest.output.classesDirs
+  classpath = sourceSets.smokeTest.runtimeClasspath
+}
+
 
 task printVersion {
   doLast {

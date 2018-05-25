@@ -4,6 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:src/test/resources/application.properties")
+@PropertySource("file:src/smokeTest/resources/application.properties")
 public class SmokeTestConfiguration {
 }

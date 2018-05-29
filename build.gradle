@@ -131,7 +131,7 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
-  compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
+  compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
 
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'

@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
   id 'application'
-  id 'org.springframework.boot' version '1.5.8.RELEASE'
+  id 'org.springframework.boot' version '1.5.13.RELEASE'
   id 'org.owasp.dependencycheck' version '3.1.2'
   id 'com.github.ben-manes.versions' version '0.15.0'
 }
@@ -50,10 +50,6 @@ tasks.withType(FindBugs) {
   }
 }
 
-dependencyCheck {
-  suppressionFiles = ['dependency-check-suppressions.xml']
-}
-
 findbugs{
   ignoreFailures=true
   reportLevel = "low"
@@ -69,12 +65,10 @@ sonarqube {
 
 test.finalizedBy jacocoTestReport
 
-// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
-  // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-  // range of 0-10 fails the build, anything greater and it doesn't fail the build
   failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-  suppressionFile = 'dependency-check-suppressions.xml'
+  suppressionFile = 'config/owasp/suppressions.xml'
+  scanConfigurations = ['compile']
 }
 
 sourceSets {
@@ -137,7 +131,7 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
-  compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
+  compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
 
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'

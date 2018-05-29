@@ -28,4 +28,13 @@
     <cve>CVE-2017-6056</cve>
   </suppress>
 
+  <suppress>
+    <notes><![CDATA[
+   file name: ognl-3.0.8.jar
+   we are not using struts
+   ]]></notes>
+    <gav regex="true">^ognl:ognl:.*$</gav>
+    <cve>CVE-2016-3093</cve>
+  </suppress>
+
 </suppressions>

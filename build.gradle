@@ -50,10 +50,6 @@ tasks.withType(FindBugs) {
   }
 }
 
-dependencyCheck {
-  suppressionFiles = ['dependency-check-suppressions.xml']
-}
-
 findbugs{
   ignoreFailures=true
   reportLevel = "low"

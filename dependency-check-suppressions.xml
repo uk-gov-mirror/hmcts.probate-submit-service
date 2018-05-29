@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
 
-  <!--
-
-  Add dependency check suppression rules here, in accordance with
-  https://jeremylong.github.io/DependencyCheck/general/suppression.html
-
-  Example:
+  <suppress>
+    <notes><![CDATA[
+   file name: tomcat-annotations-api-8.5.31.jar
+   https://github.com/spring-projects/spring-boot/issues/11110
+   ]]></notes>
+    <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
+    <cve>CVE-2016-5425</cve>
+  </suppress>
 
   <suppress>
     <notes><![CDATA[
-      Does not apply as we're not using the XmlMapper.
-    ]]></notes>
-    <gav regex="true">^com\.fasterxml\.jackson\.(core|datatype|module):jackson-.*:.*$</gav>
-    <cve>CVE-2016-7051</cve>
+   file name: tomcat-annotations-api-8.5.31.jar
+   https://github.com/spring-projects/spring-boot/issues/11110
+   ]]></notes>
+    <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
+    <cve>CVE-2016-6325</cve>
   </suppress>
 
-  -->
+  <suppress>
+    <notes><![CDATA[
+   file name: tomcat-annotations-api-8.5.31.jar
+   https://github.com/spring-projects/spring-boot/issues/11110
+   ]]></notes>
+    <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
+    <cve>CVE-2017-6056</cve>
+  </suppress>
 
 </suppressions>

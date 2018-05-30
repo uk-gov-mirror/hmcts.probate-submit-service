@@ -20,7 +20,7 @@ public class SubmitController {
     }
 
     @RequestMapping(path = "/submit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON)
-    public ResponseEntity<String> submit(@RequestBody JsonNode submitData, @RequestHeader("UserId") String userId, @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<JsonNode> submit(@RequestBody JsonNode submitData, @RequestHeader("UserId") String userId, @RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(submitService.submit(submitData, userId, authorization), HttpStatus.OK);
     }
 

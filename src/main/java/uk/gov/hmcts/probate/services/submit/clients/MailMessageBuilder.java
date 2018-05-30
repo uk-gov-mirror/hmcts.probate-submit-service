@@ -23,24 +23,24 @@ class MailMessageBuilder {
         this.templateEngine = templateEngine;
     }
 
-    public MimeMessage buildMessage(JsonNode submitData, long sequenceNumber, Properties messageProperties,  Calendar submissonTimestamp) throws MessagingException {
+    public MimeMessage buildMessage(JsonNode submitData, JsonNode registryData, Properties messageProperties,  Calendar submissonTimestamp) throws MessagingException {
         MimeMessage mailMessage = new MimeMessage(Session.getDefaultInstance(messageProperties));
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
         messageHelper.setSubject(messageProperties.getProperty("subject"));
         messageHelper.setFrom(messageProperties.getProperty("sender"));
-        messageHelper.setTo(messageProperties.getProperty("recipient"));
+        messageHelper.setTo(registryData.get("email").asText());
 
-        String messageText = templateEngine.process("email-template", createTemplateContext(submitData, sequenceNumber, submissonTimestamp));
+        String messageText = templateEngine.process("email-template", createTemplateContext(submitData, registryData.get("sequenceNumber").asLong(), submissonTimestamp));
 
         messageHelper.setText(messageText, true);
         return mailMessage;
     }
 
-    private Context createTemplateContext(JsonNode submitData, long sequenceNumber, Calendar submissonTimestamp) {
+    private Context createTemplateContext(JsonNode submitData, long registrySequenceNumber, Calendar submissonTimestamp) {
         Context ctx = new Context(Locale.getDefault());
         ctx.setVariables(getDataMap(submitData));
         ctx.setVariable("submissionDate", submissonTimestamp);
-        ctx.setVariable("sequenceNumber", sequenceNumber);
+        ctx.setVariable("registrySequenceNumber", registrySequenceNumber);
         return ctx;
     }
 

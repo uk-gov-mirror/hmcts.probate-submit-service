@@ -54,16 +54,16 @@
         },
         "declaration": {
             "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
-            "confirm": "I confirm that I will administer the estate of deceased person, according to law. I will:",
-            "requests": "If the probate registry (court) asks me to do so, I will:",
-            "understand": "I understand that:",
+            "confirm": "We confirm that we will administer the estate of deceased person, according to law. We will:",
+            "requests": "If the probate registry (court) asks us to do so, we will:",
+            "understand": "We understand that:",
             "confirmItem1": "collect the whole estate",
             "confirmItem2": "keep full details (an inventory) of the estate",
             "confirmItem3": "keep a full account of how the estate has been distributed",
             "requestsItem1": "provide the full details of the estate and how it has been distributed",
             "requestsItem2": "return the grant of probate to the court",
-            "understandItem1": "my application will be rejected if I do not provide information (if asked)",
-            "understandItem2": "criminal proceedings for fraud may be brought against me if I am found to have been deliberately untruthful or dishonest"
+            "understandItem1": "our application will be rejected if we do not provide information (if asked)",
+            "understandItem2": "criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest"
         },
         "noOfApplicants": 3,
         "noOfExecutors": 7,
@@ -103,7 +103,7 @@
                 "isDead": false,
                 "address": "exec6_address",
                 "mobile":"07963456421",
-                "executorEmail": "zcaphkk@ucl.ac.uk",
+                "email": "zcaphkk@ucl.ac.uk",
                 "hasOtherName":true,
                 "currentName": "Executor6 other name"
 
@@ -113,7 +113,7 @@
                 "isDead": false,
                 "address": "exec7_address",
                 "mobile":"07963456421",
-                "executorEmail": "zcaphkk@ucl.ac.uk",
+                "email": "zcaphkk@ucl.ac.uk",
                 "hasOtherName":false
             }],
         "softStop": "softStop"

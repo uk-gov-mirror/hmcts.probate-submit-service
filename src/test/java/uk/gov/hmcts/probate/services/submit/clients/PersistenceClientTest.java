@@ -27,7 +27,7 @@ public class PersistenceClientTest {
     private PersistenceClient persistenceClient;
     @Mock
     private RestTemplate restTemplate;
-
+    
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -64,19 +64,30 @@ public class PersistenceClientTest {
         HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
         when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
 
-        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"),new TextNode("requestBody"));
+        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
 
         verify(restTemplate, times(1)).put(endsWith("/emailId"), eq(persistenceReq));
     }
 
     @Test
-    public void loadFormDataSuccessTest() {
+    public void loadFormDataByIdSuccessTest() {
         ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("response"), HttpStatus.CREATED);
         doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
 
-        JsonNode actualResponse = persistenceClient.loadFormData("emailId");
+        JsonNode actualResponse = persistenceClient.loadFormDataById("emailId");
 
         verify(restTemplate, times(1)).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
+        assertEquals(actualResponse, mockResponse.getBody());
+    }
+
+    @Test
+    public void loadFormDataBySubmissionReferenceSuccessTest() {
+        ResponseEntity<JsonNode> mockResponse = new ResponseEntity<>(new TextNode("response"), HttpStatus.CREATED);
+        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/search/findBySubmissionReference?submissionReference=1234"), eq(JsonNode.class));
+
+        JsonNode actualResponse = persistenceClient.loadFormDataBySubmissionReference(1234);
+
+        verify(restTemplate, times(1)).getForEntity(endsWith("/search/findBySubmissionReference?submissionReference=1234"), eq(JsonNode.class));
         assertEquals(actualResponse, mockResponse.getBody());
     }
 
@@ -87,5 +98,15 @@ public class PersistenceClientTest {
         persistenceClient.saveSubmission(NullNode.getInstance());
 
         verify(restTemplate, times(1)).postForEntity(anyString(), any(), any());
+    }
+
+    @Test
+    public void getNextSequenceNumber(){
+        ResponseEntity<Long> mockResponse = new ResponseEntity<>(1234l, HttpStatus.CREATED);
+        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/RegistryName"), eq(Long.class));
+
+        Long result = persistenceClient.getNextSequenceNumber("RegistryName");
+        verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
+        assertEquals(result, mockResponse.getBody());
     }
 }

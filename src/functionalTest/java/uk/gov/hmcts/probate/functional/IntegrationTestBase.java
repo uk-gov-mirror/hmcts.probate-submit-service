@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.functional;
 
-import io.restassured.RestAssured;
-import io.restassured.specification.RequestSpecification;
+
 import net.thucydides.junit.spring.SpringIntegration;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
@@ -20,7 +19,6 @@ public abstract class IntegrationTestBase {
     String submitServiceUrl;
     String persistenceServiceUrl;
 
-    private static String SESSION_ID = "tom@email.com";
 
     @Autowired
     public void submitServiceConfiguration(@Value("${probate.submit.url}") String submitServiceUrl,
@@ -36,18 +34,4 @@ public abstract class IntegrationTestBase {
         this.springIntegration = new SpringIntegration();
     }
 
-    void populateFormDataTable() {
-        RestAssured.baseURI = persistenceServiceUrl;
-        RequestSpecification request = RestAssured.given();
-
-        request.header("Content-Type", "application/json");
-        request.header("Session-Id", SESSION_ID);
-        request.body(utils.getJsonFromFile("formData.json"));
-        request.post(persistenceServiceUrl + "/formdata");
-
-        request.header("Content-Type", "application/json");
-        request.header("Session-Id", SESSION_ID);
-        request.body(utils.getJsonFromFile("submitData.json"));
-        request.post(persistenceServiceUrl + "/submission");
-    }
 }

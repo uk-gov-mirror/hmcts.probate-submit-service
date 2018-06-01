@@ -7,7 +7,7 @@ String component = "submit-service"
 
 List<LinkedHashMap<String, Object>> secrets = [
     secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
-    secret('probateBusinessUrl', 'TEST_PERSISTENCE_URL')
+    secret('probateBusinessUrl', 'TEST_BUSINESS_URL')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {

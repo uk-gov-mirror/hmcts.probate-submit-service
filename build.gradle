@@ -126,6 +126,14 @@ repositories {
   maven { url "http://repo1.maven.org/maven2/" }
   maven { url "https://plugins.gradle.org/m2/" }
   maven { url  "https://dl.bintray.com/hmcts/hmcts-maven" }
+  maven { url 'https://repo.spring.io/libs-milestone' }
+  maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+processResources {
+  from ('src/lib/AI-Agent.xml') {
+    into 'lib'
+  }
 }
 
 def versions = [
@@ -142,6 +150,7 @@ dependencies {
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
 

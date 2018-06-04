@@ -21,7 +21,7 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 @RunWith(MockitoJUnitRunner.class)
 public class SubmitHealthIndicatorTest {
 
-    private static final String URL = "http://gggg.com";
+    private static final String URL = "http://url.com";
 
     @Mock
     private RestTemplate mockRestTemplate;

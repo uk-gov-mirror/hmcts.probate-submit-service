@@ -29,7 +29,7 @@ public class SubmitHealthIndicatorTest {
     @Mock
     private ResponseEntity<String> mockResponseEntity;
     
-    private SubmitHealthIndicator submitHealthIndicator = new SubmitHealthIndicator(URL, mockRestTemplate);
+    private SubmitHealthIndicator submitHealthIndicator;
     
     @Before
     public void setUp() {

@@ -155,7 +155,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     private void validateUpdateFormDataSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .body(utils.getJsonFromFile("formdata.json"))
+                .body(utils.getJsonFromFile("formData.json"))
                 .when().put(persistenceServiceUrl + "/formdata/" + SESSION_ID)
                 .then().assertThat().statusCode(200);
     }

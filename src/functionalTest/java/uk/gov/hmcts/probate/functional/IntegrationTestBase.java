@@ -1,8 +1,9 @@
 package uk.gov.hmcts.probate.functional;
 
-import io.restassured.RestAssured;
-import io.restassured.specification.RequestSpecification;
 import net.thucydides.junit.spring.SpringIntegration;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public abstract class IntegrationTestBase {
 
     String submitServiceUrl;
     String persistenceServiceUrl;
+    String submissionId;
 
     private static String SESSION_ID = "tom@email.com";
 
@@ -48,6 +50,7 @@ public abstract class IntegrationTestBase {
         request.header("Content-Type", "application/json");
         request.header("Session-Id", SESSION_ID);
         request.body(utils.getJsonFromFile("submitData.json"));
-        request.post(persistenceServiceUrl + "/submission");
+        Response response = request.post(persistenceServiceUrl + "/submissions");
+        submissionId = response.jsonPath().getString("id");
     }
 }

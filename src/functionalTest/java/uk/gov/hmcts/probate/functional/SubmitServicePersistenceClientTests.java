@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     private static String SESSION_ID = "tom@email.com";
-    private static long SUBMISSION_REFERENCE = 1000000000;
+    private static long SUBMISSION_REFERENCE = 123;
     private static boolean INITIALISED = false;
 
     @Before
@@ -38,12 +38,12 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     @Test
     public void loadSubmissionSuccess() {
-        validateLoadSubmissionSuccess(59);
+        validateLoadSubmissionSuccess(submissionId);
     }
 
     @Test
     public void loadSubmissionFailure() {
-        validateLoadSubmissionFailure(1, 404);
+        validateLoadSubmissionFailure(999, 404);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     @Test
     public void loadFormDataBySubmissionReferenceFailure() {
-        validateLoadFormDataBySubmissionReferenceFailure(1, 404, "Error");
+        validateLoadFormDataBySubmissionReferenceFailure(999, 404);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
         response.then().assertThat().statusCode(errorCode);
     }
 
-    private void validateLoadSubmissionSuccess(long submissionId) {
+    private void validateLoadSubmissionSuccess(String submissionId) {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
                 .when().get(persistenceServiceUrl + "/submissions/" + submissionId)
@@ -143,7 +143,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
                 .then().assertThat().statusCode(200);
     }
 
-    private void validateLoadFormDataBySubmissionReferenceFailure(long submissionReference, int errorCode, String errorMsg) {
+    private void validateLoadFormDataBySubmissionReferenceFailure(long submissionReference, int errorCode) {
         Response response = SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
                 .when().get(persistenceServiceUrl + "/formdata/search/findBySubmissionReference?submissionReference=" + submissionReference)
@@ -155,7 +155,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     private void validateUpdateFormDataSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .body(utils.getJsonFromFile("formdata.json"))
+                .body(utils.getJsonFromFile("formData.json"))
                 .when().put(persistenceServiceUrl + "/formdata/" + SESSION_ID)
                 .then().assertThat().statusCode(200);
     }

@@ -105,7 +105,7 @@
     "applicantEmail" : "tom@email.com",
     "payloadVersion" : "4.1.0"
   },
-  "submissionReference" : 1000000000,
+  "submissionReference" : 123,
   "_links" : {
     "self" : {
       "href" : "http://localhost:8282/formdata/5D4l9o38y-3tapBqAXTOsrNQKYPBlXv4"

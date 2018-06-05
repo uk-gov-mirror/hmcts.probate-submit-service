@@ -16,9 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class SubmitHealthIndicator implements HealthIndicator {
 	
-	private final static String EXCEPTION_KEY = "exception";
-	private final static String MESSAGE_KEY = "message";
-    private final static String URL_KEY = "url";
+	private final static String ERROR_KEY = "error";
 
     private final String url;
     private RestTemplate restTemplate;
@@ -28,41 +26,35 @@ public class SubmitHealthIndicator implements HealthIndicator {
     	ResponseEntity<String> responseEntity;
 
         try {
+        	log.debug("Attempting to access health endpoint: " + url + "/health");
             responseEntity = restTemplate.getForEntity(url + "/health", String.class);
-
         } catch (ResourceAccessException rae) {
             log.error(rae.getMessage(), rae);
-            return getHealthWithDownStatus(url, rae.getMessage(), "ResourceAccessException");
+            return getHealthWithDownStatus("Connection failed with ResourceAccessException");
         } catch (HttpStatusCodeException hsce) {
             log.error(hsce.getMessage(), hsce);
-            return getHealthWithDownStatus(url, hsce.getMessage(),
-                    "HttpStatusCodeException - HTTP Status: " + hsce.getStatusCode().value());
+            return getHealthWithDownStatus("HTTP Status: " + hsce.getStatusCode().value());
         } catch (UnknownHttpStatusCodeException uhsce) {
             log.error(uhsce.getMessage(), uhsce);
-            return getHealthWithDownStatus(url, uhsce.getMessage(), "UnknownHttpStatusCodeException - " + uhsce.getStatusText());
+            return getHealthWithDownStatus("Connection failed with UnknownHttpStatusCodeException");
         }
 
         if (responseEntity != null && !responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-        	System.out.println("stage BAD");
-            return getHealthWithDownStatus(url, "HTTP Status code not 200", "HTTP Status: " + responseEntity.getStatusCodeValue());
+            return getHealthWithDownStatus("HTTP Status: " + responseEntity.getStatusCodeValue());
         }
 
-        return getHealthWithUpStatus(url);
+        return getHealthWithUpStatus();
 
     }
 
-    private Health getHealthWithUpStatus(String url) {
+    private Health getHealthWithUpStatus() {
         return Health.up()
-                .withDetail(URL_KEY, url)
-                .withDetail(MESSAGE_KEY, "HTTP Status OK")
                 .build();
     }
 
-    private Health getHealthWithDownStatus(String url, String message, String status) {
+    private Health getHealthWithDownStatus(String error) {
         return Health.down()
-                .withDetail(URL_KEY, url)
-                .withDetail(MESSAGE_KEY, message)
-                .withDetail(EXCEPTION_KEY, status)
+                .withDetail(ERROR_KEY, error)
                 .build();
     }
 }

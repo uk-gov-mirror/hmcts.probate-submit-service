@@ -206,6 +206,14 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
+    public void mapMissingExecutorApplyingFieldTest() {
+        Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdNotApplyingExecutors.json").at("/4"));
+        JsonNode executor = submitdata.at("/executorsNotApplying/4");
+        Optional<JsonNode> mappedData = coreCaseDataMapper.mapExecutor(executor);
+        assertEquals(expected, mappedData);
+    }
+
+    @Test
     public void mapApplyingExecutorWithNewNameTest() {
         Optional<JsonNode> expected = Optional.of(testUtils.getJsonNodeFromFile("ccdApplyingExecutors.json").at("/1"));
         JsonNode executor = submitdata.at("/executorsApplying/1");

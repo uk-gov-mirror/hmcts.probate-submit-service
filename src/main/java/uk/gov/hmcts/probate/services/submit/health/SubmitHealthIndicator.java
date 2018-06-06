@@ -43,7 +43,6 @@ public class SubmitHealthIndicator implements HealthIndicator {
         }
 
         if (responseEntity != null && !responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-        	System.out.println("stage BAD");
             return getHealthWithDownStatus(url, "HTTP Status code not 200", "HTTP Status: " + responseEntity.getStatusCodeValue());
         }
 

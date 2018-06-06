@@ -75,7 +75,7 @@ variable "ccd_url" {
 }
 
 variable "ccd_enabled" {
-  default = "false"
+  default = "true"
 }
 
 variable "probate_mail_subject" {

@@ -94,5 +94,7 @@ variable "log_level" {
   default = "INFO"
 }
 
-
+variable "capacity" {
+  default = "1"
+}
 

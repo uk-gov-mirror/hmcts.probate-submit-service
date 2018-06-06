@@ -27,6 +27,13 @@ gitProperties {
     dateFormatTimeZone = "GMT"
 }
 
+gitProperties {
+    gitPropertiesDir = new File("${project.rootDir}/src/main/resources/uk/gov/hmcts/probate/services/submit")
+    keys = ['git.commit.id','git.commit.time']
+    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+    dateFormatTimeZone = "GMT"
+}
+
 group = 'uk.gov.hmcts.probate'
 version = "4.1.0"
 mainClassName = 'uk.gov.hmcts.probate.SubmitApplication'
@@ -147,6 +154,7 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry'
 
+    
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
@@ -156,6 +164,8 @@ dependencies {
   compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
   
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
+  testCompile group: 'org.springframework.security', name: 'spring-security-config'
+  testCompile group: 'org.springframework.security', name: 'spring-security-test'
   
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
@@ -169,7 +179,6 @@ dependencies {
 
   testSmokeCompile sourceSets.main.runtimeClasspath
   testSmokeCompile sourceSets.test.runtimeClasspath
-
 }
 
 compileJava {

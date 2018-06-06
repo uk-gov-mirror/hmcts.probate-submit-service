@@ -46,9 +46,7 @@
   services:
     persistence:
       baseUrl: http://localhost:8282
-      #service.url:  ${probate_persistence_service_url}:${probate_persistence_service_port}/formdata  #Till byron fixed side way communcation of app
       formdata.url:  ${services.persistence.baseUrl}/formdata
-      #service.url:  ${probate_persistence_service_url}:${probate_persistence_service_port}/submissions  #Till byron fixed side way communcation of app
       submissions.url:  ${services.persistence.baseUrl}/submissions
       sequenceNumber.url:  ${services.persistence.baseUrl}/sequence-number
 
@@ -158,4 +156,3 @@
         Line 2 Bham
         Line 3 Bham
         PostCode Bham
-

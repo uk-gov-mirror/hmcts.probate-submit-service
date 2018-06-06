@@ -58,8 +58,7 @@
       enabled: ${USE_CCD:false}
 
   auth.provider.service.client:
-    #baseUrl: http://localhost:4502
-    baseUrl: http://betadevaccidams2slb.reform.hmcts.net
+    baseUrl: http://localhost:4502
     microservice: 'probate_backend'
     key: dummyKey
     tokenTimeToLiveInSeconds: '900'

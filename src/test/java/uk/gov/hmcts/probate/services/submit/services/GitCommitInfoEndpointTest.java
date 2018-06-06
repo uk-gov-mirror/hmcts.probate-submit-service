@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.services;
 
 import static org.junit.Assert.assertEquals;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -43,6 +45,7 @@ public class GitCommitInfoEndpointTest {
     @Test
     public void testGitCommitInfoEndpoint()
             throws Exception {
+
     	MvcResult result = this.mvc.perform(MockMvcRequestBuilders.get("/info"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();	
     	String actualInfoEndpointJsonResponse = result.getResponse().getContentAsString(); 
@@ -54,6 +57,7 @@ public class GitCommitInfoEndpointTest {
     	
     	assertEquals("Test commit id response is correct.",EXPECTED_COMMIT_ID_INFO_RESPONSE, commitObject.getAsString("id"));
     	assertEquals("Test commit time response is correct.",EXPECTED_COMMIT_TIME_INFO_RESPONSE, commitObject.getAsString("time"));
+
     }
 }
 

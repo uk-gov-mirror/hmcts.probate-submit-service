@@ -164,8 +164,6 @@ dependencies {
   compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
   
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
-  testCompile group: 'org.springframework.security', name: 'spring-security-config'
-  testCompile group: 'org.springframework.security', name: 'spring-security-test'
   
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'

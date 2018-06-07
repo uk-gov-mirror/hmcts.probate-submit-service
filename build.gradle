@@ -1,26 +1,38 @@
 buildscript {
-  repositories {
-    mavenLocal()
-    maven { url "http://artifactory.reform.hmcts.net/artifactory/libs-release" }
-    maven { url "http://repo1.maven.org/maven2/" }
-    maven { url "https://plugins.gradle.org/m2/" }
-  }
   dependencies {
     classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.5'
+    classpath("net.serenity-bdd:serenity-gradle-plugin:1.5.2")
   }
   
 }
 
 plugins {
   id 'application'
-  id 'org.springframework.boot' version '1.5.8.RELEASE'
-  id 'org.owasp.dependencycheck' version '3.0.2'
+  id 'pmd'
+  id 'org.springframework.boot' version '1.5.13.RELEASE'
+  id 'org.owasp.dependencycheck' version '3.2.1'
   id 'com.github.ben-manes.versions' version '0.15.0'
+  id 'com.gorylenko.gradle-git-properties' version '1.4.21'
 }
 
 apply plugin: 'org.sonarqube'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+gitProperties {
+    gitPropertiesDir = new File("${project.rootDir}/src/main/resources/uk/gov/hmcts/probate/services/submit")
+    keys = ['git.commit.id','git.commit.time']
+    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+    dateFormatTimeZone = "GMT"
+}
+
+gitProperties {
+    gitPropertiesDir = new File("${project.rootDir}/src/main/resources/uk/gov/hmcts/probate/services/submit")
+    keys = ['git.commit.id','git.commit.time']
+    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+    dateFormatTimeZone = "GMT"
+}
 
 group = 'uk.gov.hmcts.probate'
 version = "4.1.0"
@@ -50,10 +62,6 @@ tasks.withType(FindBugs) {
   }
 }
 
-dependencyCheck {
-  suppressionFiles = ['dependency-check-suppressions.xml']
-}
-
 findbugs{
   ignoreFailures=true
   reportLevel = "low"
@@ -61,6 +69,7 @@ findbugs{
 
 sonarqube {
   properties {
+    property "sonar.projectName", "probate :: submit service"
     property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
     property "sonar.host.url", "https://sonar.reform.hmcts.net/"
   }
@@ -68,14 +77,52 @@ sonarqube {
 
 test.finalizedBy jacocoTestReport
 
-// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
 dependencyCheck {
-  // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-  // range of 0-10 fails the build, anything greater and it doesn't fail the build
   failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-  suppressionFile = 'dependency-check-suppressions.xml'
+  suppressionFile = "${project.rootDir}/config/owasp/suppressions.xml"
+  scanConfigurations = ['compile']
 }
 
+sourceSets {
+  testFunctional {
+    java {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+      srcDir file('src/functionalTest/java')
+    }
+    resources.srcDir file('src/functionalTest/resources')
+  }
+
+  testSmoke {
+      java {
+          compileClasspath += main.output
+          runtimeClasspath += main.output
+          srcDir file('src/smokeTest/java')
+      }
+      resources.srcDir file('src/smokeTest/resources')
+  }
+}
+
+task functional(type: Test) {
+  description = "Runs functional Tests"
+  testClassesDirs = sourceSets.testFunctional.output.classesDirs
+  classpath = sourceSets.testFunctional.runtimeClasspath
+  finalizedBy aggregate
+}
+
+task smoke(type: Test) {
+  description = "Runs Smoke Tests"
+  testClassesDirs = sourceSets.testSmoke.output.classesDirs
+  classpath = sourceSets.testSmoke.runtimeClasspath
+}
+
+pmd {
+  toolVersion = "6.3.0"
+  ignoreFailures = true
+  sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke]
+  reportsDir = file("$project.buildDir/reports/pmd")
+  ruleSetFiles = files("config/pmd/ruleset.xml")
+}
 
 repositories {
   mavenLocal()
@@ -86,10 +133,18 @@ repositories {
   maven { url "http://repo1.maven.org/maven2/" }
   maven { url "https://plugins.gradle.org/m2/" }
   maven { url  "https://dl.bintray.com/hmcts/hmcts-maven" }
+  maven { url 'https://repo.spring.io/libs-milestone' }
+  maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+processResources {
+  from ('src/lib/AI-Agent.xml') {
+    into 'lib'
+  }
 }
 
 def versions = [
-        logging: '2.0.2'
+    logging: '2.2.1'
 ]
 
 dependencies {
@@ -99,13 +154,29 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry'
 
+    
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
-  compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
   compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
+  compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+  
+  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test' 
+  
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.0.26'
+  testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+  testFunctionalCompile sourceSets.main.runtimeClasspath
+  testFunctionalCompile sourceSets.test.runtimeClasspath
 
-  testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+  testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+
+  testSmokeCompile sourceSets.main.runtimeClasspath
+  testSmokeCompile sourceSets.test.runtimeClasspath
 }
 
 compileJava {
@@ -113,12 +184,14 @@ compileJava {
 }
 
 jar {
+  archiveName = 'submit-service.jar'
   manifest {
 
     attributes 'Implementation-Title': project.name,
       'Implementation-Version': project.version
   }
 }
+
 
 task printVersion {
   doLast {

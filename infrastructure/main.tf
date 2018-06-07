@@ -38,7 +38,7 @@ data "vault_generic_secret" "idam_backend_service_key" {
 }
 
 data "vault_generic_secret" "spring_application_json_submit_service" {
-  path = "secret/${var.vault_section}/probate/spring_application_json_submit_service_test"  //need to remove _test
+  path = "secret/${var.vault_section}/probate/spring_application_json_submit_service_azure"
 }
 
 locals {

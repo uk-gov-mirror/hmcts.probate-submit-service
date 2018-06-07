@@ -110,23 +110,23 @@ node {
             }
         }
 
-        if ("develop"  == "${env.BRANCH_NAME}") {
+        if ("master"  == "${env.BRANCH_NAME}") {
 
-            stage('Install (Dev)') {
-                ansible.runInstallPlaybook(version, 'dev')
+            stage('Install (Test)') {
+                ansible.runInstallPlaybook(version, 'test')
             }
 
-            stage('Deploy (Dev)') {
-                ansible.runDeployPlaybook(version, 'dev')
+            stage('Deploy (Test)') {
+                ansible.runDeployPlaybook(version, 'test')
             }
 
-            stage('Tag Deploy success (Dev)') {
-                rpmTagger.tagDeploymentSuccessfulOn('dev')
+            stage('Tag Deploy success (Test)') {
+                rpmTagger.tagDeploymentSuccessfulOn('test')
             }
 
             stage('Smoke Test') {
                 ws('workspace/probate-frontend/build') {
-                    env.PROBATE_FRONTEND_URL = "https://www-" + 'dev' + ".probate.reform.hmcts.net/"
+                    env.PROBATE_FRONTEND_URL = "https://www-" + 'test' + ".probate.reform.hmcts.net/"
                     git url: 'git@git.reform.hmcts.net:probate/smoke-tests.git'
                     sh '''
                         npm install

@@ -98,7 +98,7 @@ node {
 
         if(storeRPMToArtifactory) {
             stage('Package (RPM)') {
-                probateBackendSubmitServiceRPMVersion = packager.javaRPM( app, 'build/libs/submit-service-$(./gradlew -q printVersion).jar',
+                probateBackendSubmitServiceRPMVersion = packager.javaRPM( app, 'build/libs/submit-service.jar',
                         'springboot', 'src/main/resources/application.yml')
                 sh "echo $probateBackendSubmitServiceRPMVersion"
                 version = "{probate_submit_buildnumber: ${probateBackendSubmitServiceRPMVersion} }"

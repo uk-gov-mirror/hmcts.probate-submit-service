@@ -11,7 +11,10 @@ List<LinkedHashMap<String, Object>> secrets = [
     secret('probateS2SKey', 'S2S_AUTH_TOTP_SECRET'),
     secret('probateIdamSecret', 'IDAM_SECRET'),
     secret('probateIdamUserName', 'IDAM_USERNAME'),
-    secret('probateIdamPassword', 'IDAM_PASSWORD')    
+    secret('probateIdamPassword', 'IDAM_PASSWORD'),
+    secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
+    secret('probateServiceAuthUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
+    secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate;
+package uk.gov.hmcts.probate.contract;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.probate.util.ContractTestUtils;
+import uk.gov.hmcts.probate.contract.util.ContractTestUtils;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = TestContextConfiguration.class)

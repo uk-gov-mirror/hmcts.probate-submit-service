@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate;
+package uk.gov.hmcts.probate.contract;
 
 import feign.Feign;
 import feign.jackson.JacksonEncoder;
@@ -13,8 +13,8 @@ import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 
 
 @Configuration
-@ComponentScan("uk.gov.hmcts.probate")
-@PropertySource("application.properties")
+@ComponentScan("uk.gov.hmcts.probate.contract")
+@PropertySource("file:src/contractTest/resources/application.properties")
 public class TestContextConfiguration {
 
     @Bean

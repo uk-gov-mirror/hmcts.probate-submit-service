@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate;
+package uk.gov.hmcts.probate.contract;
 
 
 import io.restassured.RestAssured;

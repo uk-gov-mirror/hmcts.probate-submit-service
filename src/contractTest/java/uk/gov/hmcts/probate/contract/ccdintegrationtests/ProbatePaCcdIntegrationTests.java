@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.ccdintegrationtests;
+package uk.gov.hmcts.probate.contract.ccdintegrationtests;
 
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 
@@ -6,7 +6,7 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import uk.gov.hmcts.probate.IntegrationTestBase;
+import uk.gov.hmcts.probate.contract.IntegrationTestBase;
 
 @RunWith(SerenityRunner.class)
 public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {

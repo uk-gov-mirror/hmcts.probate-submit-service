@@ -130,14 +130,14 @@ node {
                     git url: 'git@git.reform.hmcts.net:probate/smoke-tests.git'
                     sh '''
                         npm install
-                        npm run test-service -- --ENV dev --SERVICE submit-service
+                        npm run test-service -- --ENV test --SERVICE submit-service
                     '''
                     deleteDir()
                 }
             }
 
-            stage('Tag Smoke Test success (Dev)') {
-                rpmTagger.tagTestingPassedOn('dev')
+            stage('Tag Smoke Test success (Test)') {
+                rpmTagger.tagTestingPassedOn('test')
             }
         }
         deleteDir()

@@ -46,6 +46,13 @@ locals {
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
 
   //probate_frontend_hostname = "probate-frontend-aat.service.core-compute-aat.internal"
+  previewVaultName = "pro-submit-ser"
+  nonPreviewVaultName = "pro-submit-ser-${var.env}"
+  vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+
+  nonPreviewVaultUri = "${module.probate-submit-service-vault.key_vault_uri}"
+  previewVaultUri = "https://pro-submit-ser-aat.vault.azure.net/"
+  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 module "probate-submit-service" {

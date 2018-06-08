@@ -15,7 +15,11 @@ String component = "submit-service"
 
 List<LinkedHashMap<String, Object>> secrets = [
     secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
-    secret('probateBusinessUrl', 'TEST_BUSINESS_URL')
+    secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
+    secret('probateS2SKey', 'S2S_AUTH_TOTP_SECRET'),
+    secret('probateIdamSecret', 'IDAM_SECRET'),
+    secret('probateIdamUserName', 'IDAM_USERNAME'),
+    secret('probateIdamPassword', 'IDAM_PASSWORD')   
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {

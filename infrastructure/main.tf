@@ -103,7 +103,7 @@ module "probate-submit-service" {
 
 module "probate-submit-service-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "pro-submit-ser-${var.env}"
+  name                = "${local.vaultName}"
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"

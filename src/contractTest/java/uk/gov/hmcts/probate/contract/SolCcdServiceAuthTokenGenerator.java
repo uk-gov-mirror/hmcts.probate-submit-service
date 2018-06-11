@@ -65,36 +65,15 @@ public class SolCcdServiceAuthTokenGenerator {
                 .get(idamUserBaseUrl + "/details")
                 .body()
                 .path("id");
-        System.out.println("userid generated.." + userid_local);
         return userid_local;
     }
 
 
-//    private void createUserInIdam() {
-//
-////        idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-////        idamPassword = "Test123456";
-////        System.out.println("idam user create url.." +idamCreateUrl());
-////        Response res = RestAssured.given()
-////                .header("Content-Type", "application/json")
-////                .body("{\"email\":\"" + idamUsername + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + idamPassword + "\",}")
-////                .post(idamCreateUrl());
-//        idamUsername = "venu7jun1@mailinator.com";
-//        idamPassword = "Monday01";
-//
-//        //System.out.println("user created status..." + res.getStatusCode());
-//    }
-
-
     public String generateUserTokenWithNoRoles() {
-        // createUserInIdam();
         userToken = generateClientToken();
-        System.out.println("token generated.." + userToken);
         return userToken;
     }
 
-
-    //keeping this code to see if we need this mechanism after sidam integration.
     private String generateClientToken() {
         String code = generateClientCode();
         String token = "";
@@ -111,7 +90,6 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientCode() {
         String code = "";
-        //  createUserInIdam();
         final String encoded = Base64.getEncoder().encodeToString((idamUsername + ":" + idamPassword).getBytes());
         code = RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)

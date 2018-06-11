@@ -53,16 +53,8 @@ variable "no_proxy" {
 }
 
 
-variable "services_persistence_formdata_url" {
-  default = "./formdata"
-}
-
-variable "services_persistence_submissions_url" {
-  default = "./submissions"
-}
-
-variable "services_persistence_sequenceNumber_url" {
-  default = "./sequenceNumber"
+variable "services_persistence_baseUrl" {
+  default = "/"
 }
 
 
@@ -70,8 +62,8 @@ variable "idam_service_api" {
   type = "string"
 }
 
-variable "ccd_url" {
-  default = "./case-types"
+variable "ccd_baseUrl" {
+  default = "/"
 }
 
 variable "ccd_enabled" {

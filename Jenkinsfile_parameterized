@@ -15,7 +15,15 @@ String component = "submit-service"
 
 List<LinkedHashMap<String, Object>> secrets = [
     secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
-    secret('probateBusinessUrl', 'TEST_BUSINESS_URL')
+    secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
+    secret('probateS2SKey', 'S2S_AUTH_TOTP_SECRET'),
+    secret('probateIdamSecret', 'IDAM_SECRET'),
+    secret('probateIdamUserName', 'IDAM_USERNAME'),
+    secret('probateIdamPassword', 'IDAM_PASSWORD'),
+    secret('probateCcdDataStoreApi', 'CCD_DATA_STORE_API_URL'),
+    secret('probateServiceAuthUrl', 'SERVICE_AUTH_PROVIDER_BASE_URL'),
+    secret('probateUserAuthUrl', 'USER_AUTH_PROVIDER_OAUTH2_URL'),
+    secret('probateIdamOauthRedirectUrl', 'IDAM_OAUTH2_REDIRECT_URI')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -29,4 +37,61 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withParameterizedPipeline('java', product, component, params.ENVIRONMENT, 'sandbox') {
   loadVaultSecrets(secrets)
+  after('test') {
+    junit 'build/test-results/test/**/*.xml'
+    archiveArtifacts 'build/reports/tests/test/index.html'
+    publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/tests/test",
+            reportFiles          : "index.html",
+            reportName           : "probate-submit-service Test Report"
+    ]
+
+    publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/jacoco",
+            reportFiles          : "index.html",
+            reportName           : "probate-submit-service Code Coverage Report"
+    ]
+
+    publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "build/reports/findbugs",
+            reportFiles          : "main.html",
+            reportName           : "probate-submit-service find Bugs Report"
+    ]
+  }
+
+  after('functionalTest:saat') {
+      publishHTML target: [
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "SAAT Functional Tests",
+              alwaysLinkToLastBuild: true
+      ]
+  }
+
+  after('functionalTest:aat') {
+      publishHTML target: [
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "AAT Functional Tests",
+              alwaysLinkToLastBuild: true
+      ]
+  }
+
+  after('functionalTest:spreview') {
+      publishHTML target: [
+              reportDir            : "target/site/serenity/",
+              reportFiles          : "index.html",
+              reportName           : "Preview Functional Tests",
+              alwaysLinkToLastBuild: true
+      ]
+  }
 }

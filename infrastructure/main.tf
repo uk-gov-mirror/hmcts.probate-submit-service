@@ -46,6 +46,13 @@ locals {
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
 
   //probate_frontend_hostname = "probate-frontend-aat.service.core-compute-aat.internal"
+  previewVaultName = "pro-submit-ser"
+  nonPreviewVaultName = "pro-submit-ser-${var.env}"
+  vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+
+  nonPreviewVaultUri = "${module.probate-submit-service-vault.key_vault_uri}"
+  previewVaultUri = "https://pro-submit-ser-aat.vault.azure.net/"
+  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 module "probate-submit-service" {
@@ -82,12 +89,10 @@ module "probate-submit-service" {
     MAIL_JAVAMAILPROPERTIES_SUBJECT = "${var.probate_mail_subject}"
     MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_AUTH = "${var.probate_mail_use_auth}"
     MAIL_JAVAMAILPROPERTIES_MAIL_SMTP_SSL_ENABLE = "${var.probate_mail_use_ssl}"
-    SERVICES_PERSISTENCE_FORMDATA_URL = "${var.services_persistence_formdata_url}"
-    SERVICES_PERSISTENCE_SUBMISSIONS_URL = "${var.services_persistence_submissions_url}"
+    SERVICES_PERSISTENCE_BASEURL = "${var.services_persistence_baseUrl}" 
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${var.idam_service_api}"
-    SERVICES_CORECASEDATA_URL = "${var.ccd_url}"
+    SERVICES_CORECASEDATA_BASEURL = "${var.ccd_baseUrl}"
     SERVICES_CORECASEDATA_ENABLED = "${var.ccd_enabled}"
-    SERVICES_PERSISTENCE_SEQUENCENUMBER_URL = "${var.services_persistence_sequenceNumber_url}"
    
     java_app_name = "${var.microservice}"
     LOG_LEVEL = "${var.log_level}"
@@ -98,7 +103,7 @@ module "probate-submit-service" {
 
 module "probate-submit-service-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "pro-submit-ser-${var.env}"
+  name                = "${local.vaultName}"
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"

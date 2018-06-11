@@ -13,7 +13,7 @@ import java.nio.file.Files;
 
 @ContextConfiguration(classes = TestContextConfiguration.class)
 @Component
-public class TestUtils {
+public class FunctionalTestUtils {
 
     public String getJsonFromFile(String fileName) {
         try {

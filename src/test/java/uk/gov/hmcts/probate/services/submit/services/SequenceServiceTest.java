@@ -1,14 +1,20 @@
 package uk.gov.hmcts.probate.services.submit.services;
 
-import java.util.Map;
-import java.util.Properties;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -16,13 +22,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import uk.gov.hmcts.probate.services.submit.Registry;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
-
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SequenceServiceTest {
@@ -38,7 +37,7 @@ public class SequenceServiceTest {
     private long submissionReference;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         submitService = mock(SubmitService.class);
         persistenceClient = mock(PersistenceClient.class);
@@ -47,11 +46,7 @@ public class SequenceServiceTest {
         mapper = new ObjectMapper();
         testUtils = new TestUtils();
         sequenceService = new SequenceService(registryMap, persistenceClient, mailSender, mapper);
-        int mockRegistryCounter = 1;
         submissionReference = 1234;
-        when(registryMap.size()).thenReturn(2);
-        when(registryMap.get(mockRegistryCounter % registryMap.size()))
-                .thenReturn(mockRegistry);
     }
 
     @Test
@@ -69,6 +64,9 @@ public class SequenceServiceTest {
 
     @Test
     public void populateRegistrySubmitData() {
+        when(registryMap.size()).thenReturn(2);
+        when(registryMap.get(anyInt())).thenReturn(mockRegistry);
+
         JsonNode registryData = testUtils.getJsonNodeFromFile("registryDataSubmit.json");
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
         when(mockRegistry.capitalizeRegistryName()).thenReturn("Oxford");
@@ -103,7 +101,9 @@ public class SequenceServiceTest {
 
     @Test
     public void identifyNextRegistry() {
-        when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
+        when(registryMap.size()).thenReturn(2);
+        when(registryMap.get(anyInt())).thenReturn(mockRegistry);
+
         Registry result = sequenceService.identifyNextRegistry();
         assertThat(result, is(equalTo(mockRegistry)));
     }

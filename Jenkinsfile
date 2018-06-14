@@ -91,8 +91,8 @@ node {
 
         if(create_docker != 'no' || "master"  == "${env.BRANCH_NAME}") {
             stage('Package (Docker)') {
-                submitServiceVersion = dockerImage imageName: 'probate/submit-service'
-                println(submitServiceVersion)
+                //submitServiceVersion = dockerImage imageName: 'probate/submit-service'
+                //println(submitServiceVersion)
             }
         }
 

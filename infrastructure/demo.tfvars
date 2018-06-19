@@ -7,5 +7,5 @@ packages_environment = "preprod"
 packages_version = "3.0.0"
 
 idam_service_api  = "http://betaPreProdccidamAppLB.reform.hmcts.net:4502"
-ccd_baseUrl = "https://case-data-api.preprod.ccd.reform.hmcts.net:4452"
-services_persistence_baseUrl = "http://betaPreProdprobateApp01.reform.hmcts.net:4103"
+ccd_baseUrl = "http://ccd-data-store-api-demo.service.core-compute-demo.internal"
+services_persistence_baseUrl = "http://probate-persistence-service-demo.service.core-compute-demo.internal"

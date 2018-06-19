@@ -8,4 +8,4 @@ packages_version = "3.0.0"
 
 idam_service_api  = "http://betaPreProdccidamAppLB.reform.hmcts.net:4502"
 ccd_baseUrl = "http://ccd-data-store-api-demo.service.core-compute-demo.internal"
-services_persistence_baseUrl = "http://probate-persistence-service-demo-staging.service.core-compute-demo.internal"
+services_persistence_baseUrl = "http://probate-persistence-service-demo.service.core-compute-demo.internal"

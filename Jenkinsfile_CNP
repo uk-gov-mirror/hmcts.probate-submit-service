@@ -37,4 +37,5 @@ withPipeline("java", product, component) {
     } finally {
         steps.archiveArtifacts "build/reports/pitest/**/*.*"
     }
+  }
 }

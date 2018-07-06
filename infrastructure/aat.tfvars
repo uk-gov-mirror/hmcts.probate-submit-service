@@ -6,7 +6,7 @@ vault_section = "preprod"
 packages_environment = "preprod"
 packages_version = "3.0.0"
 
-capacity = "2"
+capacity = "1"   //changed until internal memory to changed to persistence
 
 idam_service_api  = "http://betaPreProdccidamAppLB.reform.hmcts.net:4502"
 ccd_baseUrl = "https://case-data-api.preprod.ccd.reform.hmcts.net:4452"

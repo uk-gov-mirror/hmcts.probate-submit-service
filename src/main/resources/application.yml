@@ -85,6 +85,7 @@
       applyingExecutorAddress: applyingExecutorAddress
       applyingExecutorOtherNames: applyingExecutorOtherNames
       applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
+      applyingExecutorOtherReason: applyingExecutorOtherReason
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter

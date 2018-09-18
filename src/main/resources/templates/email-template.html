@@ -174,7 +174,7 @@
                 </tr>
 
                 <tr>
-                    <td colspan="2" th:text="#{executorsApplying}">Other Executors applying (name + email + number + othernames used)</td>
+                    <td colspan="2" th:text="#{executorsApplying}">Other Executors applying (name + email + number + othernames used +reason)</td>
                 </tr>
 
                 <tr th:each="executor: ${executorsApplying}">
@@ -188,6 +188,12 @@
                         --
                     </td>
                     <td th:utext="${executor.class.simpleName} == 'ObjectNode' and ${executor.get('currentName')} != null? ${executor.get('currentName').asText()}">
+                        --
+                    </td>
+                    <td th:utext="${executor.class.simpleName} == 'ObjectNode' and ${executor.get('currentNameReason')} != null? ${executor.get('currentNameReason').asText()}">
+                        --
+                    </td>
+                    <td th:utext="${executor.class.simpleName} == 'ObjectNode' and ${executor.get('otherReason')} != null? ${executor.get('otherReason').asText()}">
                         --
                     </td>
                 </tr>

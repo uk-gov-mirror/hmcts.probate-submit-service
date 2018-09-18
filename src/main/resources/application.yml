@@ -73,6 +73,8 @@
       mobile: mobile
       hasOtherName: hasOtherName
       currentName: currentName
+      currentNameReason: currentNameReason
+      otherReason: otherReason
     ccd:  
       notApplyingExecutorName: notApplyingExecutorName    
       notApplyingExecutorReason: notApplyingExecutorReason

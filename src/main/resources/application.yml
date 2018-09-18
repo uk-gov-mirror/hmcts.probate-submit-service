@@ -84,6 +84,7 @@
       applyingExecutorPhoneNumber: applyingExecutorPhoneNumber
       applyingExecutorAddress: applyingExecutorAddress
       applyingExecutorOtherNames: applyingExecutorOtherNames
+      applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter

@@ -65,6 +65,10 @@ public class CoreCaseDataMapper {
     private String hasOtherName;
     @Value("${ccd.probate.currentName}")
     private String currentName;
+    @Value("${ccd.probate.currentNameReason}")
+    private String currentNameReason;
+    @Value("${ccd.probate.otherReason}")
+    private String otherReason;
     @Value("${ccd.probate.notApplyingKey}")
     private String notApplyingKey;
     @Value("${ccd.ccd.notApplyingExecutorName}")
@@ -81,6 +85,10 @@ public class CoreCaseDataMapper {
     private String applyingExecutorAddress;
     @Value("${ccd.ccd.applyingExecutorOtherNames}")
     private String applyingExecutorOtherNames;
+    @Value("${ccd.ccd.applyingExecutorOtherNamesReason}")
+    private String applyingExecutorOtherNamesReason;
+    @Value("${ccd.ccd.applyingExecutorOtherReason}")
+    private String applyingExecutorOtherReason;
     @NotNull
     private Map<String, String> reasonMap;
     @NotNull

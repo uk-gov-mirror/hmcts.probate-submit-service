@@ -81,12 +81,12 @@ dependencyCheck {
 
 sourceSets {
   testFunctional {
-    java {
+    /*java {
       compileClasspath += main.output
       runtimeClasspath += main.output
       srcDir file('src/functionalTest/java')
     }
-    resources.srcDir file('src/functionalTest/resources')
+    resources.srcDir file('src/functionalTest/resources')*/
   }
 
   testSmoke {

@@ -1,7 +1,10 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +49,19 @@ public class MailClientTest {
     private Calendar submissionTimestamp;
     private JsonNode registryData;
 
+    private ObjectMapper objectMapper;
+
+    private ObjectNode submitData;
+
     @Before
     public void setUp() throws IOException {
         mailClient = new MailClient(mailSenderMock, mailMessageBuilderMock);
         submissionTimestamp = Calendar.getInstance();
         registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        objectMapper = new ObjectMapper();
+
+        submitData = objectMapper.createObjectNode();
+        submitData.set("submitdata", objectMapper.createObjectNode().set("submissionReference", new LongNode(1234)));
     }
 
 
@@ -60,7 +71,7 @@ public class MailClientTest {
         when(mailMessageBuilderMock.buildMessage(any(JsonNode.class), any(JsonNode.class), any(Properties.class), any(Calendar.class))).thenReturn(mimeMessageMock);
         when(mimeMessageMock.getHeader(anyString(), any())).thenReturn("1234");
 
-        String response = mailClient.execute(NullNode.getInstance(), registryData,
+        String response = mailClient.execute(submitData, registryData,
                 submissionTimestamp);
 
         assertThat(response, is("1234"));

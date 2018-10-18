@@ -28,9 +28,9 @@ public class MailClient implements Client<JsonNode, String> {
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public String execute(JsonNode submitData, JsonNode registryData,  Calendar submissionTimestamp) {
         try {
-            MimeMessage message = mailMessageBuilder.buildMessage(submitData, registryData.get("registry"), mailSender.getJavaMailProperties(), submissionTimestamp);
+            MimeMessage message = mailMessageBuilder.buildMessage(submitData, registryData, mailSender.getJavaMailProperties(), submissionTimestamp);
             mailSender.send(message);
-            return registryData.get("submissionReference").asText();
+            return submitData.at("/submitdata/submissionReference").asText();
         } catch (MessagingException ex) {
             throw new ParsingSubmitException("Could not build or extract the data from the message", ex);
         }

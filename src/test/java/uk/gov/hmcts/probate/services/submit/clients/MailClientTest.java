@@ -57,7 +57,7 @@ public class MailClientTest {
     public void setUp() throws IOException {
         mailClient = new MailClient(mailSenderMock, mailMessageBuilderMock);
         submissionTimestamp = Calendar.getInstance();
-        registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
+        registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json").get("registry");
         objectMapper = new ObjectMapper();
 
         submitData = objectMapper.createObjectNode();

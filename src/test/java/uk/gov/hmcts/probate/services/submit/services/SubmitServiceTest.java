@@ -126,7 +126,7 @@ public class SubmitServiceTest {
         ccdObjectNode.set("state", new TextNode(CASE_STATE));
         formDataObjectNode.set("ccdCase", ccdObjectNode);
         ObjectNode formDataNode = objectMapper.createObjectNode();
-        formDataNode.set("registry", registryData);
+        formDataNode.set("registry", registryData.get("registry"));
         formDataObjectNode.set("formdata", formDataNode);
         FormData formData = new FormData(formDataObjectNode);
 
@@ -147,7 +147,7 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
         assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
-        assertThat(submitResponse.at("/registry"), is(equalTo(registryData)));
+        assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
         verify(persistenceClient, never()).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(persistenceClient, never()).saveSubmission(submitData);
@@ -166,7 +166,6 @@ public class SubmitServiceTest {
         ccdObjectNode.set("state", new TextNode(CASE_STATE));
         formDataObjectNode.set("ccdCase", ccdObjectNode);
         ObjectNode formDataNode = objectMapper.createObjectNode();
-        ccdObjectNode.set("registry", registryData);
         formDataObjectNode.set("formdata", formDataNode);
         FormData formData = new FormData(formDataObjectNode);
 
@@ -189,7 +188,7 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
         assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
-        assertThat(submitResponse.at("/registry"), is(equalTo(registryData)));
+        assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
         verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(persistenceClient, times(1)).saveSubmission(submitData);

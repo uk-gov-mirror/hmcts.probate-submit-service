@@ -31,6 +31,7 @@ import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 @Service
 public class SubmitService {
 
+    private static final String REGISTRY_FIELD_NAME = "registry";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String CREATE_CASE_CCD_EVENT_ID = "createCase";
@@ -96,14 +97,14 @@ public class SubmitService {
 
     private ObjectNode createResponse(Optional<CcdCaseResponse> caseResponseOptional, FormData formData) {
         ObjectNode response = objectMapper.createObjectNode();
-        response.set("registry", formData.getRegistry());
+        response.set(REGISTRY_FIELD_NAME, formData.getRegistry());
         response.set("submissionReference", formData.getSubmissionReferenceAsJsonNode());
         setCCDItemsOnResponse(caseResponseOptional, response);
         return response;
     }
 
     private void updateFormData(FormData formData, JsonNode submissionReference, JsonNode registryData) {
-        ((ObjectNode)formData.getJson().get("formdata")).set("registry", registryData);
+        ((ObjectNode)formData.getJson().get("formdata")).set(REGISTRY_FIELD_NAME, registryData.get(REGISTRY_FIELD_NAME));
         ((ObjectNode) formData.getJson()).set("submissionReference", submissionReference);
         ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
     }

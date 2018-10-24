@@ -290,8 +290,10 @@ public class CoreCaseDataMapper {
         if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
-            String executorOtherNameReason = executor.get(currentNameReason).asText();
-            value.set(applyingExecutorOtherNamesReason, new TextNode(executorOtherNameReason.trim()));
+            if (executor.has(currentNameReason)) {
+                String executorOtherNameReason = executor.get(currentNameReason).asText();
+                value.set(applyingExecutorOtherNamesReason, new TextNode(executorOtherNameReason.trim()));
+            }
         }
 
         if (executor.has(otherReason) && executor.get(hasOtherName).asBoolean() == true) {

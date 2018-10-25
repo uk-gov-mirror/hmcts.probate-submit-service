@@ -98,6 +98,10 @@
       applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
       applicantLastName: primaryApplicantSurname
+      applicantSameWillName: primaryApplicantSameWillName
+      applicantAlias: primaryApplicantAlias
+      applicantAliasReason: primaryApplicantAliasReason
+      applicantOtherReason: primaryApplicantOtherReason
       applicantPhone: primaryApplicantPhoneNumber
       applicantEmail: primaryApplicantEmailAddress
       deceasedFirstname: deceasedForenames

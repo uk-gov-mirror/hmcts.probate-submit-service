@@ -98,6 +98,8 @@ public class MailMessageBuilderTest {
             assertThat(mailContent, containsString(Applying.at("/email").asText()));
             assertThat(mailContent, containsString(Applying.at("/mobile").asText()));
             assertThat(mailContent, containsString(Applying.at("/currentName").asText()));
+            assertThat(mailContent, containsString(Applying.at("/currentNameReason").asText()));
+            assertThat(mailContent, containsString(Applying.at("/otherReason").asText()));
         });
         assertThat(mailContent, containsString(emailData.at("/submitdata/executorsApplying").asText()));
     }

@@ -131,6 +131,8 @@
                 "isApplying": true,
                 "hasOtherName": true,
                 "currentName": "exec_7_new_name ",
+                "currentNameReason": "other",
+                "otherReason": "nickname",
                 "email": "hi@hotmail.co.uk",
                 "mobile": "2222222222",
                 "address": "exec_7_address\r\n",

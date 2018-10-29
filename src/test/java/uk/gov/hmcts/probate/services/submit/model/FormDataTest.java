@@ -35,6 +35,11 @@ public class FormDataTest {
     }
 
     @Test
+    public void shouldGetCcdCaseState() {
+        assertThat(formData.getCcdCaseState(), is("CaseCreated"));
+    }
+
+    @Test
     public void shouldGetRegistry() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 

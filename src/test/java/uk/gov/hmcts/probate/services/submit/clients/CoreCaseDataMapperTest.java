@@ -94,18 +94,13 @@ public class CoreCaseDataMapperTest {
         JsonNode mappedData = coreCaseDataMapper.createCcdData(submitdata, ccdEventId, ccdToken, submissonTimestamp, registryData);
         assertEquals(mappedData.get("event").get("id").asText(), ccdEventId);
         assertEquals(mappedData.get("event_token"), ccdToken);
-        assertNotNull (mappedData.get("data"));       
+        assertNotNull (mappedData.get("data"));
     }
 
     @Test
     public void mapDataTest() {
         JsonNode mappedData = coreCaseDataMapper.mapData(submitdata, submissonTimestamp, registryData);
         JsonNode registry = registryData.get("registry");
-
-        assertTrue(mappedData.get("ihtFormCompletedOnline").asText().equals("Yes"));
-        assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
-        assertTrue(mappedData.get("ihtFormId").asText().equals("IHT205"));
-        assertTrue(mappedData.get("softStop").asText().equals("Yes"));
         assertTrue(mappedData.get("applicationSubmittedDate").asText().equals("2017-08-24"));
         assertTrue(mappedData.get("applicationID").equals(registryData.get("submissionReference")));
         assertTrue(mappedData.get("registryLocation").equals(registry.get("name")));
@@ -268,21 +263,21 @@ public class CoreCaseDataMapperTest {
         assertFalse(mappedData.isPresent());
         assertEquals(expected, mappedData);
     }
-       
+
     @Test
     public void mapAliasesTest() throws IOException {
         JsonNode expected = TestUtils.getJsonNodeFromFile("ccdAliases.json");
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getAliasMap(), coreCaseDataMapper::aliasesMapper);
         assertEquals(expected, mappedData.get("deceasedAliasNameList"));
     }
-        
+
     @Test
     public void mapNonExistentAliasesTest() {
         Optional<JsonNode> expected = Optional.empty();
         Optional<JsonNode> mappedData = coreCaseDataMapper.aliasesMapper(submitdata, "noSuchField");
         assertEquals(expected, mappedData);
     }
-    
+
     @Test
     public void mapAliasTest() throws IOException {
         Optional<JsonNode> expected = Optional.of(TestUtils.getJsonNodeFromFile("ccdAliases.json").at("/0"));
@@ -322,9 +317,9 @@ public class CoreCaseDataMapperTest {
 
     @Test
     public void mapAddressesTest() throws IOException {
-       Map<String, JsonNode> expected = TestUtils.getJsonMapFromFile("ccdAddresses.json");
-       Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getAddressMap(), coreCaseDataMapper::addressMapper);
-       assertEquals(expected, mappedData);
+        Map<String, JsonNode> expected = TestUtils.getJsonMapFromFile("ccdAddresses.json");
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getAddressMap(), coreCaseDataMapper::addressMapper);
+        assertEquals(expected, mappedData);
     }
 
     @Test

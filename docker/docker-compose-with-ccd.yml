@@ -330,6 +330,7 @@ services:
       - http_proxy=
       - https_proxy=
       - no_proxy=
+      - LIQUIBASE_AT_STARTUP=true
     ports:
      - 8282:8282
     depends_on:

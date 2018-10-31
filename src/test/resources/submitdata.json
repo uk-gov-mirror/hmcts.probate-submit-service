@@ -112,7 +112,9 @@
         "mobile": "07963456421",
         "email": "zcaphkk@ucl.ac.uk",
         "hasOtherName": true,
-        "currentName": "Executor6 other name"
+        "currentName": "Executor6 other name",
+        "currentNameReason": "other",
+        "otherReason": "nickname"
       },
       {
         "fullName": "Seventh Executor Name",
@@ -126,6 +128,7 @@
     ],
     "softStop": "softStop",
     "caseId": 111111113,
+    "caseState": "CaseCreated",
     "paymentResponse": {
       "id": "24",
       "amount": 5000,

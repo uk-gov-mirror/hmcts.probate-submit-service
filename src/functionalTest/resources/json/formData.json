@@ -45,7 +45,10 @@
       "phoneNumber" : "07123456789",
       "addressFound" : "none",
       "freeTextAddress" : "Lead Applicant Address",
-      "nameAsOnTheWill" : "Yes"
+      "nameAsOnTheWill" : "No",
+      "alias": "Lead_Applicant_Alias",
+      "aliasReason": "other",
+      "otherReason": "nickname"
     },
     "executors" : {
       "list" : [ {

@@ -44,4 +44,14 @@ public class CcdCaseResponseTest {
 
         assertThat(reference, is(equalTo("")));
     }
+
+    @Test
+    public void shouldReturnEmptyStringWhenEmptyPayments() throws IOException {
+        JsonNode jsonNode = TestUtils.getJsonNodeFromFile("ccdCaseResponseEmptyPayments.json");
+        ccdCaseResponse = new CcdCaseResponse(jsonNode);
+
+        String reference = ccdCaseResponse.getPaymentReference();
+
+        assertThat(reference, is(equalTo("")));
+    }
 }

@@ -73,6 +73,8 @@
       mobile: mobile
       hasOtherName: hasOtherName
       currentName: currentName
+      currentNameReason: currentNameReason
+      otherReason: otherReason
     ccd:  
       notApplyingExecutorName: notApplyingExecutorName    
       notApplyingExecutorReason: notApplyingExecutorReason
@@ -82,6 +84,8 @@
       applyingExecutorPhoneNumber: applyingExecutorPhoneNumber
       applyingExecutorAddress: applyingExecutorAddress
       applyingExecutorOtherNames: applyingExecutorOtherNames
+      applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
+      applyingExecutorOtherReason: applyingExecutorOtherReason
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter
@@ -94,6 +98,10 @@
       applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
       applicantLastName: primaryApplicantSurname
+      applicantSameWillName: primaryApplicantSameWillName
+      applicantAlias: primaryApplicantAlias
+      applicantAliasReason: primaryApplicantAliasReason
+      applicantOtherReason: primaryApplicantOtherReason
       applicantPhone: primaryApplicantPhoneNumber
       applicantEmail: primaryApplicantEmailAddress
       deceasedFirstname: deceasedForenames

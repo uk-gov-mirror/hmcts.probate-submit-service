@@ -65,6 +65,11 @@ public class SubmitDataTest {
     }
 
     @Test
+    public void shouldGetCaseState() {
+        assertThat(submitData.getCaseState(), is("CaseCreated"));
+    }
+
+    @Test
     public void shouldGetRegistry() throws IOException {
         JsonNode jsonNode = objectMapper.readTree("{\n" +
                 "    \"registry\": {\n" +

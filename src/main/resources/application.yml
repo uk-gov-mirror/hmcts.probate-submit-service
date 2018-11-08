@@ -95,7 +95,6 @@
       deceasedDob: deceasedDateOfBirth
       deceasedDod: deceasedDateOfDeath
     fieldMap:
-      applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
       applicantLastName: primaryApplicantSurname
       applicantSameWillName: primaryApplicantSameWillName
@@ -106,8 +105,6 @@
       applicantEmail: primaryApplicantEmailAddress
       deceasedFirstname: deceasedForenames
       deceasedSurname: deceasedSurname
-      willLeft: willExists
-      willOriginal: willAccessOriginal
       willWithCodicils: willHasCodicils
       deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
       noOfApplicants: numberOfApplicants

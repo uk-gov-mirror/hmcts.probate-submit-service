@@ -340,7 +340,7 @@ services:
       - PROXY_DEFINITION_DATA=http://ccd-definition-store-api:4451/api/data
       - PROXY_DEFINITION_DISPLAY=http://ccd-definition-store-api:4451/api/display
       # this NEEDS to be your local ip address
-      - PROXY_PRINT_SERVICE=http://172.16.10.233:3100
+      - PROXY_PRINT_SERVICE=http://172.16.10.152:3100
       - PROXY_DOCUMENT_MANAGEMENT=http://document-management-store:8081
     ports:
       - 3453:3453
@@ -361,7 +361,7 @@ services:
     image: docker.artifactory.reform.hmcts.net/common-components/payments-api:latest
     container_name: payments-api
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.16.10.233:5430/payment
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.16.10.152:5430/payment
       - SPRING_DATASOURCE_USERNAME=payment
       - SPRING_DATASOURCE_PASSWORD=
       - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080/

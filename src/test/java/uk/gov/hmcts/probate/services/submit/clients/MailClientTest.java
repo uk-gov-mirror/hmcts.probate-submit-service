@@ -6,11 +6,12 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -30,11 +31,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 public class MailClientTest {
+
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Autowired
     SpringTemplateEngine templateEngine;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private MailMessageBuilder mailMessageBuilderMock;
@@ -80,8 +85,9 @@ public class MailClientTest {
 
     @Test(expected = ParsingSubmitException.class)
     public void shouldThrowParsingSubmitExceptionWhenMailClientThrowsMessageException() throws MessagingException {
-        Mockito.when(mailMessageBuilderMock.buildMessage(any(JsonNode.class), any(JsonNode.class),
+        when(mailMessageBuilderMock.buildMessage(any(JsonNode.class), any(JsonNode.class),
                 any(Properties.class), any(Calendar.class))).thenThrow(new MessagingException());
+        when(mailSenderMock.getJavaMailProperties()).thenReturn(new Properties());
 
         mailClient.execute(NullNode.getInstance(), registryData, submissionTimestamp);
     }

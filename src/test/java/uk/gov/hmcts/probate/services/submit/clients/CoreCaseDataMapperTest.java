@@ -2,7 +2,6 @@ package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.Before;
@@ -29,17 +28,13 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Configuration
 @Validated
-@ConfigurationProperties(prefix = "ccd")
+@ConfigurationProperties(prefix = "ccd", ignoreInvalidFields = true)
 public class CoreCaseDataMapperTest {
 
     private static final String CREATE_CASE_CCD_EVENT_ID = "createCase";

@@ -42,6 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/health",
                 "/info",
                 "/favicon.ico",
+                "/submit",
+                "/updatePaymentStatus",
+                "/resubmit",
                 "/");
     }
 

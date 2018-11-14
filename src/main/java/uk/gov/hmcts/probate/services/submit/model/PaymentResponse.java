@@ -17,6 +17,10 @@ public class PaymentResponse {
         return amount.multiply(new BigDecimal(100)).setScale(0).longValue();
     }
 
+    public boolean isAmountMissing() {
+        return paymentNode.get("amount") == null;
+    }
+
     public String getReference() {
         return paymentNode.get("reference").asText();
     }

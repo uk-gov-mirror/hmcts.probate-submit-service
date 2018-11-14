@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.GrantOfRepresentationDTO;
+import uk.gov.hmcts.probate.services.submit.model.v2.GrantOfRepresentation;
 
 @Api(tags = {"DraftsController"})
 @SwaggerDefinition(tags = {@Tag(name = "DraftsController", description = "Drafts API")})
@@ -28,7 +28,7 @@ public class DraftsController {
     })
     @RequestMapping(path = "/case-type/GrantOfRepresentation/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<GrantOfRepresentationDTO> saveDraft(@RequestBody GrantOfRepresentationDTO grantOfRepresentationDTO) {
+    public ResponseEntity<GrantOfRepresentation> saveDraft(@RequestBody GrantOfRepresentation grantOfRepresentation) {
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -31,12 +32,14 @@ public class MailClient implements Client<JsonNode, String> {
 
     @Override
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public String execute(JsonNode submitData, JsonNode registryData,  Calendar submissionTimestamp) {
+    public String execute(JsonNode submitData, JsonNode registryData, Calendar submissionTimestamp) {
         try {
             MimeMessage message = mailMessageBuilder.buildMessage(submitData, registryData, mailSender.getJavaMailProperties(), submissionTimestamp);
             mailSender.send(message);
             String submissionReference = submitData.at("/submitdata/submissionReference").asText();
-            logger.info("Mail sent to {} with submission reference {}", registryData.get("email").asText(), submissionReference);
+            if (registryData != null && registryData.get("email") != null) {
+                logger.info("Mail sent to {} with submission reference {}", registryData.get("email").asText(), submissionReference);
+            }
             return submissionReference;
         } catch (MessagingException ex) {
             throw new ParsingSubmitException("Could not build or extract the data from the message", ex);

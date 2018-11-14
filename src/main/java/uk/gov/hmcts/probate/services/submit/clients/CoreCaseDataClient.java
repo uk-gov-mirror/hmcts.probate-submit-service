@@ -140,7 +140,7 @@ public class CoreCaseDataClient {
         HttpEntity<JsonNode> ccdSaveRequest = requestFactory.createCcdSaveRequest(ccdData, authorization);
 
         logger.info("Update case payment url: {}", url);
-        logger.info("Update case payment body: {}", ccdData.toString());
+        logger.info("Update case payment body : {}", ccdData.toString());
         return new CcdCaseResponse(postRequestToUrl(ccdSaveRequest, url));
     }
 

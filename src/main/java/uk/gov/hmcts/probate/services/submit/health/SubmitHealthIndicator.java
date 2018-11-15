@@ -9,9 +9,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.UnknownHttpStatusCodeException;
 
-//@Slf4j
-//@AllArgsConstructor
 public class SubmitHealthIndicator implements HealthIndicator {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SubmitHealthIndicator.class);
 	
 	private final static String EXCEPTION_KEY = "exception";
 	private final static String MESSAGE_KEY = "message";
@@ -33,14 +32,14 @@ public class SubmitHealthIndicator implements HealthIndicator {
             responseEntity = restTemplate.getForEntity(url + "/health", String.class);
 
         } catch (ResourceAccessException rae) {
-            //log.error(rae.getMessage(), rae);
+            log.error(rae.getMessage(), rae);
             return getHealthWithDownStatus(url, rae.getMessage(), "ResourceAccessException");
         } catch (HttpStatusCodeException hsce) {
-            //log.error(hsce.getMessage(), hsce);
+            log.error(hsce.getMessage(), hsce);
             return getHealthWithDownStatus(url, hsce.getMessage(),
                     "HttpStatusCodeException - HTTP Status: " + hsce.getStatusCode().value());
         } catch (UnknownHttpStatusCodeException uhsce) {
-            //log.error(uhsce.getMessage(), uhsce);
+            log.error(uhsce.getMessage(), uhsce);
             return getHealthWithDownStatus(url, uhsce.getMessage(), "UnknownHttpStatusCodeException - " + uhsce.getStatusText());
         }
 

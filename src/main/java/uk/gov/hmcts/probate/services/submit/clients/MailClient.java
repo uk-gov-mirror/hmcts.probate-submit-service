@@ -30,8 +30,7 @@ public class MailClient implements Client<JsonNode, String> {
         try {
             MimeMessage message = mailMessageBuilder.buildMessage(submitData, registryData, mailSender.getJavaMailProperties(), submissionTimestamp);
             mailSender.send(message);
-            String submissionReference = submitData.at("/submitdata/submissionReference").asText();
-            return submissionReference;
+            return submitData.at("/submitdata/submissionReference").asText();
         } catch (MessagingException ex) {
             throw new ParsingSubmitException("Could not build or extract the data from the message", ex);
         }

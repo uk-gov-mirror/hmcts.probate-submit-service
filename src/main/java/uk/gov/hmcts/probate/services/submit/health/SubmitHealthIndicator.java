@@ -43,7 +43,7 @@ public class SubmitHealthIndicator implements HealthIndicator {
             return getHealthWithDownStatus(url, uhsce.getMessage(), "UnknownHttpStatusCodeException - " + uhsce.getStatusText());
         }
 
-        if (responseEntity != null && !responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             return getHealthWithDownStatus(url, "HTTP Status code not 200", "HTTP Status: " + responseEntity.getStatusCodeValue());
         }
 

@@ -10,13 +10,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.validation.annotation.Validated;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,12 +25,14 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Configuration
-@Validated
 @ConfigurationProperties(prefix = "ccd", ignoreInvalidFields = true)
 public class CoreCaseDataMapperTest {
 
@@ -49,29 +48,6 @@ public class CoreCaseDataMapperTest {
     private Calendar submissonTimestamp;
     private String ccdEventId;
     private JsonNode submitdata;
-
-    @NotNull
-    private Map<String, String> fieldMap;
-
-    public Map<String, String> getFieldMap() {
-        return fieldMap;
-    }
-
-    public void setFieldMap(Map<String, String> fieldMap) {
-        this.fieldMap = fieldMap;
-    }
-
-    @NotNull
-    private Map<String, String> monetaryValueMap;
-
-    public Map<String, String> getMonetaryValueMap() {
-        return monetaryValueMap;
-    }
-
-    public void setMonetaryValueMap(Map<String, String> monetaryValueMap) {
-        this.monetaryValueMap = monetaryValueMap;
-    }
-
 
     @Before
     public void setup() throws ParseException, IOException {
@@ -105,17 +81,6 @@ public class CoreCaseDataMapperTest {
         assertNotNull(mappedData.get("deceasedDateOfDeath"));
         assertNotNull(mappedData.get("declaration"));
         assertNotNull(mappedData.get("applicationType"));
-    }
-
-    @Test
-    public void mapMonetaryValuesTest() {
-        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getMonetaryValueMap(), coreCaseDataMapper::monetaryValueMapper);
-
-        monetaryValueMap
-                .values()
-                .forEach(
-                        e -> assertTrue(e + " is not found in the mapped data", mappedData.containsKey(e))
-                );
     }
 
     @Test
@@ -155,17 +120,6 @@ public class CoreCaseDataMapperTest {
 
         Optional<JsonNode> mappedData = coreCaseDataMapper.monetaryValueMapper(value, "totalFee");
         assertEquals(expected, mappedData);
-    }
-
-    @Test
-    public void mapFieldsTest() {
-        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getFieldMap(), coreCaseDataMapper::fieldMapper);
-
-        fieldMap
-                .values()
-                .forEach(
-                        e -> assertTrue(e + " is not found in the mapped data", mappedData.containsKey(e))
-                );
     }
 
     @Test

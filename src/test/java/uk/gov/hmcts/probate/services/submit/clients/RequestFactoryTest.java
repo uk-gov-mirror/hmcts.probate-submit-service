@@ -1,23 +1,24 @@
 package uk.gov.hmcts.probate.services.submit.clients;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
-import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-import org.springframework.http.HttpHeaders;
-import uk.gov.hmcts.probate.security.SecurityUtils;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,9 +42,9 @@ public class RequestFactoryTest {
         HttpEntity<JsonNode> persistenceRequest = requestFactory.createPersistenceRequest(jsonNode);
 
         assertEquals(persistenceRequest.getBody(), jsonNode);
-        assertEquals( MediaType.APPLICATION_JSON, persistenceRequest.getHeaders().getContentType());
+        assertEquals(MediaType.APPLICATION_JSON, persistenceRequest.getHeaders().getContentType());
     }
-    
+
     @Test
     public void testCreateCcdSaveRequest() throws IOException {
         JsonNode jsonNode = TestUtils.getJsonNodeFromFile("formPayload.json");
@@ -57,8 +58,8 @@ public class RequestFactoryTest {
         auth.add("Bearer dummyToken");
         assertEquals(request.getHeaders().get("Authorization"), auth);
 
-    }   
-        
+    }
+
     @Test
     public void testCreateCcdStartRequest() {
         String authorization = "dummyToken";
@@ -68,5 +69,5 @@ public class RequestFactoryTest {
         List<String> auth = new ArrayList<>();
         auth.add("Bearer dummyToken");
         assertEquals(auth, request.getHeaders().get("Authorization"));
-    }   
+    }
 }

@@ -34,6 +34,5 @@ public class MailClient implements Client<JsonNode, String> {
         } catch (MessagingException ex) {
             throw new ParsingSubmitException("Could not build or extract the data from the message", ex);
         }
-
     }
 }

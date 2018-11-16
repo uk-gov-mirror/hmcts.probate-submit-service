@@ -469,7 +469,7 @@ public class CoreCaseDataMapper {
             LocalDate localDate = LocalDateTime.now().toLocalDate();
             probateData.put("applicationSubmittedDate", localDate.toString());
         }
-        if (paymentResponse.getTotal() != 0L) {
+        if (paymentResponse.getAmount() != 0L) {
             ObjectNode paymentNode = mapper.createObjectNode();
             ObjectNode paymentValueNode = mapper.createObjectNode();
             paymentValueNode.put("status", paymentResponse.getStatus());

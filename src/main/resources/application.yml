@@ -6,7 +6,7 @@
   management:
     security:
       enabled: false
-  
+
   mail:
     username: localhost
     password: dummyKey
@@ -62,7 +62,7 @@
     tokenTimeToLiveInSeconds: '900'
 
   idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
-  
+
   ccd:
     probate:
       fullName: fullName
@@ -75,8 +75,10 @@
       currentName: currentName
       currentNameReason: currentNameReason
       otherReason: otherReason
-    ccd:  
-      notApplyingExecutorName: notApplyingExecutorName    
+      filename: filename
+      url: url
+    ccd:
+      notApplyingExecutorName: notApplyingExecutorName
       notApplyingExecutorReason: notApplyingExecutorReason
       value: value
       applyingExecutorName: applyingExecutorName
@@ -86,6 +88,9 @@
       applyingExecutorOtherNames: applyingExecutorOtherNames
       applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
       applyingExecutorOtherReason: applyingExecutorOtherReason
+      DocumentType: DocumentType
+      DocumentLink: DocumentLink
+      Comment: Comment
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter
@@ -130,11 +135,14 @@
     executorMap:
       executorsNotApplying: executorsNotApplying
       executorsApplying: executorsApplying
-    aliasMap:  
+    aliasMap:
       deceasedOtherNames: deceasedAliasNameList
     addressMap:
       applicantAddress: primaryApplicantAddress
       deceasedAddress: deceasedAddress
+    documentUploadMap:
+      documentUploads: boDocumentsUploaded
+
 
   logging:
     level:

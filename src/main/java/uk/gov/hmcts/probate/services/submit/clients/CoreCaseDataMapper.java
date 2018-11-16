@@ -70,6 +70,10 @@ public class CoreCaseDataMapper {
     private String otherReason;
     @Value("${ccd.probate.notApplyingKey}")
     private String notApplyingKey;
+    @Value("${ccd.probate.filename}")
+    private String filename;
+    @Value("${ccd.probate.url}")
+    private String url;
     @Value("${ccd.ccd.notApplyingExecutorName}")
     private String notApplyingExecutorName;
     @Value("${ccd.ccd.notApplyingExecutorReason}")
@@ -88,6 +92,12 @@ public class CoreCaseDataMapper {
     private String applyingExecutorOtherNamesReason;
     @Value("${ccd.ccd.applyingExecutorOtherReason}")
     private String applyingExecutorOtherReason;
+    @Value("${ccd.ccd.DocumentType}")
+    private String DocumentType;
+    @Value("${ccd.ccd.DocumentLink}")
+    private String DocumentLink;
+    @Value("${ccd.ccd.Comment}")
+    private String Comment;
     @NotNull
     private Map<String, String> reasonMap;
     @NotNull
@@ -106,6 +116,8 @@ public class CoreCaseDataMapper {
     private Map<String, String> legalStatementMap;
     @NotNull
     private Map<String, String> addressMap;
+    @NotNull
+    private Map<String, String> documentUploadMap;
 
     public Map<String, String> getReasonMap() {
         return reasonMap;
@@ -179,6 +191,14 @@ public class CoreCaseDataMapper {
         this.addressMap = addressMap;
     }
 
+    public Map<String, String> getDocumentUploadMap() {
+        return documentUploadMap;
+    }
+
+    public void setDocumentUploadMap(Map<String, String> documentUploadMap) {
+        this.documentUploadMap = documentUploadMap;
+    }
+
     public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode event = mapper.createObjectNode();
@@ -217,6 +237,7 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, declarationMap, this::declarationMapper));
         ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
+        ccdData.setAll(map(probateData, documentUploadMap, this::documentUploadMapper));
         return ccdData;
     }
 
@@ -503,6 +524,36 @@ public class CoreCaseDataMapper {
              logger.error("Error parsing payment date", pe);
         }
         return "";
+    }
+
+    public Optional<JsonNode> documentUploadMapper(JsonNode probateData, String fieldname) {
+        Optional<JsonNode> ret = Optional.empty();
+        Optional<JsonNode> documentUploads = Optional.ofNullable(probateData.get(fieldname));
+        if (documentUploads.isPresent()) {
+            ArrayNode documentUploadCcdFormat = new ObjectMapper().createArrayNode();
+            documentUploads.get()
+                    .elements().forEachRemaining(
+                    document -> mapDocument(document).ifPresent(documentUploadCcdFormat::add)
+            );
+            ret = Optional.of(documentUploadCcdFormat);
+        }
+        return ret;
+    }
+
+    public Optional<JsonNode> mapDocument(JsonNode document) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode ccdFormat = mapper.createObjectNode();
+        ObjectNode value = mapper.createObjectNode();
+
+        String documentUploadURL = document.get(url).asText();
+        value.set(DocumentLink, new TextNode(documentUploadURL.trim()));
+        String documentUploadName = document.get(filename).asText();
+        value.set(Comment, new TextNode(documentUploadName.trim()));
+        String documentUploadType = "DeathCertificate";
+        value.set(DocumentType, new TextNode(documentUploadType.trim()));
+
+        ccdFormat.set(VALUE, value);
+        return Optional.of(ccdFormat);
     }
 }
 

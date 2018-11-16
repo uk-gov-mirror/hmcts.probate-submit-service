@@ -1,0 +1,23 @@
+[
+  {
+    "value": {
+      "DocumentType": "deathCertificate",
+      "DocumentLink": "url_link1",
+      "Comment": "document_1"
+    }
+  },
+  {
+    "value": {
+      "DocumentType": "deathCertificate",
+      "DocumentLink": "url_link2",
+      "Comment": "document_2"
+    }
+  },
+  {
+    "value": {
+      "DocumentType": "deathCertificate",
+      "DocumentLink": "url_link3",
+      "Comment": "document_3"
+    }
+  }
+]

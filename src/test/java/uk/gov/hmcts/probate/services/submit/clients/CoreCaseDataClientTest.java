@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(MockitoJUnitRunner.class)
 public class CoreCaseDataClientTest {
 
     private static final String CORE_CASE_DATA_URL =
@@ -40,16 +40,13 @@ public class CoreCaseDataClientTest {
     private static final Calendar SUBMISSION_TIMESTAMP = Calendar.getInstance();
     private static final JsonNode SEQUENCE_NUMBER = new LongNode(123L);
     private static final String APPLY_FOR_GRANT_CCD_EVENT_ID = "applyForGrant";
-    private static final String CCD_EVENT_ID = "CCD_EVENT_ID";
     private static final String TOKEN_RESOURCE = "token";
     private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "createCase";
 
     public static final String APPLICANT_EMAIL_ADDRESS_FIELD = "applicantEmail";
-    public static final String DECEASED_SURNAME_FIELD = "deceasedSurname";
     public static final String DECEASED_FORENAMES_FIELD = "deceasedFirstname";
 
     public static final JsonNode PRIMARY_APPLICANT_EMAIL_ADDRESS = new TextNode("test@test.com");
-    public static final JsonNode DECEASED_SURNAME = new TextNode("Brown");
     public static final JsonNode DECEASED_FORENAMES = new TextNode("Bobby");
 
     private CcdCreateCaseParams ccdCreateCaseParams;
@@ -113,10 +110,6 @@ public class CoreCaseDataClientTest {
         when(submitData.getSubmitData()).thenReturn(submitDataJson);
         when(submitDataJson.get(APPLICANT_EMAIL_ADDRESS_FIELD))
                 .thenReturn(PRIMARY_APPLICANT_EMAIL_ADDRESS);
-
-        when(submitDataJson.get(DECEASED_FORENAMES_FIELD)).thenReturn(DECEASED_FORENAMES);
-
-        when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
     }
 
     @Test
@@ -128,8 +121,6 @@ public class CoreCaseDataClientTest {
         
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
-        when(response.getBody()).thenReturn(ccdData);
-        when(ccdData.get(TOKEN_RESOURCE)).thenReturn(tokenJsonNode);
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.set("token", TextNode.valueOf("token"));
@@ -151,8 +142,6 @@ public class CoreCaseDataClientTest {
                 .when(restTemplate).exchange(url, HttpMethod.GET, ccdRequest, JsonNode.class);
         when(requestFactory.createCcdStartRequest(ccdCreateCaseParams.getAuthorization()))
                 .thenReturn(ccdRequest);
-        when(response.getBody()).thenReturn(ccdData);
-        when(ccdData.get(TOKEN_RESOURCE)).thenReturn(tokenJsonNode);
 
         coreCaseDataClient.createCase(ccdCreateCaseParams);
     }
@@ -227,7 +216,6 @@ public class CoreCaseDataClientTest {
         when(requestFactory.createCcdStartRequest(AUTHORIZATION_TOKEN)).thenReturn(ccdRequest);
         ArrayNode arrayNode = objectMapper.createArrayNode();
         arrayNode.add(ccdData);
-        when(response.getBody()).thenReturn(arrayNode);
 
         coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
     }

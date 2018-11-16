@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
@@ -103,7 +103,6 @@ public class SubmitServiceTest {
         setupFormData();
 
         when(submitData.getApplicantEmailAddress()).thenReturn(APPLICANT_EMAIL_ADDRESS);
-        when(submitData.getPaymentTotal()).thenReturn(100D);
         when(submitData.getPaymentResponse()).thenReturn(paymentResponse);
         when(submitData.getCaseState()).thenReturn(CASE_STATE);
         when(submitData.getCaseId()).thenReturn(CASE_ID);
@@ -233,7 +232,6 @@ public class SubmitServiceTest {
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
         when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
-        when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
@@ -251,8 +249,6 @@ public class SubmitServiceTest {
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
         when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
-        when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
-        when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
@@ -352,11 +348,8 @@ public class SubmitServiceTest {
 
     @Test
     public void shouldNotUpdatePaymentStatusSuccessfullyWhenPaymentReferencesIsTheSameAsExisting() {
-        when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
-        when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
         when(ccdCaseResponse.getPaymentReference()).thenReturn("RC-1537-1988-5489-1986");
         when(paymentResponse.getReference()).thenReturn("RC-1537-1988-5489-1986");
 
@@ -375,8 +368,6 @@ public class SubmitServiceTest {
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
         when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
-        when(ccdCaseResponse.getPaymentReference()).thenReturn("RC-1537-1988-5489-1986");
-        when(paymentResponse.getReference()).thenReturn("RC-1537-1988-5489-1986");
         when(paymentResponse.getAmount()).thenReturn(0L);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);

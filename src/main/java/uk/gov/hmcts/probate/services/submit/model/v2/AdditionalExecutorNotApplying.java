@@ -8,8 +8,12 @@ import lombok.Data;
 public class AdditionalExecutorNotApplying {
 
     private final String notApplyingExecutorName;
+
     private final String notApplyingExecutorNameOnWill;
+
     private final String notApplyingExecutorNameDifferenceComment;
+
     private final String notApplyingExecutorReason;
+
     private final String notApplyingExecutorNotified;
 }

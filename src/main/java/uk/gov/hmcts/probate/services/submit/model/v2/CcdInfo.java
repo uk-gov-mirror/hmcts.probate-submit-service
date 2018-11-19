@@ -5,7 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LegalStatementExecutorNotApplying {
+public class CcdInfo {
 
-    private final String executor;
+    private String caseId;
+
+    private String state;
+
 }

@@ -6,19 +6,31 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.GrantOfRepresentation;
+import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
+import uk.gov.hmcts.probate.services.submit.services.DraftService;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @Api(tags = {"DraftsController"})
 @SwaggerDefinition(tags = {@Tag(name = "DraftsController", description = "Drafts API")})
 @RestController
 public class DraftsController {
+
+    private final DraftService draftService;
+
+    @Autowired
+    public DraftsController(DraftService draftService) {
+        this.draftService = draftService;
+    }
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
@@ -28,7 +40,7 @@ public class DraftsController {
     })
     @RequestMapping(path = "/case-type/GrantOfRepresentation/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<GrantOfRepresentation> saveDraft(@RequestBody GrantOfRepresentation grantOfRepresentation) {
-        return null;
+    public ResponseEntity<DraftRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail, @RequestBody DraftRequest draftRequest) {
+        return new ResponseEntity(draftService.saveDraft(applicantEmail, draftRequest), CREATED);
     }
 }

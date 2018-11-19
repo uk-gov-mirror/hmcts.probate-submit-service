@@ -1,8 +1,14 @@
-package uk.gov.hmcts.probate.services.submit.model.v2;
+package uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.probate.services.submit.model.v2.Address;
+import uk.gov.hmcts.probate.services.submit.model.v2.AliasName;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
+import uk.gov.hmcts.probate.services.submit.model.v2.CollectionMember;
+import uk.gov.hmcts.probate.services.submit.model.v2.Payment;
+import uk.gov.hmcts.probate.services.submit.model.v2.YesNo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +16,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class GrantOfRepresentation {
+public class GrantOfRepresentation extends CaseData {
 
     private LocalDate applicationSubmittedDate;
 
@@ -83,7 +89,7 @@ public class GrantOfRepresentation {
     private String primaryApplicantAlias;
 
     private String primaryApplicantAliasReason;
-    
+
     private String primaryApplicantOtherReason;
 
     private String primaryApplicantPhoneNumber;
@@ -98,5 +104,5 @@ public class GrantOfRepresentation {
 
     private String totalFee;
 
-    private final List<CollectionMember<AliasName>> deceasedAliasNameList;
+    private List<CollectionMember<AliasName>> deceasedAliasNameList;
 }

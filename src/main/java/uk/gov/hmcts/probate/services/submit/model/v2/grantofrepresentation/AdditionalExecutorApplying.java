@@ -1,7 +1,8 @@
-package uk.gov.hmcts.probate.services.submit.model.v2;
+package uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation;
 
 import lombok.Builder;
 import lombok.Data;
+import uk.gov.hmcts.probate.services.submit.model.v2.Address;
 
 @Data
 @Builder

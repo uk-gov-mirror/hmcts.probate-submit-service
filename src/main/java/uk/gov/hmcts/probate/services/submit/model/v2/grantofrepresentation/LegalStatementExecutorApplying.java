@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.model.v2;
+package uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

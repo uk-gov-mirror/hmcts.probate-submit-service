@@ -212,6 +212,14 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
+    public void mapNonExistentDocumentTest()  {
+        Optional<JsonNode> expected = Optional.empty();
+        Optional<JsonNode> mappedData = coreCaseDataMapper.documentUploadMapper(submitdata, "noSuchField");
+        assertEquals(expected, mappedData);
+
+    }
+
+    @Test
     public void mapNonExistentExecutorsTest() {
         Optional<JsonNode> expected = Optional.empty();
         Optional<JsonNode> mappedData = coreCaseDataMapper.executorsMapper(submitdata, "noSuchField");

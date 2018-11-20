@@ -545,12 +545,12 @@ public class CoreCaseDataMapper {
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
 
+        String documentUploadType = "deathCertificate";
+        value.set(DocumentType, new TextNode(documentUploadType.trim()));
         String documentUploadURL = document.get(url).asText();
         value.set(DocumentLink, new TextNode(documentUploadURL.trim()));
         String documentUploadName = document.get(filename).asText();
         value.set(Comment, new TextNode(documentUploadName.trim()));
-        String documentUploadType = "DeathCertificate";
-        value.set(DocumentType, new TextNode(documentUploadType.trim()));
 
         ccdFormat.set(VALUE, value);
         return Optional.of(ccdFormat);

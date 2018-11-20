@@ -38,8 +38,7 @@
         "willOriginal": "Yes",
         "willWithCodicils": "Yes",
         "willCodicilsNumber": "2",
-        "documentUploads": {
-            "uploads": [{
+        "documentUploads": [{
                     "filename": "document_1",
                     "url": "url_link1"
                 },
@@ -53,7 +52,7 @@
                 }
 
             ]
-        },
+        ,
         "ihtCompleted": "Yes",
         "ihtForm": "online",
         "ihtFormId": "IHT205",

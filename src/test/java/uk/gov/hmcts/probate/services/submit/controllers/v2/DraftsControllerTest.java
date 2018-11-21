@@ -8,7 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.hmcts.probate.services.submit.services.DraftService;
+import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {DraftsController.class}, secure = false)
 public class DraftsControllerTest {
 
-    private static final String DRAFTS_URL = "/case-type/GrantOfRepresentation/drafts";
+    private static final String DRAFTS_URL = "/drafts";
 
     private static final String EMAIL_ADDRESS = "test@test.com";
 

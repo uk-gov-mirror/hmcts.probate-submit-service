@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.services;
+package uk.gov.hmcts.probate.services.submit.services.v2;
 
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftResponse;

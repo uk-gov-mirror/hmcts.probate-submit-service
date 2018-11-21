@@ -6,6 +6,7 @@ import lombok.Data;
 import uk.gov.hmcts.probate.services.submit.model.v2.Address;
 import uk.gov.hmcts.probate.services.submit.model.v2.AliasName;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
 import uk.gov.hmcts.probate.services.submit.model.v2.CollectionMember;
 import uk.gov.hmcts.probate.services.submit.model.v2.Payment;
 import uk.gov.hmcts.probate.services.submit.model.v2.YesNo;

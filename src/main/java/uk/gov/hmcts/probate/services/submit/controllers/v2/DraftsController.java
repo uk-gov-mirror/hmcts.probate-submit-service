@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
-import uk.gov.hmcts.probate.services.submit.services.DraftService;
+import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @Api(tags = {"DraftsController"})
 @SwaggerDefinition(tags = {@Tag(name = "DraftsController", description = "Drafts API")})
@@ -38,9 +38,9 @@ public class DraftsController {
             @ApiResponse(code = 400, message = "Draft save to CCD  failed"),
             @ApiResponse(code = 422, message = "Invalid or missing attribute")
     })
-    @RequestMapping(path = "/case-type/GrantOfRepresentation/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<DraftRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail, @RequestBody DraftRequest draftRequest) {
-        return new ResponseEntity(draftService.saveDraft(applicantEmail, draftRequest), CREATED);
+        return new ResponseEntity(draftService.saveDraft(applicantEmail, draftRequest), OK);
     }
 }

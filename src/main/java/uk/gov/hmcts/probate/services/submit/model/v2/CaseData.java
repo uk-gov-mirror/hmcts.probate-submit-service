@@ -9,6 +9,4 @@ import uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation.Grant
 @JsonSubTypes({@JsonSubTypes.Type(value = GrantOfRepresentation.class, name = "GrantOfRepresentation")})
 @Data
 public abstract class CaseData {
-
-    protected CaseType type;
 }

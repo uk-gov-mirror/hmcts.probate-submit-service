@@ -4,14 +4,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
+import static uk.gov.hmcts.probate.services.submit.model.v2.CaseType.Constants.CAVEAT_NAME;
+import static uk.gov.hmcts.probate.services.submit.model.v2.CaseType.Constants.GRANT_OF_REPRESENTATION_NAME;
+
 @RequiredArgsConstructor
 public enum CaseType {
 
-    @JsonProperty("GrantOfRepresentation") GRANT_OF_REPRESENTATION("GrantOfRepresentation"),
-    @JsonProperty("Caveat") CAVEAT("Caveat");
+    @JsonProperty(GRANT_OF_REPRESENTATION_NAME) GRANT_OF_REPRESENTATION(GRANT_OF_REPRESENTATION_NAME),
+    @JsonProperty(CAVEAT_NAME) CAVEAT(CAVEAT_NAME);
 
     @Getter
     private final String name;
+
+    public static CaseType getCaseType(CaseData caseData) {
+        String className = caseData.getClass().getSimpleName();
+        return Arrays.stream(CaseType.values())
+                .filter(caseType -> caseType.getName().equals(className))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Cannot find case type associated with class: " + className));
+
+    }
+
+    public static class Constants {
+
+        public static final String GRANT_OF_REPRESENTATION_NAME = "GrantOfRepresentation";
+
+        public static final String CAVEAT_NAME = "Caveat";
+
+        private Constants() {
+        }
+    }
 }
 
 

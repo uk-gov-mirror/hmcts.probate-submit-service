@@ -35,6 +35,6 @@ public class DraftsControllerTest {
         mockMvc.perform(post(DRAFTS_URL + "/" + EMAIL_ADDRESS)
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 }

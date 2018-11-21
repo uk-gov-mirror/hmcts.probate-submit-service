@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CcdInfo {
+public class CaseInfo {
 
     private String caseId;
 

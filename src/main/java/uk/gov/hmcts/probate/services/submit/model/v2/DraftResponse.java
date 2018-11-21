@@ -9,5 +9,5 @@ public class DraftResponse {
 
     private CaseData caseData;
 
-    private CcdInfo ccdInfo;
+    private CaseInfo caseInfo;
 }

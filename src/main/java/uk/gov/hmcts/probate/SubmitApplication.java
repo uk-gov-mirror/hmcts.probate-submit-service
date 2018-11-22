@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.ccd.client.healthcheck.CoreCaseDataHealthIndicator;
 
 @EnableSwagger2
 @EnableFeignClients
-@SpringBootApplication(exclude = {ServiceAuthHealthIndicator.class, CoreCaseDataHealthIndicator.class})
+@SpringBootApplication(exclude = {ServiceAuthHealthIndicator.class})
 public class SubmitApplication {
     public static void main(String[] args) {
         SpringApplication.run(SubmitApplication.class, args);

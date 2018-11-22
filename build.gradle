@@ -171,7 +171,8 @@ def versions = [
     ccdClient: '4.4.1',
     springCloudStarterNetflixHystrix: '2.0.2.RELEASE',
     springfoxSwagger: '2.6.1',
-    springCloudWiremock: '1.2.4.RELEASE'
+    springCloudWiremock: '1.2.4.RELEASE',
+    serentity: '2.0.17'
 ]
 
 
@@ -205,19 +206,14 @@ dependencies {
   
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.0.RELEASE'
 
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.17'
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.17'
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.0.17'
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '2.0.17'
-
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
   testCompile group: 'org.springframework.security', name: 'spring-security-test'
   testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
-  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.0.26'
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
+  testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testFunctionalCompile sourceSets.main.runtimeClasspath
   testFunctionalCompile sourceSets.test.runtimeClasspath
@@ -227,10 +223,10 @@ dependencies {
   testSmokeCompile sourceSets.main.runtimeClasspath
   testSmokeCompile sourceSets.test.runtimeClasspath
 
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: '1.5.2'
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: '1.5.2'
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
-  testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.0.26'
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
+  testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testContractCompile sourceSets.main.runtimeClasspath
   testContractCompile sourceSets.test.runtimeClasspath

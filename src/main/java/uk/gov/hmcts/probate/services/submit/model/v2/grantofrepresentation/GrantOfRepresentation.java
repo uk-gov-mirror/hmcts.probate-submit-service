@@ -1,6 +1,8 @@
 package uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.probate.services.submit.model.v2.Address;
@@ -67,9 +69,11 @@ public class GrantOfRepresentation extends CaseData {
 
     private YesNo willAccessOriginal;
 
-    private BigDecimal ihtNetValue;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long ihtNetValue;
 
-    private BigDecimal ihtGrossValue;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long ihtGrossValue;
 
     private String ihtReferenceNumber;
 

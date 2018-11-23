@@ -26,13 +26,13 @@ public class SecurityUtils {
     public SecurityDTO getSecurityDTO() {
         return SecurityDTO.builder()
                 .authorisation(getUserToken())
-                .authorisation(getUserId())
+                .userId(getUserId())
                 .serviceAuthorisation(generateServiceToken())
                 .build();
     }
 
     public String getUserToken() {
-        return (String) SecurityContextHolder.getContext()
+        return "Bearer " + SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getCredentials();
     }

@@ -3,20 +3,20 @@ package uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
 import uk.gov.hmcts.probate.services.submit.model.v2.Address;
 import uk.gov.hmcts.probate.services.submit.model.v2.AliasName;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
 import uk.gov.hmcts.probate.services.submit.model.v2.CollectionMember;
 import uk.gov.hmcts.probate.services.submit.model.v2.Payment;
 import uk.gov.hmcts.probate.services.submit.model.v2.YesNo;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@ApiModel(value = "GrantOfRepresentation", parent = CaseData.class)
 @Data
 @Builder
 public class GrantOfRepresentation extends CaseData {

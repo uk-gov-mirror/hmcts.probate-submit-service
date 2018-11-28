@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
 import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @Api(tags = {"DraftsController"})
@@ -34,13 +36,14 @@ public class DraftsController {
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Draft save to CCD successful"),
-            @ApiResponse(code = 400, message = "Draft save to CCD  failed"),
-            @ApiResponse(code = 422, message = "Invalid or missing attribute")
+            @ApiResponse(code = 200, message = "Draft save to CCD successful"),
+            @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<DraftRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail, @RequestBody DraftRequest draftRequest) {
+    public ResponseEntity<DraftRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
+                                                  @Valid @RequestBody DraftRequest draftRequest) {
         return new ResponseEntity(draftService.saveDraft(applicantEmail, draftRequest), OK);
     }
 }

@@ -49,6 +49,9 @@
       basename: messages
       cache-seconds: -1
       encoding: UTF-8
+    jackson:
+      deserialization:
+        FAIL_ON_UNKNOWN_PROPERTIES: true
 
   server:
     port: 8181

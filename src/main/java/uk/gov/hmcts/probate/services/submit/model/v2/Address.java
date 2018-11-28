@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.model.v2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 
 @Data
 @Builder
+@ApiModel(value = "Address", description = "Represents address in CCD")
 public class Address implements Serializable {
 
     @JsonProperty(value = "AddressLine1")

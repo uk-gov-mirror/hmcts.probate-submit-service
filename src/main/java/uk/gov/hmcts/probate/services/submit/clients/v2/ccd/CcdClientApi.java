@@ -8,7 +8,6 @@ import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseInfo;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
 import uk.gov.hmcts.probate.services.submit.model.v2.JurisdictionId;
-import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataApiClient;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -19,23 +18,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class CoreCaseDataApiClientImpl implements CoreCaseDataApiClient {
+public class CcdClientApi {
 
     private static final String CASE_QUERY_PARAM = "case.primaryApplicantEmailAddress";
 
     private final CoreCaseDataApi coreCaseDataApi;
 
     @Autowired
-    public CoreCaseDataApiClientImpl(CoreCaseDataApi coreCaseDataApi) {
+    public CcdClientApi(CoreCaseDataApi coreCaseDataApi) {
         this.coreCaseDataApi = coreCaseDataApi;
     }
 
-    @Override
-    public CaseInfo updateDraft(String caseId, CaseData caseData, SecurityDTO securityDTO) {
-        return updateCase(caseId, caseData, EventId.UPDATE_DRAFT, securityDTO);
-    }
-
-    private CaseInfo updateCase(String caseId, CaseData caseData, EventId eventId,
+    public CaseInfo updateCase(String caseId, CaseData caseData, EventId eventId,
                                 SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
         StartEventResponse startEventResponse = coreCaseDataApi.startEventForCitizen(
@@ -61,12 +55,7 @@ public class CoreCaseDataApiClientImpl implements CoreCaseDataApiClient {
         return createCaseInfo(caseDetails);
     }
 
-    @Override
-    public CaseInfo createDraft(CaseData caseData, SecurityDTO securityDTO) {
-        return createCase(caseData, EventId.CREATE_DRAFT, securityDTO);
-    }
-
-    private CaseInfo createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
+    public CaseInfo createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
         StartEventResponse startEventResponse = coreCaseDataApi.startForCitizen(
                 securityDTO.getAuthorisation(),
@@ -87,6 +76,23 @@ public class CoreCaseDataApiClientImpl implements CoreCaseDataApiClient {
                 caseDataContent
         );
         return createCaseInfo(caseDetails);
+    }
+
+    public Optional<CaseInfo> findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                ImmutableMap.of(CASE_QUERY_PARAM, applicantEmail));
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        if (caseDetails.size() > 1) {
+            throw new IllegalStateException("Multiple cases exist with applicant email provided!");
+        }
+        return caseDetails.stream().findFirst().map(this::createCaseInfo);
     }
 
     private CaseInfo createCaseInfo(CaseDetails caseDetails) {
@@ -110,23 +116,5 @@ public class CoreCaseDataApiClientImpl implements CoreCaseDataApiClient {
                 .description("Probate application")
                 .summary("Probate application")
                 .build();
-    }
-
-    @Override
-    public Optional<CaseInfo> findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
-        List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
-                caseType.getName(),
-                ImmutableMap.of(CASE_QUERY_PARAM, applicantEmail));
-        if (caseDetails == null) {
-            return Optional.empty();
-        }
-        if (caseDetails.size() > 1) {
-            throw new IllegalStateException("Multiple cases exist with applicant email provided!");
-        }
-        return caseDetails.stream().findFirst().map(this::createCaseInfo);
     }
 }

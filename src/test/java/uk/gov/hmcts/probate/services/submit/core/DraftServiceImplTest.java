@@ -14,7 +14,7 @@ import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftResponse;
 import uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation.GrantOfRepresentation;
-import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataApiClient;
+import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataFacade;
 
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class DraftServiceImplTest {
     private SecurityUtils mockSecurityUtils;
 
     @Mock
-    private CoreCaseDataApiClient mockCoreCaseDataApiClient;
+    private CoreCaseDataFacade mockCoreCaseDataFacade;
 
     @InjectMocks
     private DraftServiceImpl draftService;
@@ -61,32 +61,32 @@ public class DraftServiceImplTest {
     @Test
     public void shouldCreateDraftWhenNoExistingCase() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        when(mockCoreCaseDataApiClient.findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO))
+        when(mockCoreCaseDataFacade.findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.empty());
-        when(mockCoreCaseDataApiClient.createDraft(caseData, securityDTO)).thenReturn(caseInfo);
+        when(mockCoreCaseDataFacade.createDraft(caseData, securityDTO)).thenReturn(caseInfo);
 
         DraftResponse draftResponse = draftService.saveDraft(APPLICANT_EMAIL, draftRequest);
 
         assertThat(draftResponse.getCaseData(), is(caseData));
         assertThat(draftResponse.getCaseInfo(), is(caseInfo));
         verify(mockSecurityUtils, times(1)).getSecurityDTO();
-        verify(mockCoreCaseDataApiClient, times(1)).findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO);
-        verify(mockCoreCaseDataApiClient, times(1)).createDraft(caseData, securityDTO);
+        verify(mockCoreCaseDataFacade, times(1)).findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO);
+        verify(mockCoreCaseDataFacade, times(1)).createDraft(caseData, securityDTO);
     }
 
     @Test
     public void shouldUpdateDraftWhenExistingCase() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        when(mockCoreCaseDataApiClient.findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO))
+        when(mockCoreCaseDataFacade.findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.of(caseInfo));
-        when(mockCoreCaseDataApiClient.updateDraft(CASE_ID, caseData, securityDTO)).thenReturn(caseInfo);
+        when(mockCoreCaseDataFacade.updateDraft(CASE_ID, caseData, securityDTO)).thenReturn(caseInfo);
 
         DraftResponse draftResponse = draftService.saveDraft(APPLICANT_EMAIL, draftRequest);
 
         assertThat(draftResponse.getCaseData(), is(caseData));
         assertThat(draftResponse.getCaseInfo(), is(equalTo(caseInfo)));
         verify(mockSecurityUtils, times(1)).getSecurityDTO();
-        verify(mockCoreCaseDataApiClient, times(1)).findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO);
-        verify(mockCoreCaseDataApiClient, times(1)).updateDraft(CASE_ID, caseData, securityDTO);
+        verify(mockCoreCaseDataFacade, times(1)).findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO);
+        verify(mockCoreCaseDataFacade, times(1)).updateDraft(CASE_ID, caseData, securityDTO);
     }
 }

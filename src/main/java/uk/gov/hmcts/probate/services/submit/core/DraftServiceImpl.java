@@ -9,7 +9,7 @@ import uk.gov.hmcts.probate.services.submit.model.v2.CaseInfo;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.DraftResponse;
-import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataApiClient;
+import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataFacade;
 import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
 
 import java.util.Optional;
@@ -17,13 +17,13 @@ import java.util.Optional;
 @Component
 public class DraftServiceImpl implements DraftService {
 
-    private final CoreCaseDataApiClient coreCaseDataApiClient;
+    private final CoreCaseDataFacade coreCaseDataFacade;
 
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public DraftServiceImpl(CoreCaseDataApiClient coreCaseDataApiClient, SecurityUtils securityUtils) {
-        this.coreCaseDataApiClient = coreCaseDataApiClient;
+    public DraftServiceImpl(CoreCaseDataFacade coreCaseDataFacade, SecurityUtils securityUtils) {
+        this.coreCaseDataFacade = coreCaseDataFacade;
         this.securityUtils = securityUtils;
     }
 
@@ -32,7 +32,7 @@ public class DraftServiceImpl implements DraftService {
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         CaseData caseData = draftRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        Optional<CaseInfo> caseInfoOptional = coreCaseDataApiClient.findCase(applicantEmail, caseType, securityDTO);
+        Optional<CaseInfo> caseInfoOptional = coreCaseDataFacade.findCase(applicantEmail, caseType, securityDTO);
 
         CaseInfo caseInfo = saveDraft(securityDTO, caseData, caseInfoOptional);
         return DraftResponse.builder()
@@ -44,8 +44,8 @@ public class DraftServiceImpl implements DraftService {
     private CaseInfo saveDraft(SecurityDTO securityDTO, CaseData caseData, Optional<CaseInfo> caseInfoOptional) {
         if (caseInfoOptional.isPresent()) {
             CaseInfo caseInfo = caseInfoOptional.get();
-            return coreCaseDataApiClient.updateDraft(caseInfo.getCaseId(), caseData, securityDTO);
+            return coreCaseDataFacade.updateDraft(caseInfo.getCaseId(), caseData, securityDTO);
         }
-        return coreCaseDataApiClient.createDraft(caseData, securityDTO);
+        return coreCaseDataFacade.createDraft(caseData, securityDTO);
     }
 }

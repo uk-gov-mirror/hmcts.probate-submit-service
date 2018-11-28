@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.model.v2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import static uk.gov.hmcts.probate.services.submit.model.v2.CaseType.Constants.CAVEAT_NAME;
 import static uk.gov.hmcts.probate.services.submit.model.v2.CaseType.Constants.GRANT_OF_REPRESENTATION_NAME;
 
+@ApiModel(value = "CaseType", description = "Represents case type")
 @RequiredArgsConstructor
 public enum CaseType {
 

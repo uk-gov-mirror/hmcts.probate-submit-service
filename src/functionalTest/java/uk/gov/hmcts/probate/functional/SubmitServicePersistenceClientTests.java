@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     private static String SESSION_ID = "tom@email.com";
-    private static long SUBMISSION_REFERENCE = 123;
+    private static long SUBMISSION_REFERENCE = 123456;
     private static boolean INITIALISED = false;
 
     @Before

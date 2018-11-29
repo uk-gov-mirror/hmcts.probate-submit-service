@@ -17,7 +17,6 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     private static String SESSION_ID = "tom@email.com";
     private static long SUBMISSION_REFERENCE = 123;
-    private static long FORM_DATA_ID = 456;
     private static boolean INITIALISED = false;
 
     @Before
@@ -44,7 +43,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     @Test
     public void loadSubmissionFailure() {
-        validateLoadSubmissionFailure(999, 404);
+        validateLoadSubmissionFailure(9999, 404);
     }
 
     @Test
@@ -64,7 +63,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
 
     @Test
     public void loadFormDataBySubmissionReferenceFailure() {
-        validateLoadFormDataBySubmissionReferenceFailure(999, 404);
+        validateLoadFormDataBySubmissionReferenceFailure(9999, 404);
     }
 
     @Test
@@ -124,7 +123,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     private void validateLoadFormDataIdSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/formdata/" + FORM_DATA_ID)
+                .when().get(persistenceServiceUrl + "/formdata/" + SESSION_ID)
                 .then().assertThat().statusCode(200);
     }
 
@@ -157,14 +156,14 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
                 .body(utils.getJsonFromFile("formData.json"))
-                .when().put(persistenceServiceUrl + "/formdata/" + FORM_DATA_ID)
+                .when().put(persistenceServiceUrl + "/formdata/" + SESSION_ID)
                 .then().assertThat().statusCode(200);
     }
 
     private void validateUpdateFormDataFailure(int errorCode) {
         Response response = SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().put(persistenceServiceUrl + "/formdata/" + FORM_DATA_ID)
+                .when().put(persistenceServiceUrl + "/formdata/" + SESSION_ID)
                 .thenReturn();
 
         response.then().assertThat().statusCode(errorCode);

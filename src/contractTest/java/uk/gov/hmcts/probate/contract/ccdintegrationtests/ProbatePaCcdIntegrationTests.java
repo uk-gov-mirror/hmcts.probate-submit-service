@@ -133,24 +133,6 @@ public class ProbatePaCcdIntegrationTests extends IntegrationTestBase {
 
 
     @Test
-    public void verifySecurityClassificationIsPresentInTheSuccessResponse() throws IOException {
-        given()
-                .when().baseUri("http://rpe-service-auth-provider-aat.service.core-compute-aat.internal").get("/health")
-                .then()
-                .statusCode(200);
-
-        ObjectNode requestJson = getRequestJsonWithToken(APPLY_FOR_GRANT_TOKEN_URL_PATH, "success.pa.ccd.json");
-
-        given()
-                .headers(contractTestUtils.getHeadersWithUserId())
-                .body(requestJson.toString())
-                .when().post("/citizens/" + contractTestUtils.getUserId()
-                + "/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases")
-                .then()
-                .statusCode(201).and().body("security_classification", equalToIgnoringCase("PUBLIC"));
-    }
-
-    @Test
     public void verifyCreatedDateIsPresentInTheSuccessResponse() throws IOException {
         ObjectNode requestJson = getRequestJsonWithToken(APPLY_FOR_GRANT_TOKEN_URL_PATH, "success.pa.ccd.json");
 

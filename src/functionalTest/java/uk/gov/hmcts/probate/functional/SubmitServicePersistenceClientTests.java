@@ -157,7 +157,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
                 .headers(utils.getHeaders(SESSION_ID))
                 .body(utils.getJsonFromFile("formData.json"))
                 .when().put(persistenceServiceUrl + "/formdata/" + SESSION_ID)
-                .then().assertThat().statusCode(200);
+                .then().assertThat().statusCode(201);
     }
 
     private void validateUpdateFormDataFailure(int errorCode) {

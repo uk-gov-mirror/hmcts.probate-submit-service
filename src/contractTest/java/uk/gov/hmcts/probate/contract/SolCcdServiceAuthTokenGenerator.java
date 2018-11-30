@@ -80,6 +80,7 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientToken() {
         String code = generateClientCode();
+        log.info("CODE="+code);
         String token = "";
 
         String path = idamUserBaseUrl + "/oauth2/token?code=" + code +
@@ -98,11 +99,10 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientCode() {
         String code = "";
-        final String encoded = Base64.getEncoder().encodeToString((idamUsername + ":" + idamPassword).getBytes());
-        code = RestAssured.given().baseUri(idamUserBaseUrl)
-                .header("Authorization", "Basic " + encoded)
-                .post("/oauth2/authorize?response_type=code&client_id=probate&redirect_uri=" + redirectUri)
-                .body().path("code");
+        code = RestAssured.given().header("Authorization", "Basic dGVzdEBURVNULkNPTToxMjM=")
+                .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code" +
+                        "&client_id=" + clientId +
+                        "&redirect_uri=" + redirectUri).body().path("code");
         return code;
 
     }

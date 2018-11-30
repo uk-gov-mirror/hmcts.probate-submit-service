@@ -120,7 +120,7 @@ public class SolCcdServiceAuthTokenGenerator {
         System.out.println("user="+user+ " pass="+pass);
         given().headers("Content-type", "application/json")
                 .relaxedHTTPSValidation()
-                .body("{ \"email\":\"\"+user+\"\", \"forename\":\""+user+"\",\"surname\":\"\"+user+\"\",\"password\":\""+pass+"\",\"continue-url\":\"test\"}")
+                .body("{ \"email\":\""+user+"\", \"forename\":\""+user+"\",\"surname\":\""+user+"\",\"password\":\""+pass+"\",\"continue-url\":\"test\"}")
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

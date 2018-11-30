@@ -2,8 +2,6 @@ package uk.gov.hmcts.probate.contract;
 
 
 import io.restassured.RestAssured;
-import java.util.Base64;
-
 import io.restassured.response.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +78,7 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientToken() {
         String code = generateClientCode();
-        log.info("CODE="+code);
+        System.out.println("CODE=" + code);
         String token = "";
 
         String path = idamUserBaseUrl + "/oauth2/token?code=" + code +
@@ -88,10 +86,10 @@ public class SolCcdServiceAuthTokenGenerator {
                 "&client_id=probate" +
                 "&redirect_uri=" + redirectUri +
                 "&grant_type=authorization_code";
-        log.info("PATH="+path);
+        System.out.println("PATH=" + path);
         ResponseBody body = RestAssured.given().post(path)
                 .body();
-        log.info("BODY="+body);
+        System.out.println("BODY=" + body);
         token = body.path("access_token");
 
         return "Bearer " + token;
@@ -99,6 +97,7 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientCode() {
         String code = "";
+        System.out.println("idamUserBaseUrl=" + idamUserBaseUrl);
         code = RestAssured.given().header("Authorization", "Basic dGVzdEBURVNULkNPTToxMjM=")
                 .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code" +
                         "&client_id=" + clientId +

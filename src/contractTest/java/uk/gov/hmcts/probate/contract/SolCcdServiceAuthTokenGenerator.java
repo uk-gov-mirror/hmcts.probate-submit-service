@@ -3,12 +3,16 @@ package uk.gov.hmcts.probate.contract;
 
 import io.restassured.RestAssured;
 import java.util.Base64;
+
+import io.restassured.response.ResponseBody;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 
 @Component
+@Slf4j
 public class SolCcdServiceAuthTokenGenerator {
 
     @Value("${idam.oauth2.client.id}")
@@ -78,12 +82,16 @@ public class SolCcdServiceAuthTokenGenerator {
         String code = generateClientCode();
         String token = "";
 
-        token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
+        String path = idamUserBaseUrl + "/oauth2/token?code=" + code +
                 "&client_secret=" + secret +
                 "&client_id=probate" +
                 "&redirect_uri=" + redirectUri +
-                "&grant_type=authorization_code")
-                .body().path("access_token");
+                "&grant_type=authorization_code";
+        log.info("PATH="+path);
+        ResponseBody body = RestAssured.given().post(path)
+                .body();
+        log.info("BODY="+body);
+        token = body.path("access_token");
 
         return "Bearer " + token;
     }

@@ -53,6 +53,9 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String userToken;
 
+    private final int rnd = (int) (Math.random() * 1000000);
+    private final String pass = "123";
+
 
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
@@ -84,7 +87,7 @@ public class SolCcdServiceAuthTokenGenerator {
 
         String path = idamUserBaseUrl + "/oauth2/token?code=" + code +
                 "&client_secret=" + secret +
-                "&client_id=probate" +
+                "&client_id=" + clientId +
                 "&redirect_uri=" + redirectUri +
                 "&grant_type=authorization_code";
         System.out.println("PATH=" + path);
@@ -100,7 +103,8 @@ public class SolCcdServiceAuthTokenGenerator {
         System.out.println("idamUsername=" + idamUsername);
         System.out.println("idamPassword=" + idamPassword);
         String code = "";
-        final String encoded = Base64.getEncoder().encodeToString(("test@TEST.COM" + ":" + "123").getBytes());
+        String user = "test" + rnd + "@TEST.COM";
+        final String encoded = Base64.getEncoder().encodeToString((user + ":" + pass).getBytes());
         System.out.println("encoded=" + encoded);
         System.out.println("redirectUri=" + redirectUri);
         code = RestAssured.given().baseUri(idamUserBaseUrl)
@@ -112,9 +116,11 @@ public class SolCcdServiceAuthTokenGenerator {
     }
 
     public void createNewUser() {
+        String user = "test" + rnd + "@TEST.COM";
+        System.out.println("user="+user+ " pass="+pass);
         given().headers("Content-type", "application/json")
                 .relaxedHTTPSValidation()
-                .body("{ \"email\":\"test@TEST.COM\", \"forename\":\"test@TEST.COM\",\"surname\":\"test@TEST.COM\",\"password\":\"123\",\"continue-url\":\"test\"}")
+                .body("{ \"email\":\"\"+user+\"\", \"forename\":\""+user+"\",\"surname\":\"\"+user+\"\",\"password\":\""+pass+"\",\"continue-url\":\"test\"}")
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

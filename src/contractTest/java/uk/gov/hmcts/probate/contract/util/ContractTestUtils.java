@@ -29,7 +29,6 @@ public class ContractTestUtils {
 
     private String serviceToken;
 
-    @Value("${user.id.url}")
     private String userId;
 
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
@@ -41,6 +40,7 @@ public class ContractTestUtils {
         System.out.println("Service Token: " + serviceToken);
         objectMapper = new ObjectMapper();
 
+        System.out.println("userId="+userId);
         if (userId == null || userId.isEmpty()) {
             solCcdServiceAuthTokenGenerator.createNewUser();
             userId = solCcdServiceAuthTokenGenerator.getUserId();

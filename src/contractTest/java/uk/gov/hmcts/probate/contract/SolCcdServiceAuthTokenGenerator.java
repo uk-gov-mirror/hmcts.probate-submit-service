@@ -1,6 +1,8 @@
 package uk.gov.hmcts.probate.contract;
 
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.restassured.RestAssured;
 import io.restassured.response.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
@@ -66,19 +68,14 @@ public class SolCcdServiceAuthTokenGenerator {
 
 
     public String getUserId() {
-        String userid_local = "" + RestAssured.given()
-                .header("Authorization", userToken)
-                .get(idamUserBaseUrl + "/details")
-                .body()
-                .path("id");
-        return userid_local;
+        String clientToken = generateClientToken();
+
+        String withoutSignature = clientToken.substring(0, clientToken.lastIndexOf('.') + 1);
+        Claims claims = Jwts.parser().parseClaimsJwt(withoutSignature).getBody();
+
+        return claims.get("id", String.class);
     }
 
-
-    public String generateUserTokenWithNoRoles() {
-        userToken = generateClientToken();
-        return userToken;
-    }
 
     private String generateClientToken() {
         String code = generateClientCode();

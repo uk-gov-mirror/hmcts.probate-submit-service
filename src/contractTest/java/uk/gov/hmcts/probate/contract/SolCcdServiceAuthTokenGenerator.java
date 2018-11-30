@@ -26,8 +26,6 @@ public class SolCcdServiceAuthTokenGenerator {
     @Value("${service.auth.provider.base.url}")
     private String baseServiceAuthUrl;
 
-    @Value("${user.auth.provider.oauth2.url}")
-    private String baseServiceOauth2Url;
     String clientToken;
 
     @Value("${idam.username}")

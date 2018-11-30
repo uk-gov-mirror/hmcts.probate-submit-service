@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 
 import java.util.Base64;
 
+import static io.restassured.RestAssured.given;
+
 @Component
 @Slf4j
 public class SolCcdServiceAuthTokenGenerator {
@@ -110,5 +112,12 @@ public class SolCcdServiceAuthTokenGenerator {
                 .body().path("code");
         return code;
 
+    }
+
+    public void createNewUser() {
+        given().headers("Content-type", "application/json")
+                .relaxedHTTPSValidation()
+                .body("{ \"email\":\"test@TEST.COM\", \"forename\":\"test@TEST.COM\",\"surname\":\"test@TEST.COM\",\"password\":\"123\",\"continue-url\":\"test\"}")
+                .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

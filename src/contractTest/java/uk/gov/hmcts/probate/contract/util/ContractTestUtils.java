@@ -6,6 +6,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.ResourceUtils;
@@ -28,11 +29,22 @@ public class ContractTestUtils {
 
     private String serviceToken;
 
+    @Value("${user.id.url}")
+    private String userId;
+
+    public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
+    public static final String CONTENT_TYPE = "Content-Type";
+
     @PostConstruct
     public void init() {
         serviceToken = solCcdServiceAuthTokenGenerator.generateServiceToken();
         System.out.println("Service Token: " + serviceToken);
         objectMapper = new ObjectMapper();
+
+        if (userId == null || userId.isEmpty()) {
+            solCcdServiceAuthTokenGenerator.createNewUser();
+            userId = solCcdServiceAuthTokenGenerator.getUserId();
+        }
     }
 
     public JsonNode getJsonNodeFromFile(String fileName) throws IOException {
@@ -46,21 +58,19 @@ public class ContractTestUtils {
 
     public Headers getHeaders(String serviceToken) {
         return Headers.headers(
-                new Header("ServiceAuthorization", serviceToken),
-                new Header("Content-Type", ContentType.JSON.toString()));
+                new Header(SERVICE_AUTHORIZATION, serviceToken),
+                new Header(CONTENT_TYPE, ContentType.JSON.toString()));
     }
 
     public Headers getHeadersWithUserId() {
-        return getHeadersWithUserId(serviceToken);
+        return getHeadersWithUserId(serviceToken, userId);
     }
 
-    public Headers getHeadersWithUserId(String serviceToken) {
+    private Headers getHeadersWithUserId(String serviceToken, String userId) {
         return Headers.headers(
-                new Header("ServiceAuthorization", serviceToken),
-                new Header("Content-Type", ContentType.JSON.toString()),
-                new Header("Authorization", solCcdServiceAuthTokenGenerator.generateUserTokenWithNoRoles()));
-
-
+                new Header(SERVICE_AUTHORIZATION, serviceToken),
+                new Header(CONTENT_TYPE, ContentType.JSON.toString()),
+                new Header("user-id", userId));
     }
 
     public String getUserId() {

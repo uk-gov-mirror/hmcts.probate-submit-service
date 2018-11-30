@@ -90,7 +90,7 @@ public class SolCcdServiceAuthTokenGenerator {
         System.out.println("PATH=" + path);
         ResponseBody body = RestAssured.given().post(path)
                 .body();
-        System.out.println("BODY=" + body);
+        System.out.println("BODY=" + body.prettyPrint());
         token = body.path("access_token");
 
         return "Bearer " + token;
@@ -100,12 +100,12 @@ public class SolCcdServiceAuthTokenGenerator {
         System.out.println("idamUsername=" + idamUsername);
         System.out.println("idamPassword=" + idamPassword);
         String code = "";
-        final String encoded = Base64.getEncoder().encodeToString((idamUsername + ":" + idamPassword).getBytes());
+        final String encoded = Base64.getEncoder().encodeToString(("test@TEST.COM" + ":" + "123").getBytes());
         System.out.println("encoded=" + encoded);
-        System.out.println("redirectUri=" + redirectUri.replaceAll("A", " A "));
+        System.out.println("redirectUri=" + redirectUri);
         code = RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)
-                .post("/oauth2/authorize?response_type=code&client_id=probate&redirect_uri=" + redirectUri)
+                .post("/oauth2/authorize?response_type=code&client_id="+clientId+"&redirect_uri=" + redirectUri)
                 .body().path("code");
         return code;
 

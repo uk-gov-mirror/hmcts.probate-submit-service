@@ -107,6 +107,15 @@ public class SolCcdServiceAuthTokenGenerator {
         final String encoded = Base64.getEncoder().encodeToString((user + ":" + pass).getBytes());
         System.out.println("encoded=" + encoded);
         System.out.println("redirectUri=" + redirectUri);
+
+        String jsonResponse = given()
+                .relaxedHTTPSValidation()
+                .header("Authorization", "Basic dGVzdEBURVNULkNPTToxMjM=")
+                .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code" +
+                        "&client_id=" + clientId +
+                        "&redirect_uri=" + redirectUri)
+                .asString();
+
         code = RestAssured.given().baseUri(idamUserBaseUrl)
                 .header("Authorization", "Basic " + encoded)
                 .post("/oauth2/authorize?response_type=code&client_id="+clientId+"&redirect_uri=" + redirectUri)
@@ -116,11 +125,9 @@ public class SolCcdServiceAuthTokenGenerator {
     }
 
     public void createNewUser() {
-        String user = "test" + rnd + "@TEST.COM";
-        System.out.println("user="+user+ " pass="+pass);
         given().headers("Content-type", "application/json")
                 .relaxedHTTPSValidation()
-                .body("{ \"email\":\""+user+"\", \"forename\":\""+user+"\",\"surname\":\""+user+"\",\"password\":\""+pass+"\",\"continue-url\":\"test\"}")
+                .body("{ \"email\":\"test@TEST.COM\", \"forename\":\"test@TEST.COM\",\"surname\":\"test@TEST.COM\",\"password\":\"123\",\"continue-url\":\"test\"}")
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

@@ -2,9 +2,11 @@ package uk.gov.hmcts.probate.contract.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
+import io.restassured.parsing.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,7 @@ public class ContractTestUtils {
     @PostConstruct
     public void init() {
         serviceToken = solCcdServiceAuthTokenGenerator.generateServiceToken();
+        RestAssured.defaultParser = Parser.JSON;
         System.out.println("Service Token: " + serviceToken);
         objectMapper = new ObjectMapper();
 

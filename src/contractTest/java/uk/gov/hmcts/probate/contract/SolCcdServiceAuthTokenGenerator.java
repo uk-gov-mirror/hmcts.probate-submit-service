@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.contract;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.restassured.RestAssured;
@@ -9,8 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.probate.contract.model.ClientAuthorizationCodeResponse;
+import uk.gov.hmcts.probate.contract.model.ClientAuthorizationResponse;
 import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 
+import java.io.IOException;
 import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
@@ -94,19 +98,21 @@ public class SolCcdServiceAuthTokenGenerator {
         ResponseBody body = RestAssured.given().post(path)
                 .body();
         System.out.println("BODY=" + body.prettyPrint());
-        token = body.path("access_token");
+        String jsonResponse = body.asString();
 
-        return "Bearer " + token;
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            token = mapper.readValue(jsonResponse, ClientAuthorizationResponse.class).accessToken;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return token;
     }
 
     private String generateClientCode() {
-        System.out.println("idamUsername=" + idamUsername);
-        System.out.println("idamPassword=" + idamPassword);
         String code = "";
-        String user = "test" + rnd + "@TEST.COM";
-        final String encoded = Base64.getEncoder().encodeToString((user + ":" + pass).getBytes());
-        System.out.println("encoded=" + encoded);
-        System.out.println("redirectUri=" + redirectUri);
 
         String jsonResponse = given()
                 .relaxedHTTPSValidation()
@@ -116,10 +122,15 @@ public class SolCcdServiceAuthTokenGenerator {
                         "&redirect_uri=" + redirectUri)
                 .asString();
 
-        code = RestAssured.given().baseUri(idamUserBaseUrl)
-                .header("Authorization", "Basic " + encoded)
-                .post("/oauth2/authorize?response_type=code&client_id="+clientId+"&redirect_uri=" + redirectUri)
-                .body().path("code");
+        System.out.println("jsonResponse="+jsonResponse);
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            code = mapper.readValue(jsonResponse, ClientAuthorizationCodeResponse.class).code;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
         return code;
 
     }

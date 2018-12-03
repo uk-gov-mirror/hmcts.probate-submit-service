@@ -57,10 +57,6 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String userToken;
 
-    private final int rnd = (int) (Math.random() * 1000000);
-    private final String pass = "123";
-
-
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
@@ -113,7 +109,7 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientCode() {
         String code = "";
-        final String encoded = Base64.getEncoder().encodeToString(("test123@TEST.COM:Password123").getBytes());
+        final String encoded = Base64.getEncoder().encodeToString(("test@TEST.COM:Password123").getBytes());
 
         System.out.println("encoded="+encoded);
         String jsonResponse = given()
@@ -140,7 +136,7 @@ public class SolCcdServiceAuthTokenGenerator {
     public void createNewUser() {
         given().headers("Content-type", "application/json")
                 .relaxedHTTPSValidation()
-                .body("{ \"email\":\"test123@TEST.COM\", \"forename\":\"test123@TEST.COM\",\"surname\":\"test123@TEST.COM\",\"password\":\"Password123\",\"continue-url\":\"test\"}")
+                .body("{ \"email\":\"test@TEST.COM\", \"forename\":\"test@TEST.COM\",\"surname\":\"test@TEST.COM\",\"password\":\"Password123\",\"continue-url\":\"test\"}")
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

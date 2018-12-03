@@ -138,7 +138,7 @@ public class SolCcdServiceAuthTokenGenerator {
     public void createNewUser() {
         given().headers("Content-type", "application/json")
                 .relaxedHTTPSValidation()
-                .body("{ \"email\":\"test@TEST.COM\", \"forename\":\"test@TEST.COM\",\"surname\":\"test@TEST.COM\",\"password\":\"123\",\"continue-url\":\"test\"}")
+                .body("{ \"email\":\"test123@TEST.COM\", \"forename\":\"test123@TEST.COM\",\"surname\":\"test123@TEST.COM\",\"password\":\"Password123\",\"continue-url\":\"test\"}")
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

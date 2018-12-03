@@ -113,10 +113,12 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientCode() {
         String code = "";
+        final String encoded = Base64.getEncoder().encodeToString(("test123@TEST.COM:Password123").getBytes());
 
+        System.out.println("encoded="+encoded);
         String jsonResponse = given()
                 .relaxedHTTPSValidation()
-                .header("Authorization", "Basic dGVzdEBURVNULkNPTToxMjM=")
+                .header("Authorization", "Basic "+encoded)
                 .post(idamUserBaseUrl + "/oauth2/authorize?response_type=code" +
                         "&client_id=" + clientId +
                         "&redirect_uri=" + redirectUri)

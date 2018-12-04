@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import javax.mail.Message;
@@ -50,7 +50,6 @@ public class MailMessageBuilderTest {
 
         MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registry, messageProperties, submissonTimestamp);
         String mailContent = mimeMessage.getContent().toString();
-        System.out.println(mailContent);
         assertThat(mimeMessage.getSubject(), is("subject"));
         assertThat(mimeMessage.getFrom(), arrayContaining(new InternetAddress("sender")));
         assertThat(mimeMessage.getRecipients(Message.RecipientType.TO), arrayContaining(new InternetAddress("oxford@email.com")));

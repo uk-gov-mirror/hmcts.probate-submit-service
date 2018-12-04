@@ -68,8 +68,4 @@ public class PaymentResponseTest {
         assertThat(paymentResponse.getSiteId(), is("P223"));
     }
 
-    @Test
-    public void shouldCheckIfNoPayment() {
-        assertThat(noPaymentResponse.getTotal(), is(0L));
-    }
 }

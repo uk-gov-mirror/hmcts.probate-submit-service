@@ -285,7 +285,7 @@ public class CoreCaseDataMapper {
             value.set(notApplyingExecutorReason, mappedReason);
         }
 
-        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
+        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean()) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
             if (executor.has(currentNameReason)) {
@@ -294,7 +294,7 @@ public class CoreCaseDataMapper {
             }
         }
 
-        if (executor.has(otherReason) && executor.get(hasOtherName).asBoolean() == true) {
+        if (executor.has(otherReason) && executor.get(hasOtherName).asBoolean()) {
             String executorOtherReason = executor.get(otherReason).asText();
             value.set(applyingExecutorOtherReason, new TextNode(executorOtherReason.trim()));
         }
@@ -468,7 +468,7 @@ public class CoreCaseDataMapper {
             LocalDate localDate = LocalDateTime.now().toLocalDate();
             probateData.put("applicationSubmittedDate", localDate.toString());
         }
-        if (paymentResponse.getTotal() != 0L) {
+        if (paymentResponse.getAmount() != 0L) {
             ObjectNode paymentNode = mapper.createObjectNode();
             ObjectNode paymentValueNode = mapper.createObjectNode();
             paymentValueNode.put("status", paymentResponse.getStatus());

@@ -70,7 +70,7 @@ public class ContractTestUtils {
     }
 
     public Headers getHeadersWithUserId() {
-        return getHeadersWithUserId(serviceToken, userId);
+        return getHeadersWithUserId(serviceToken, userToken);
     }
 
     private Headers getHeadersWithUserId(String serviceToken, String userToken) {

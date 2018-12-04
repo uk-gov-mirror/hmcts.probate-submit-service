@@ -109,7 +109,7 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientCode() {
         String code = "";
-        final String encoded = Base64.getEncoder().encodeToString(("test@TEST.COM:Password123").getBytes());
+        final String encoded = Base64.getEncoder().encodeToString(("testABC@TEST.COM:Probate123").getBytes());
 
         System.out.println("encoded="+encoded);
         String jsonResponse = given()
@@ -136,7 +136,7 @@ public class SolCcdServiceAuthTokenGenerator {
     public void createNewUser() {
         given().headers("Content-type", "application/json")
                 .relaxedHTTPSValidation()
-                .body("{ \"email\":\"test@TEST.COM\", \"forename\":\"test@TEST.COM\",\"surname\":\"test@TEST.COM\",\"password\":\"Password123\",\"continue-url\":\"test\", \"user_group_name\":\"citizen\"}")
+                .body("{ \"email\":\"testABC@TEST.COM\", \"forename\":\"testABC@TEST.COM\",\"surname\":\"testABC@TEST.COM\",\"password\":\"Probate123\",\"continue-url\":\"test\", \"user_group_name\":\"citizen\"}")
                 .post(idamUserBaseUrl + "/testing-support/accounts");
     }
 }

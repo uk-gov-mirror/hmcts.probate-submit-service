@@ -50,7 +50,6 @@ public class MailMessageBuilderTest {
 
         MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registry, messageProperties, submissonTimestamp);
         String mailContent = mimeMessage.getContent().toString();
-        System.out.println(mailContent);
         assertThat(mimeMessage.getSubject(), is("subject"));
         assertThat(mimeMessage.getFrom(), arrayContaining(new InternetAddress("sender")));
         assertThat(mimeMessage.getRecipients(Message.RecipientType.TO), arrayContaining(new InternetAddress("oxford@email.com")));

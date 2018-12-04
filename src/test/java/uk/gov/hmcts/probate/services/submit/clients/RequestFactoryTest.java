@@ -53,7 +53,6 @@ public class RequestFactoryTest {
 
         assertEquals(jsonNode, request.getBody());
         assertEquals(MediaType.APPLICATION_JSON, request.getHeaders().getContentType());
-        System.out.println(request.getHeaders().get("Authorization"));
         List<String> auth = new ArrayList<>();
         auth.add("Bearer dummyToken");
         assertEquals(request.getHeaders().get("Authorization"), auth);

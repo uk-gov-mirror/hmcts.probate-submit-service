@@ -70,6 +70,8 @@ public class ContractTestUtils {
     }
 
     private Headers getHeadersWithUserId(String serviceToken, String userId) {
+        System.out.println("getHeadersWithUserId.serviceToken="+serviceToken);
+        System.out.println("getHeadersWithUserId.userId="+userId);
         return Headers.headers(
                 new Header(SERVICE_AUTHORIZATION, serviceToken),
                 new Header(CONTENT_TYPE, ContentType.JSON.toString()),

@@ -33,6 +33,9 @@ public class ContractTestUtils {
 
     private String userId;
 
+    private String userToken;
+
+    public static final String AUTHORIZATION = "Authorization";
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
     public static final String CONTENT_TYPE = "Content-Type";
 
@@ -46,7 +49,8 @@ public class ContractTestUtils {
         System.out.println("userId="+userId);
         if (userId == null || userId.isEmpty()) {
             solCcdServiceAuthTokenGenerator.createNewUser();
-            userId = solCcdServiceAuthTokenGenerator.getUserId();
+            userToken = solCcdServiceAuthTokenGenerator.getUserToken();
+            userId = solCcdServiceAuthTokenGenerator.getUserId(userToken);
         }
     }
 
@@ -66,14 +70,14 @@ public class ContractTestUtils {
     }
 
     public Headers getHeadersWithUserId() {
-        return getHeadersWithUserId(serviceToken, userId);
+        return getHeadersWithUserId(userToken, userId);
     }
 
-    private Headers getHeadersWithUserId(String serviceToken, String userId) {
-        System.out.println("getHeadersWithUserId.serviceToken="+serviceToken);
+    private Headers getHeadersWithUserId(String userToken, String userId) {
+        System.out.println("getHeadersWithUserId.userToken="+userToken);
         System.out.println("getHeadersWithUserId.userId="+userId);
         return Headers.headers(
-                new Header(SERVICE_AUTHORIZATION, serviceToken),
+                new Header(AUTHORIZATION, userToken),
                 new Header(CONTENT_TYPE, ContentType.JSON.toString()),
                 new Header("user-id", userId));
     }

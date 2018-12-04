@@ -70,8 +70,11 @@ public class SolCcdServiceAuthTokenGenerator {
     }
 
 
-    public String getUserId() {
-        String clientToken = generateClientToken();
+    public String getUserToken() {
+        return generateClientToken();
+    }
+
+    public String getUserId(String clientToken) {
 
         String withoutSignature = clientToken.substring(0, clientToken.lastIndexOf('.') + 1);
         Claims claims = Jwts.parser().parseClaimsJwt(withoutSignature).getBody();

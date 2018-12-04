@@ -8,7 +8,6 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.parsing.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.ResourceUtils;
@@ -43,10 +42,8 @@ public class ContractTestUtils {
     public void init() {
         serviceToken = solCcdServiceAuthTokenGenerator.generateServiceToken();
         RestAssured.defaultParser = Parser.JSON;
-        System.out.println("Service Token: " + serviceToken);
         objectMapper = new ObjectMapper();
 
-        System.out.println("userId="+userId);
         if (userId == null || userId.isEmpty()) {
             solCcdServiceAuthTokenGenerator.createNewUser();
             userToken = solCcdServiceAuthTokenGenerator.getUserToken();
@@ -74,8 +71,6 @@ public class ContractTestUtils {
     }
 
     private Headers getHeadersWithUserId(String serviceToken, String userToken) {
-        System.out.println("getHeadersWithUserId.serviceToken="+serviceToken);
-        System.out.println("getHeadersWithUserId.userToken="+userToken);
         return Headers.headers(
                 new Header(AUTHORIZATION, "Bearer "+userToken),
                 new Header(SERVICE_AUTHORIZATION, serviceToken),

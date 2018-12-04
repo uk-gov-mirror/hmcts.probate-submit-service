@@ -89,7 +89,6 @@ public class SolCcdServiceAuthTokenGenerator {
 
     private String generateClientToken() {
         String code = generateClientCode();
-        System.out.println("CODE=" + code);
         String token = "";
 
         String path = idamUserBaseUrl + "/oauth2/token?code=" + code +
@@ -97,10 +96,8 @@ public class SolCcdServiceAuthTokenGenerator {
                 "&client_id=" + clientId +
                 "&redirect_uri=" + redirectUri +
                 "&grant_type=authorization_code";
-        System.out.println("PATH=" + path);
         ResponseBody body = RestAssured.given().post(path)
                 .body();
-        System.out.println("BODY=" + body.prettyPrint());
         String jsonResponse = body.asString();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -118,7 +115,6 @@ public class SolCcdServiceAuthTokenGenerator {
         String code = "";
         final String encoded = Base64.getEncoder().encodeToString(("testABC@TEST.COM:Probate123").getBytes());
 
-        System.out.println("encoded="+encoded);
         String jsonResponse = given()
                 .relaxedHTTPSValidation()
                 .header("Authorization", "Basic "+encoded)
@@ -126,8 +122,6 @@ public class SolCcdServiceAuthTokenGenerator {
                         "&client_id=" + clientId +
                         "&redirect_uri=" + redirectUri)
                 .asString();
-
-        System.out.println("jsonResponse="+jsonResponse);
         ObjectMapper mapper = new ObjectMapper();
 
         try {

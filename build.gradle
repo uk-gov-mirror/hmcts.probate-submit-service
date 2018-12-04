@@ -197,6 +197,8 @@ dependencies {
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.5.2'
   testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+  testFunctionalCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+  testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
   testFunctionalCompile sourceSets.main.runtimeClasspath
   testFunctionalCompile sourceSets.test.runtimeClasspath
 
@@ -210,6 +212,8 @@ dependencies {
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '1.5.2'
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.5.2'
   testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+  testContractCompile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+  testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
   testContractCompile sourceSets.main.runtimeClasspath
   testContractCompile sourceSets.test.runtimeClasspath
 }

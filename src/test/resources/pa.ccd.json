@@ -9,7 +9,6 @@
   "data": {
     "applicationID": "603",
     "applicationSubmittedDate": "2018-05-17",
-    "deceasedDomicileInEngWales": "Yes",
     "ihtFormCompletedOnline": "Yes",
     "softStop": "No",
     "registryLocation": "Birmingham",
@@ -23,10 +22,7 @@
     "deceasedMarriedAfterWillOrCodicilDate": "Yes",
     "deceasedForenames": "Suki",
     "numberOfApplicants": 3,
-    "willAccessOriginal": "Yes",
     "primaryApplicantEmailAddress": "test@test.com",
-    "primaryApplicantIsApplying": "Yes",
-    "willExists": "Yes",
     "primaryApplicantForenames": "Amal",
     "primaryApplicantSurname": "Mason",
     "ihtReferenceNumber": "12345678F12345",

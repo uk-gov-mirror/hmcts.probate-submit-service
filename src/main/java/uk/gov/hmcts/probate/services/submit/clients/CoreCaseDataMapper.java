@@ -229,7 +229,6 @@ public class CoreCaseDataMapper {
         ccdData.set("applicationID", registryData.get("submissionReference"));
         LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
-        ccdData.put("deceasedDomicileInEngWales", "live (domicile) permanently in England or Wales".equalsIgnoreCase(probateData.get("deceasedDomicile").asText()) ? "Yes" : "No");
         boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());
         String ihtFormId = probateData.get("ihtFormId") == null ? "" : probateData.get("ihtFormId").asText();
         ccdData.put("ihtFormCompletedOnline", ihtCompletedOnline ? "Yes" : "No");
@@ -316,7 +315,7 @@ public class CoreCaseDataMapper {
             value.set(notApplyingExecutorReason, mappedReason);
         }
 
-        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean() == true) {
+        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean()) {
             String executorOtherName = executor.get(currentName).asText();
             value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
             if (executor.has(currentNameReason)) {
@@ -325,7 +324,7 @@ public class CoreCaseDataMapper {
             }
         }
 
-        if (executor.has(otherReason) && executor.get(hasOtherName).asBoolean() == true) {
+        if (executor.has(otherReason) && executor.get(hasOtherName).asBoolean()) {
             String executorOtherReason = executor.get(otherReason).asText();
             value.set(applyingExecutorOtherReason, new TextNode(executorOtherReason.trim()));
         }
@@ -499,7 +498,7 @@ public class CoreCaseDataMapper {
             LocalDate localDate = LocalDateTime.now().toLocalDate();
             probateData.put("applicationSubmittedDate", localDate.toString());
         }
-        if (paymentResponse.getTotal() != 0L) {
+        if (paymentResponse.getAmount() != 0L) {
             ObjectNode paymentNode = mapper.createObjectNode();
             ObjectNode paymentValueNode = mapper.createObjectNode();
             paymentValueNode.put("status", paymentResponse.getStatus());

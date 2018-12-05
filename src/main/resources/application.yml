@@ -3,9 +3,19 @@
     basic:
       enabled: false
 
+#  management:
+#    security:
+#      enabled: false
+
   management:
-    security:
-      enabled: false
+    endpoints:
+      web:
+        exposure:
+          include: '*'
+        base-path: /
+    endpoint:
+      health:
+        show-details: always
 
   mail:
     username: localhost
@@ -62,7 +72,7 @@
     tokenTimeToLiveInSeconds: '900'
 
   idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
-
+  
   ccd:
     probate:
       fullName: fullName
@@ -103,7 +113,6 @@
       deceasedDob: deceasedDateOfBirth
       deceasedDod: deceasedDateOfDeath
     fieldMap:
-      applicantIsExecutor: primaryApplicantIsApplying
       applicantFirstName: primaryApplicantForenames
       applicantLastName: primaryApplicantSurname
       applicantSameWillName: primaryApplicantSameWillName
@@ -114,8 +123,6 @@
       applicantEmail: primaryApplicantEmailAddress
       deceasedFirstname: deceasedForenames
       deceasedSurname: deceasedSurname
-      willLeft: willExists
-      willOriginal: willAccessOriginal
       willWithCodicils: willHasCodicils
       deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
       noOfApplicants: numberOfApplicants

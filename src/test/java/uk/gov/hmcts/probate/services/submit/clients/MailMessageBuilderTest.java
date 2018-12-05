@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import javax.mail.Message;
@@ -50,7 +50,6 @@ public class MailMessageBuilderTest {
 
         MimeMessage mimeMessage = mailMessageBuilder.buildMessage(emailData, registry, messageProperties, submissonTimestamp);
         String mailContent = mimeMessage.getContent().toString();
-        System.out.println(mailContent);
         assertThat(mimeMessage.getSubject(), is("subject"));
         assertThat(mimeMessage.getFrom(), arrayContaining(new InternetAddress("sender")));
         assertThat(mimeMessage.getRecipients(Message.RecipientType.TO), arrayContaining(new InternetAddress("oxford@email.com")));
@@ -71,7 +70,6 @@ public class MailMessageBuilderTest {
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfApplicants").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDob").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDod").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willLeft").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfExecutors").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/executorsNotApplying").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtForm").asText()));
@@ -86,11 +84,7 @@ public class MailMessageBuilderTest {
         });
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedMarriedAfterDateOnWill").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtIdentifier").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/applicantIsExecutor").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDomicile").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willOriginal").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/willWithCodicils").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willOriginal").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtCompleted").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfExecutors").asText()));
         emailData.at("/submitdata/executorsNotApplying").elements().forEachRemaining(notApplying -> {

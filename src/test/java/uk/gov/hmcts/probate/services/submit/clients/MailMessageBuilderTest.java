@@ -70,7 +70,6 @@ public class MailMessageBuilderTest {
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfApplicants").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDob").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDod").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willLeft").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfExecutors").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/executorsNotApplying").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtForm").asText()));
@@ -85,11 +84,7 @@ public class MailMessageBuilderTest {
         });
         assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedMarriedAfterDateOnWill").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtIdentifier").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/applicantIsExecutor").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/deceasedDomicile").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willOriginal").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/willWithCodicils").asText()));
-        assertThat(mailContent, containsString(emailData.at("/submitdata/willOriginal").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/ihtCompleted").asText()));
         assertThat(mailContent, containsString(emailData.at("/submitdata/noOfExecutors").asText()));
         emailData.at("/submitdata/executorsNotApplying").elements().forEachRemaining(notApplying -> {

@@ -90,6 +90,9 @@
       applyingExecutorOtherReason: applyingExecutorOtherReason
       DocumentType: DocumentType
       DocumentLink: DocumentLink
+      documentUrl: document_url
+      documentBinaryUrl: document_binary_url
+      documentFilename: document_filename
       Comment: Comment
     reasonMap:
       optionDiedBefore: DiedBefore

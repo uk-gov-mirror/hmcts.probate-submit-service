@@ -2,21 +2,33 @@
   {
     "value": {
       "DocumentType": "deathCertificate",
-      "DocumentLink": "url_link1",
+      "DocumentLink": {
+        "document_url": "url_link1",
+        "document_binary_url": "url_link1",
+        "document_filename": "document_1"
+      },
       "Comment": "document_1"
     }
   },
   {
     "value": {
       "DocumentType": "deathCertificate",
-      "DocumentLink": "url_link2",
+      "DocumentLink": {
+        "document_url": "url_link2",
+        "document_binary_url": "url_link2",
+        "document_filename": "document_2"
+      },
       "Comment": "document_2"
     }
   },
   {
     "value": {
       "DocumentType": "deathCertificate",
-      "DocumentLink": "url_link3",
+      "DocumentLink": {
+        "document_url": "url_link3",
+        "document_binary_url": "url_link3",
+        "document_filename": "document_3"
+      },
       "Comment": "document_3"
     }
   }

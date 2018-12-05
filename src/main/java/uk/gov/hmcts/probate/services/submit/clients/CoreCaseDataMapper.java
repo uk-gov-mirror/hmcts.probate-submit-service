@@ -98,6 +98,14 @@ public class CoreCaseDataMapper {
     private String DocumentLink;
     @Value("${ccd.ccd.Comment}")
     private String Comment;
+
+    @Value("${ccd.ccd.documentUrl}")
+    private String documentUrl;
+    @Value("${ccd.ccd.documentBinaryUrl}")
+    private String documentBinaryUrl;
+    @Value("${ccd.ccd.documentFilename}")
+    private String documentFilename;
+
     @NotNull
     private Map<String, String> reasonMap;
     @NotNull
@@ -548,8 +556,15 @@ public class CoreCaseDataMapper {
         String documentUploadType = "deathCertificate";
         value.set(DocumentType, new TextNode(documentUploadType.trim()));
         String documentUploadURL = document.get(url).asText();
-        value.set(DocumentLink, new TextNode(documentUploadURL.trim()));
+
         String documentUploadName = document.get(filename).asText();
+
+        ObjectNode docLinkValue = mapper.createObjectNode();
+        docLinkValue.set(documentUrl, new TextNode(documentUploadURL.trim()));
+        docLinkValue.set(documentBinaryUrl, new TextNode(documentUploadURL.trim()));
+        docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
+
+        value.set(DocumentLink, docLinkValue);
         value.set(Comment, new TextNode(documentUploadName.trim()));
 
         ccdFormat.set(VALUE, value);

@@ -45,6 +45,7 @@ public class CoreCaseDataMapper {
     private static final String EXECUTORS_APPLYING = "executorsApplying";
     private static final String INTRO = "intro";
     private static final String APPLICANT = "applicant";
+    private static final String BINARY_URL_SUFFIX = "binary";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -561,7 +562,7 @@ public class CoreCaseDataMapper {
 
         ObjectNode docLinkValue = mapper.createObjectNode();
         docLinkValue.set(documentUrl, new TextNode(documentUploadURL.trim()));
-        docLinkValue.set(documentBinaryUrl, new TextNode(documentUploadURL.trim()));
+        docLinkValue.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
         docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
 
         value.set(DocumentLink, docLinkValue);
@@ -569,6 +570,10 @@ public class CoreCaseDataMapper {
 
         ccdFormat.set(VALUE, value);
         return Optional.of(ccdFormat);
+    }
+
+    private String getBinaryDocumentUploadURL(String trim) {
+        return trim + "/" + BINARY_URL_SUFFIX;
     }
 }
 

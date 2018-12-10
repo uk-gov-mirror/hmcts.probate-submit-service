@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +51,9 @@ public class CoreCaseDataMapper {
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @Value("${ccd.probate.fullName}")
     private String fullName;
@@ -209,7 +213,6 @@ public class CoreCaseDataMapper {
     }
 
     public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissionTimestamp, JsonNode registryData) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
         event.put("description", "");
@@ -223,7 +226,6 @@ public class CoreCaseDataMapper {
     }
 
     public ObjectNode mapData(JsonNode probateData, Calendar submissionTimestamp, JsonNode registryData) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdData = mapper.createObjectNode();
         JsonNode registry = registryData.get("registry");
         ccdData.set("applicationID", registryData.get("submissionReference"));
@@ -282,7 +284,7 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> executors = Optional.ofNullable(probateData.get(fieldname));
         if (executors.isPresent()) {
-            ArrayNode executorsCcdFormat = new ObjectMapper().createArrayNode();
+            ArrayNode executorsCcdFormat = mapper.createArrayNode();
             executors.get()
                     .elements().forEachRemaining(
                     executor -> mapExecutor(executor).ifPresent(executorsCcdFormat::add)
@@ -293,7 +295,6 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapExecutor(JsonNode executor) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         String executorName = executor.get(fullName).asText();
@@ -358,7 +359,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> aliases = Optional.ofNullable(probateData.get(fieldname));
         if (aliases.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ArrayNode aliasesCcdFormat = mapper.createArrayNode();
 
             probateData.get(fieldname)
@@ -371,7 +371,6 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapAlias(JsonNode alias) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("Forenames", alias.get("firstName"));
@@ -384,7 +383,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> address = Optional.ofNullable(probateData.get(fieldname));
         if (address.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdAddressObject = mapper.createObjectNode();
             ccdAddressObject.set("AddressLine1", address.get());
             return Optional.of(ccdAddressObject);
@@ -397,7 +395,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> declaration = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
         if (declaration.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdDeclaration = mapper.createObjectNode();
             ccdDeclaration.set("confirm", declaration.get().get("confirm"));
             ccdDeclaration.set("confirmItem1", declaration.get().get("confirmItem1"));
@@ -422,7 +419,6 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> legalStatement = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
         if (legalStatement.isPresent()) {
-            ObjectMapper mapper = new ObjectMapper();
             ObjectNode ccdLegalStatement = mapper.createObjectNode();
             ObjectNode value = mapper.createObjectNode();
             ccdLegalStatement.set(APPLICANT, legalStatement.get().get(APPLICANT));
@@ -463,7 +459,6 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapExecNotApplying(JsonNode executor) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdExecutorsNotApplying = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("executor", executor);
@@ -472,7 +467,6 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> mapExecApplying(JsonNode executorApplying) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode ccdExecutorsApplying = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
         value.set("name", executorApplying.get("name"));
@@ -482,7 +476,6 @@ public class CoreCaseDataMapper {
     }
 
     public JsonNode updatePaymentStatus(PaymentResponse paymentResponse, String ccdEventId, JsonNode ccdToken) {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
         event.put("description", "");
@@ -538,7 +531,7 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> ret = Optional.empty();
         Optional<JsonNode> documentUploads = Optional.ofNullable(probateData.get(fieldname));
         if (documentUploads.isPresent()) {
-            ArrayNode documentUploadCcdFormat = new ObjectMapper().createArrayNode();
+            ArrayNode documentUploadCcdFormat = mapper.createArrayNode();
             documentUploads.get()
                     .elements().forEachRemaining(
                     document -> mapDocument(document).ifPresent(documentUploadCcdFormat::add)
@@ -548,8 +541,7 @@ public class CoreCaseDataMapper {
         return ret;
     }
 
-    public Optional<JsonNode> mapDocument(JsonNode document) {
-        ObjectMapper mapper = new ObjectMapper();
+    private Optional<JsonNode> mapDocument(JsonNode document) {
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
 

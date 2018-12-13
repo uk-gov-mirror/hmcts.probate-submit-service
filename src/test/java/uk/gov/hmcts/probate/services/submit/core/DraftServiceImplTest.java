@@ -8,13 +8,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseInfo;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
-import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.DraftResponse;
-import uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation.GrantOfRepresentation;
-import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataFacade;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
+import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
 
 import java.util.Optional;
 
@@ -24,6 +23,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_DRAFT;
+import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DraftServiceImplTest {
@@ -37,12 +38,12 @@ public class DraftServiceImplTest {
     private SecurityUtils mockSecurityUtils;
 
     @Mock
-    private CoreCaseDataFacade mockCoreCaseDataFacade;
+    private CoreCaseDataService coreCaseDataService;
 
     @InjectMocks
     private DraftServiceImpl draftService;
 
-    private DraftRequest draftRequest;
+    private CaseRequest caseRequest;
 
     private CaseData caseData;
 
@@ -50,43 +51,48 @@ public class DraftServiceImplTest {
 
     private CaseInfo caseInfo;
 
+    private CaseResponse caseResponse;
+
     @Before
     public void setUp() {
         securityDTO = SecurityDTO.builder().build();
-        caseData = GrantOfRepresentation.builder().build();
-        draftRequest = DraftRequest.builder().caseData(caseData).build();
-        caseInfo = CaseInfo.builder().caseId(CASE_ID).state(STATE).build();
+        caseData = new GrantOfRepresentation();
+        caseRequest = CaseRequest.builder().caseData(caseData).build();
+        caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(STATE);
+        caseResponse = CaseResponse.builder().caseData(caseData).caseInfo(caseInfo).build();
     }
 
     @Test
     public void shouldCreateDraftWhenNoExistingCase() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        when(mockCoreCaseDataFacade.findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO))
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.empty());
-        when(mockCoreCaseDataFacade.createDraft(caseData, securityDTO)).thenReturn(caseInfo);
+        when(coreCaseDataService.createCase(caseData, CREATE_DRAFT, securityDTO)).thenReturn(caseResponse);
 
-        DraftResponse draftResponse = draftService.saveDraft(APPLICANT_EMAIL, draftRequest);
+        CaseResponse caseResponse = draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
 
-        assertThat(draftResponse.getCaseData(), is(caseData));
-        assertThat(draftResponse.getCaseInfo(), is(caseInfo));
+        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertThat(caseResponse.getCaseInfo(), is(caseInfo));
         verify(mockSecurityUtils, times(1)).getSecurityDTO();
-        verify(mockCoreCaseDataFacade, times(1)).findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO);
-        verify(mockCoreCaseDataFacade, times(1)).createDraft(caseData, securityDTO);
+        verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDTO);
     }
 
     @Test
     public void shouldUpdateDraftWhenExistingCase() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        when(mockCoreCaseDataFacade.findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO))
-                .thenReturn(Optional.of(caseInfo));
-        when(mockCoreCaseDataFacade.updateDraft(CASE_ID, caseData, securityDTO)).thenReturn(caseInfo);
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
+                .thenReturn(Optional.of(caseResponse));
+        when(coreCaseDataService.updateCase(CASE_ID, caseData, CREATE_DRAFT, securityDTO)).thenReturn(caseResponse);
 
-        DraftResponse draftResponse = draftService.saveDraft(APPLICANT_EMAIL, draftRequest);
+        CaseResponse caseResponse = draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
 
-        assertThat(draftResponse.getCaseData(), is(caseData));
-        assertThat(draftResponse.getCaseInfo(), is(equalTo(caseInfo)));
+        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));
         verify(mockSecurityUtils, times(1)).getSecurityDTO();
-        verify(mockCoreCaseDataFacade, times(1)).findCase(APPLICANT_EMAIL, CaseType.GRANT_OF_REPRESENTATION, securityDTO);
-        verify(mockCoreCaseDataFacade, times(1)).updateDraft(CASE_ID, caseData, securityDTO);
+        verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, CREATE_DRAFT, securityDTO);
     }
 }

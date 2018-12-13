@@ -1,6 +1,6 @@
 {
   "formdata": {
-    "iht": {
+    "iht": {                                                //not for caveat or standing search
       "method": "Through the HMRC online service",
       "netValue": 123,
       "completed": "Yes",
@@ -22,7 +22,7 @@
     },
     "payment": {
       "total": "0.50",
-      "copies": {
+      "copies": {                   //not for caveats or standing search
         "uk": {
           "cost": 0.5,
           "number": 1
@@ -59,7 +59,7 @@
       "dob_formattedDate": "1 January 1930",
       "dod_formattedDate": "1 January 2018"
     },
-    "registry": {
+    "registry": {                                               //everything will use this
       "email": "birmingham@email.com",
       "address": "Line 1 Bham\nLine 2 Bham\nLine 3 Bham\nPostCode Bham\n",
       "sequenceNumber": 20009
@@ -85,7 +85,7 @@
       ],
       "executorsNumber": 1
     },
-    "declaration": {
+    "declaration": {       //for intestacy and admon will, but different for caveat & standing search
       "softStop": true,
       "declaration": {
         "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",

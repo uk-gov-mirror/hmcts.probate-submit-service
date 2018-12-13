@@ -15,31 +15,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
+import uk.gov.hmcts.probate.services.submit.model.v2.PaymentUpdateRequest;
+import uk.gov.hmcts.probate.services.submit.services.v2.PaymentsService;
 
 import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 
-@Api(tags = {"DraftsController"})
-@SwaggerDefinition(tags = {@Tag(name = "DraftsController", description = "Drafts API")})
+@Api(tags = {"PaymentsController"})
+@SwaggerDefinition(tags = {@Tag(name = "PaymentsController", description = "Payments API")})
 @RestController
 @RequiredArgsConstructor
-public class DraftsController {
+public class PaymentsController {
 
-    private final DraftService draftService;
+    private final PaymentsService paymentsService;
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
-            @ApiResponse(code = 400, message = "Draft save to CCD  failed")
+            @ApiResponse(code = 500, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(path = "/payments/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
-                                                 @Valid @RequestBody CaseRequest caseRequest) {
-        return new ResponseEntity(draftService.saveDraft(applicantEmail, caseRequest), OK);
+    public ResponseEntity<CaseResponse> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
+                                                  @Valid @RequestBody PaymentUpdateRequest paymentUpdateRequest) {
+        return new ResponseEntity(paymentsService.addPaymentToCase(applicantEmail, paymentUpdateRequest), OK);
     }
 }

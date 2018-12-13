@@ -9,6 +9,7 @@ import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,30 +17,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
-
-import javax.validation.Valid;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
+import uk.gov.hmcts.probate.services.submit.services.v2.SubmissionsService;
+import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
 import static org.springframework.http.HttpStatus.OK;
 
-@Api(tags = {"DraftsController"})
-@SwaggerDefinition(tags = {@Tag(name = "DraftsController", description = "Drafts API")})
+@Api(tags = {"SubmissionsController"})
+@SwaggerDefinition(tags = {@Tag(name = "SubmissionsController", description = "Submissions API")})
 @RestController
 @RequiredArgsConstructor
-public class DraftsController {
+public class SubmissionsController {
 
-    private final DraftService draftService;
+    private final SubmissionsService submissionsService;
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(path = "/submissions/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
-                                                 @Valid @RequestBody CaseRequest caseRequest) {
-        return new ResponseEntity(draftService.saveDraft(applicantEmail, caseRequest), OK);
+    public ResponseEntity<CaseResponse> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
+                                                  @Validated(SubmissionGroup.class) @RequestBody CaseRequest caseRequest) {
+        return new ResponseEntity(submissionsService.submit(applicantEmail, caseRequest), OK);
     }
 }

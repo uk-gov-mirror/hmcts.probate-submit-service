@@ -3,8 +3,7 @@ package uk.gov.hmcts.probate.services.submit.services.v2;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 
-public interface DraftService {
+public interface SubmissionsService {
 
-    CaseResponse saveDraft(String applicantEmail, CaseRequest caseRequest);
-
+    CaseResponse submit(String applicantEmail, CaseRequest caseRequest);
 }

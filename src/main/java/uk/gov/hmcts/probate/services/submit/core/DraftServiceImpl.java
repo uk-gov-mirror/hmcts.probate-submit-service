@@ -1,51 +1,43 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseInfo;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseType;
-import uk.gov.hmcts.probate.services.submit.model.v2.DraftRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.DraftResponse;
-import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataFacade;
+import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
+import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class DraftServiceImpl implements DraftService {
 
-    private final CoreCaseDataFacade coreCaseDataFacade;
+    private final CoreCaseDataService coreCaseDataService;
 
     private final SecurityUtils securityUtils;
 
-    @Autowired
-    public DraftServiceImpl(CoreCaseDataFacade coreCaseDataFacade, SecurityUtils securityUtils) {
-        this.coreCaseDataFacade = coreCaseDataFacade;
-        this.securityUtils = securityUtils;
-    }
-
     @Override
-    public DraftResponse saveDraft(String applicantEmail, DraftRequest draftRequest) {
+    public CaseResponse saveDraft(String applicantEmail, CaseRequest caseRequest) {
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-        CaseData caseData = draftRequest.getCaseData();
+        CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        Optional<CaseInfo> caseInfoOptional = coreCaseDataFacade.findCase(applicantEmail, caseType, securityDTO);
-
-        CaseInfo caseInfo = saveDraft(securityDTO, caseData, caseInfoOptional);
-        return DraftResponse.builder()
-                .caseData(caseData)
-                .caseInfo(caseInfo)
-                .build();
+        Optional<CaseResponse> caseInfoOptional = coreCaseDataService.findCase(applicantEmail, caseType, securityDTO);
+        return saveDraft(securityDTO, caseData, caseInfoOptional);
     }
 
-    private CaseInfo saveDraft(SecurityDTO securityDTO, CaseData caseData, Optional<CaseInfo> caseInfoOptional) {
-        if (caseInfoOptional.isPresent()) {
-            CaseInfo caseInfo = caseInfoOptional.get();
-            return coreCaseDataFacade.updateDraft(caseInfo.getCaseId(), caseData, securityDTO);
+    private CaseResponse saveDraft(SecurityDTO securityDTO, CaseData caseData,
+                                   Optional<CaseResponse> caseResponseOptional) {
+        if (caseResponseOptional.isPresent()) {
+            CaseResponse caseResponse = caseResponseOptional.get();
+            return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData,
+                    EventId.UPDATE_DRAFT, securityDTO);
         }
-        return coreCaseDataFacade.createDraft(caseData, securityDTO);
+        return coreCaseDataService.createCase(caseData, EventId.CREATE_DRAFT, securityDTO);
     }
 }

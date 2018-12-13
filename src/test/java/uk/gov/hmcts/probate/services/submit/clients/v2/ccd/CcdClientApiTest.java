@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -11,14 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseData;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseInfo;
-import uk.gov.hmcts.probate.services.submit.model.v2.grantofrepresentation.GrantOfRepresentation;
+import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
 
 import java.util.Map;
 import java.util.Optional;
@@ -32,8 +33,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_DRAFT;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.UPDATE_DRAFT;
-import static uk.gov.hmcts.probate.services.submit.model.v2.CaseType.GRANT_OF_REPRESENTATION;
-import static uk.gov.hmcts.probate.services.submit.model.v2.JurisdictionId.PROBATE;
+import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
+import static uk.gov.hmcts.reform.probate.model.cases.JurisdictionId.PROBATE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CcdClientApiTest {
@@ -75,13 +76,15 @@ public class CcdClientApiTest {
 
     @Before
     public void setUp() {
+        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()));
+
         securityDTO = SecurityDTO.builder()
                 .authorisation(AUTHORIZATION)
                 .serviceAuthorisation(SERVICE_AUTHORIZATION)
                 .userId(USER_ID)
                 .build();
 
-        caseData = GrantOfRepresentation.builder().build();
+        caseData = new GrantOfRepresentation();
         startEventResponse = StartEventResponse.builder()
                 .token(TOKEN)
                 .build();
@@ -110,11 +113,11 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
-        CaseInfo caseInfo = ccdClientApi.createCase(caseData, EventId.CREATE_DRAFT, securityDTO);
+        CaseResponse caseResponse = ccdClientApi.createCase(caseData, EventId.CREATE_DRAFT, securityDTO);
 
-        assertThat(caseInfo, is(notNullValue()));
-        assertThat(caseInfo.getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseInfo.getState(), is(STATE));
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
         verify(mockCoreCaseDataApi, times(1)).startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
         verify(mockCoreCaseDataApi, times(1)).submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
@@ -131,11 +134,11 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
-        CaseInfo caseInfo = ccdClientApi.updateCase(CASE_ID.toString(), caseData, EventId.UPDATE_DRAFT, securityDTO);
+        CaseResponse caseResponse = ccdClientApi.updateCase(CASE_ID.toString(), caseData, EventId.UPDATE_DRAFT, securityDTO);
 
-        assertThat(caseInfo, is(notNullValue()));
-        assertThat(caseInfo.getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseInfo.getState(), is(STATE));
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
         verify(mockCoreCaseDataApi, times(1)).startEventForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName());
         verify(mockCoreCaseDataApi, times(1)).submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
@@ -148,12 +151,12 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(Lists.newArrayList(caseDetails));
 
-        Optional<CaseInfo> optionalCaseInfo = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        Optional<CaseResponse> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
 
-        CaseInfo caseInfo = optionalCaseInfo.get();
-        assertThat(caseInfo, is(notNullValue()));
-        assertThat(caseInfo.getCaseId(), is(CASE_ID.toString()));
-        assertThat(caseInfo.getState(), is(STATE));
+        CaseResponse caseResponse = optionalCaseResponse.get();
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
         verify(mockCoreCaseDataApi, times(1)).searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap));
     }
@@ -164,9 +167,9 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(null);
 
-        Optional<CaseInfo> optionalCaseInfo = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        Optional<CaseResponse> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
 
-        assertThat(optionalCaseInfo.isPresent(), is(false));
+        assertThat(optionalCaseResponse.isPresent(), is(false));
     }
 
     @Test

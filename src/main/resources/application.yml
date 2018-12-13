@@ -5,7 +5,7 @@
 
 #  management:
 #    security:
-#      enabled: false 
+#      enabled: false
 
   management:
     endpoints:
@@ -85,8 +85,10 @@
       currentName: currentName
       currentNameReason: currentNameReason
       otherReason: otherReason
-    ccd:  
-      notApplyingExecutorName: notApplyingExecutorName    
+      filename: filename
+      url: url
+    ccd:
+      notApplyingExecutorName: notApplyingExecutorName
       notApplyingExecutorReason: notApplyingExecutorReason
       value: value
       applyingExecutorName: applyingExecutorName
@@ -96,6 +98,12 @@
       applyingExecutorOtherNames: applyingExecutorOtherNames
       applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
       applyingExecutorOtherReason: applyingExecutorOtherReason
+      DocumentType: DocumentType
+      DocumentLink: DocumentLink
+      documentUrl: document_url
+      documentBinaryUrl: document_binary_url
+      documentFilename: document_filename
+      Comment: Comment
     reasonMap:
       optionDiedBefore: DiedBefore
       optionDiedAfter: DiedAfter
@@ -137,11 +145,14 @@
     executorMap:
       executorsNotApplying: executorsNotApplying
       executorsApplying: executorsApplying
-    aliasMap:  
+    aliasMap:
       deceasedOtherNames: deceasedAliasNameList
     addressMap:
       applicantAddress: primaryApplicantAddress
       deceasedAddress: deceasedAddress
+    documentUploadMap:
+      documentUploads: boDocumentsUploaded
+
 
   logging:
     level:

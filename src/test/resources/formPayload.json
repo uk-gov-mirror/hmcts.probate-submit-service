@@ -34,6 +34,21 @@
         "deceasedDob": "1 February 1900",
         "willWithCodicils": "Yes",
         "willCodicilsNumber": "2",
+        "documentUploads": [{
+                    "filename": "document_1",
+                    "url": "url_link1"
+                },
+                {
+                    "filename": "document_2",
+                    "url": "url_link2"
+                },
+                {
+                    "filename": "document_3",
+                    "url": "url_link3"
+                }
+
+            ]
+        ,
         "ihtCompleted": "Yes",
         "ihtForm": "online",
         "ihtFormId": "IHT205",

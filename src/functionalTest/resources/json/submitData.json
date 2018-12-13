@@ -18,6 +18,22 @@
     "noOfExecutors":1,
     "willWithDate":"No",
     "willWithCodicils":"No",
+    "documentUploads": {
+      "uploads": [{
+        "filename": "document_1",
+        "url": "url_link1"
+      },
+        {
+          "filename": "document_2",
+          "url": "url_link2"
+        },
+        {
+          "filename": "document_3",
+          "url": "url_link3"
+        }
+
+      ]
+    },
     "deceasedMarriedAfterWillOrCodicilDate": "Yes",
     "ihtCompleted":"Yes",
     "ihtForm":"online",

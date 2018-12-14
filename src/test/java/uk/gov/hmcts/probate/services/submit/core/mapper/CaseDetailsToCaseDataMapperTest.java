@@ -24,15 +24,13 @@ public class CaseDetailsToCaseDataMapperTest {
     }
 
     @Test
-    public void map() {
+    public void shouldMap() {
         Map<String, Object> map = ImmutableMap.<String,Object>builder()
-                .put("type", "GrantOfRepresentation")
                 .put("applicationType", "Intestacy")
                 .put("deceasedForenames", "Robert")
                 .put("deceasedSurname", "Baratheon")
                 .build();
-
-        CaseDetails caseDetails = CaseDetails.builder().data(map).build();
+        CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
 
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
 

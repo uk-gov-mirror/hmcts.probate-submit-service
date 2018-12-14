@@ -35,7 +35,7 @@ public class DraftsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(path = "/v2/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<CaseRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail,

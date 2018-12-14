@@ -32,7 +32,7 @@ public class CasesController {
             @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
             @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
-    @RequestMapping(path = "/cases/{applicantEmail}", method = RequestMethod.GET,
+    @RequestMapping(path = "/v2/cases/{applicantEmail}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<CaseResponse> getCase(@RequestParam("caseType") CaseType caseType,

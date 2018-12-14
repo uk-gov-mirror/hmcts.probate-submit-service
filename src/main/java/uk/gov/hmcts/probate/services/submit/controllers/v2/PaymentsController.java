@@ -36,10 +36,10 @@ public class PaymentsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 500, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/payments/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(path = "/v2/payments/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseResponse> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
+    public ResponseEntity<CaseResponse> addPaymentToCase(@PathVariable("applicantEmail") String applicantEmail,
                                                   @Valid @RequestBody PaymentUpdateRequest paymentUpdateRequest) {
         return new ResponseEntity(paymentsService.addPaymentToCase(applicantEmail, paymentUpdateRequest), OK);
     }

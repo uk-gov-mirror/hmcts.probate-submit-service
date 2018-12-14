@@ -9,31 +9,32 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
-import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
+import uk.gov.hmcts.probate.services.submit.model.v2.PaymentUpdateRequest;
+import uk.gov.hmcts.probate.services.submit.services.v2.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.Payment;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = {DraftsController.class}, secure = false)
-public class DraftsControllerTest {
+@WebMvcTest(value = {PaymentsController.class}, secure = false)
+public class PaymentsControllerTest {
 
-    private static final String DRAFTS_URL = "/v2/drafts";
+    private static final String PAYMENTS_URL = "/v2/payments";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
-    private static final String DRAFT = "Draft";
+    private static final String APPLICATION_CREATED = "PAAppCreated";
 
     @MockBean
-    private DraftService draftService;
+    private PaymentsService paymentsService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,20 +43,24 @@ public class DraftsControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void shouldSaveDraftForIntestacyGrantOfRepresentation() throws Exception {
+    public void shouldAddPaymentToCase() throws Exception {
         String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(DRAFT);
+        caseInfo.setState(APPLICATION_CREATED);
+        Payment payment = grantOfRepresentation.getPayments().get(0).getValue();
         CaseResponse caseResponse = CaseResponse.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        CaseRequest caseRequest = CaseRequest.builder().caseData(grantOfRepresentation).build();
-        when(draftService.saveDraft(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(caseResponse);
+        PaymentUpdateRequest paymentUpdateRequest = PaymentUpdateRequest.builder()
+                .payment(payment)
+                .type(CaseType.GRANT_OF_REPRESENTATION)
+                .build();
+        when(paymentsService.addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest))).thenReturn(caseResponse);
 
-        mockMvc.perform(post(DRAFTS_URL + "/" + EMAIL_ADDRESS)
-                .content(objectMapper.writeValueAsString(caseRequest))
+        mockMvc.perform(post(PAYMENTS_URL + "/" + EMAIL_ADDRESS)
+                .content(objectMapper.writeValueAsString(paymentUpdateRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(draftService, times(1)).saveDraft(eq(EMAIL_ADDRESS), eq(caseRequest));
+        verify(paymentsService).addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest));
     }
 }

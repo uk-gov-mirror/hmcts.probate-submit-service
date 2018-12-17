@@ -17,11 +17,13 @@ import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
-import uk.gov.hmcts.reform.probate.model.cases.Payment;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -59,19 +61,19 @@ public class PaymentServiceImplTest {
 
     private CaseResponse caseResponse;
 
-    private Payment payment;
+    private CasePayment payment;
 
     private PaymentUpdateRequest paymentUpdateRequest;
 
     @Before
     public void setUp() {
-        payment = new Payment();
+        payment = new CasePayment();
         payment.setSiteId("site-id-123");
         payment.setTransactionId("XXXXXX1234");
         payment.setMethod("online");
         payment.setReference("REFERENCE00000");
         payment.setStatus(PaymentStatus.SUCCESS);
-        payment.setDate(LocalDate.of(2018, 1, 1));
+        payment.setDate(Date.from(LocalDate.of(2018, 1, 1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         payment.setAmount(100000L);
         paymentUpdateRequest = PaymentUpdateRequest.builder().type(CaseType.GRANT_OF_REPRESENTATION)
                 .payment(payment)

@@ -16,9 +16,9 @@ import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.v2.PaymentsService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.CollectionMember;
-import uk.gov.hmcts.reform.probate.model.cases.Payment;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseResponse caseResponse = findCase(applicantEmail, caseType, securityDTO);
         String caseId = caseResponse.getCaseInfo().getCaseId();
         CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
-        Payment payment = paymentUpdateRequest.getPayment();
+        CasePayment payment = paymentUpdateRequest.getPayment();
         EventId eventId = getEventId(caseState, payment);
         CaseData caseData = createCaseData(caseResponse, payment);
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
@@ -71,14 +71,14 @@ public class PaymentServiceImpl implements PaymentsService {
         return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
     }
 
-    private EventId getEventId(CaseState caseState, Payment payment) {
+    private EventId getEventId(CaseState caseState, CasePayment payment) {
         Optional<EventId> optionalEventId =
                 Optional.ofNullable(PAYMENT_EVENT_MAP.get(Pair.of(caseState, payment.getStatus())));
         return optionalEventId
                 .orElseThrow(() -> new CaseStatePreconditionException(caseState, payment.getStatus()));
     }
 
-    private CaseData createCaseData(CaseResponse caseResponse, Payment payment) {
+    private CaseData createCaseData(CaseResponse caseResponse, CasePayment payment) {
         CaseData caseData = caseResponse.getCaseData();
         CollectionMember collectionMember = new CollectionMember();
         collectionMember.setValue(payment);

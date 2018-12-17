@@ -15,8 +15,8 @@ import uk.gov.hmcts.probate.services.submit.services.v2.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
-import uk.gov.hmcts.reform.probate.model.cases.Payment;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -49,7 +49,7 @@ public class PaymentsControllerTest {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(APPLICATION_CREATED);
-        Payment payment = grantOfRepresentation.getPayments().get(0).getValue();
+        CasePayment payment = grantOfRepresentation.getPayments().get(0).getValue();
         CaseResponse caseResponse = CaseResponse.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         PaymentUpdateRequest paymentUpdateRequest = PaymentUpdateRequest.builder()
                 .payment(payment)

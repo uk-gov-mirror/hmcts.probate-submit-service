@@ -9,14 +9,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
-import uk.gov.hmcts.probate.services.submit.model.v2.PaymentUpdateRequest;
 import uk.gov.hmcts.probate.services.submit.services.v2.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -50,10 +50,10 @@ public class PaymentsControllerTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(APPLICATION_CREATED);
         CasePayment payment = grantOfRepresentation.getPayments().get(0).getValue();
-        CaseResponse caseResponse = CaseResponse.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        PaymentUpdateRequest paymentUpdateRequest = PaymentUpdateRequest.builder()
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbatePaymentDetails paymentUpdateRequest = ProbatePaymentDetails.builder()
                 .payment(payment)
-                .type(CaseType.GRANT_OF_REPRESENTATION)
+                .caseType(CaseType.GRANT_OF_REPRESENTATION)
                 .build();
         when(paymentsService.addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest))).thenReturn(caseResponse);
 

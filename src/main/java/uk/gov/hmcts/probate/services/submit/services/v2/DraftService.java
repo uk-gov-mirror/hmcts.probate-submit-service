@@ -1,10 +1,9 @@
 package uk.gov.hmcts.probate.services.submit.services.v2;
 
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 public interface DraftService {
 
-    CaseResponse saveDraft(String applicantEmail, CaseRequest caseRequest);
+    ProbateCaseDetails saveDraft(String applicantEmail, ProbateCaseDetails caseRequest);
 
 }

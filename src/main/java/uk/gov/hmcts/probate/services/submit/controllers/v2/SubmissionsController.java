@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.SubmissionsService;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -39,8 +38,8 @@ public class SubmissionsController {
     @RequestMapping(path = "/v2/submissions/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseResponse> submit(@PathVariable("applicantEmail") String applicantEmail,
-                                                  @Validated(SubmissionGroup.class) @RequestBody CaseRequest caseRequest) {
+    public ResponseEntity<ProbateCaseDetails> submit(@PathVariable("applicantEmail") String applicantEmail,
+                                                     @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         return new ResponseEntity(submissionsService.submit(applicantEmail, caseRequest), OK);
     }
 }

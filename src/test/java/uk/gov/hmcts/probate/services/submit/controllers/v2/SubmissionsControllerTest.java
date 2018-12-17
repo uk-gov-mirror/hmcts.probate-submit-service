@@ -9,12 +9,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.SubmissionsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -47,8 +46,8 @@ public class SubmissionsControllerTest {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(APPLICATION_CREATED);
-        CaseResponse caseResponse = CaseResponse.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        CaseRequest caseRequest = CaseRequest.builder().caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
         when(submissionsService.submit(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(caseResponse);
 
         mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.CasesService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 @Api(tags = {"CasesController"})
 @SwaggerDefinition(tags = {@Tag(name = "CasesController", description = "Cases API")})
@@ -35,8 +35,8 @@ public class CasesController {
     @RequestMapping(path = "/v2/cases/{applicantEmail}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseResponse> getCase(@RequestParam("caseType") CaseType caseType,
-                                                @PathVariable("applicantEmail") String applicantEmail) {
+    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam("caseType") CaseType caseType,
+                                                      @PathVariable("applicantEmail") String applicantEmail) {
         return ResponseEntity.ok(casesService.getCase(applicantEmail, caseType));
     }
 }

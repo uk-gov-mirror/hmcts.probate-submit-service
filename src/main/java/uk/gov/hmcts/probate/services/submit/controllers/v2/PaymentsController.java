@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
-import uk.gov.hmcts.probate.services.submit.model.v2.PaymentUpdateRequest;
 import uk.gov.hmcts.probate.services.submit.services.v2.PaymentsService;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 
 import javax.validation.Valid;
 
@@ -39,8 +39,8 @@ public class PaymentsController {
     @RequestMapping(path = "/v2/payments/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseResponse> addPaymentToCase(@PathVariable("applicantEmail") String applicantEmail,
-                                                  @Valid @RequestBody PaymentUpdateRequest paymentUpdateRequest) {
-        return new ResponseEntity(paymentsService.addPaymentToCase(applicantEmail, paymentUpdateRequest), OK);
+    public ResponseEntity<ProbateCaseDetails> addPaymentToCase(@PathVariable("applicantEmail") String applicantEmail,
+                                                               @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
+        return new ResponseEntity(paymentsService.addPaymentToCase(applicantEmail, probatePaymentDetails), OK);
     }
 }

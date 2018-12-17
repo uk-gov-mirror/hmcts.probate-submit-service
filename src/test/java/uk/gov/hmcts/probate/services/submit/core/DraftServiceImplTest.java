@@ -8,11 +8,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
 
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class DraftServiceImplTest {
     @InjectMocks
     private DraftServiceImpl draftService;
 
-    private CaseRequest caseRequest;
+    private ProbateCaseDetails caseRequest;
 
     private CaseData caseData;
 
@@ -52,17 +51,17 @@ public class DraftServiceImplTest {
 
     private CaseInfo caseInfo;
 
-    private CaseResponse caseResponse;
+    private ProbateCaseDetails caseResponse;
 
     @Before
     public void setUp() {
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentation();
-        caseRequest = CaseRequest.builder().caseData(caseData).build();
+        caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
-        caseResponse = CaseResponse.builder().caseData(caseData).caseInfo(caseInfo).build();
+        caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
     }
 
     @Test
@@ -72,7 +71,7 @@ public class DraftServiceImplTest {
                 .thenReturn(Optional.empty());
         when(coreCaseDataService.createCase(caseData, CREATE_DRAFT, securityDTO)).thenReturn(caseResponse);
 
-        CaseResponse caseResponse = draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
+        ProbateCaseDetails caseResponse = draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
 
         assertThat(caseResponse.getCaseData(), is(caseData));
         assertThat(caseResponse.getCaseInfo(), is(caseInfo));
@@ -88,7 +87,7 @@ public class DraftServiceImplTest {
                 .thenReturn(Optional.of(caseResponse));
         when(coreCaseDataService.updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDTO)).thenReturn(caseResponse);
 
-        CaseResponse caseResponse = draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
+        ProbateCaseDetails caseResponse = draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
 
         assertThat(caseResponse.getCaseData(), is(caseData));
         assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));

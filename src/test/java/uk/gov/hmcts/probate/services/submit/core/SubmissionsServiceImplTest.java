@@ -9,28 +9,24 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseState;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
 
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_APPLICATION;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_DRAFT;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.UPDATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,7 +46,7 @@ public class SubmissionsServiceImplTest {
     @InjectMocks
     private SubmissionsServiceImpl submissionsService;
 
-    private CaseRequest caseRequest;
+    private ProbateCaseDetails caseRequest;
 
     private CaseData caseData;
 
@@ -58,17 +54,17 @@ public class SubmissionsServiceImplTest {
 
     private CaseInfo caseInfo;
 
-    private CaseResponse caseResponse;
+    private ProbateCaseDetails caseResponse;
 
     @Before
     public void setUp() {
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentation();
-        caseRequest = CaseRequest.builder().caseData(caseData).build();
+        caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
-        caseResponse = CaseResponse.builder().caseData(caseData).caseInfo(caseInfo).build();
+        caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
     }
 
     @Test(expected = CaseNotFoundException.class)
@@ -88,7 +84,7 @@ public class SubmissionsServiceImplTest {
         when(coreCaseDataService.updateCase(eq(CASE_ID), eq(caseData), eq(CREATE_APPLICATION), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
-        CaseResponse caseResponse = submissionsService.submit(APPLICANT_EMAIL, caseRequest);
+        ProbateCaseDetails caseResponse = submissionsService.submit(APPLICANT_EMAIL, caseRequest);
 
         assertThat(caseResponse.getCaseData(), is(caseData));
         assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));
@@ -102,7 +98,7 @@ public class SubmissionsServiceImplTest {
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.PA_APP_CREATED.getName());
-        caseResponse = CaseResponse.builder().caseData(caseData).caseInfo(caseInfo).build();
+        caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
 
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))

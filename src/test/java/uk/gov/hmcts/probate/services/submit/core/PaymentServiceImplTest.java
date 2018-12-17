@@ -9,8 +9,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseState;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
-import uk.gov.hmcts.probate.services.submit.model.v2.PaymentUpdateRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
@@ -19,6 +17,8 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
 
 import java.time.LocalDate;
@@ -59,11 +59,11 @@ public class PaymentServiceImplTest {
 
     private CaseInfo caseInfo;
 
-    private CaseResponse caseResponse;
+    private ProbateCaseDetails caseResponse;
 
     private CasePayment payment;
 
-    private PaymentUpdateRequest paymentUpdateRequest;
+    private ProbatePaymentDetails paymentUpdateRequest;
 
     @Before
     public void setUp() {
@@ -75,14 +75,14 @@ public class PaymentServiceImplTest {
         payment.setStatus(PaymentStatus.SUCCESS);
         payment.setDate(Date.from(LocalDate.of(2018, 1, 1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         payment.setAmount(100000L);
-        paymentUpdateRequest = PaymentUpdateRequest.builder().type(CaseType.GRANT_OF_REPRESENTATION)
+        paymentUpdateRequest = ProbatePaymentDetails.builder().caseType(CaseType.GRANT_OF_REPRESENTATION)
                 .payment(payment)
                 .build();
         caseData = new GrantOfRepresentation();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
-        caseResponse = CaseResponse.builder().caseData(caseData).caseInfo(caseInfo).build();
+        caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
     }
 
     @Test
@@ -93,7 +93,7 @@ public class PaymentServiceImplTest {
         when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData), eq(PAYMENT_SUCCESS), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
-        CaseResponse actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
+        ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
 
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();
@@ -110,7 +110,7 @@ public class PaymentServiceImplTest {
                 .thenReturn(caseResponse);
         paymentUpdateRequest.getPayment().setStatus(PaymentStatus.FAILED);
 
-        CaseResponse actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
+        ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
 
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();
@@ -128,7 +128,7 @@ public class PaymentServiceImplTest {
                 .thenReturn(caseResponse);
         paymentUpdateRequest.getPayment().setStatus(PaymentStatus.FAILED);
 
-        CaseResponse actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
+        ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
 
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();
@@ -146,7 +146,7 @@ public class PaymentServiceImplTest {
                 .thenReturn(caseResponse);
         paymentUpdateRequest.getPayment().setStatus(PaymentStatus.SUCCESS);
 
-        CaseResponse actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
+        ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
 
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();

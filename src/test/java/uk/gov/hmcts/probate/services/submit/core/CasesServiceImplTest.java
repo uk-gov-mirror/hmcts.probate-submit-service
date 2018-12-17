@@ -7,9 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.util.Optional;
 
@@ -38,11 +38,11 @@ public class CasesServiceImplTest {
     @Test
     public void shouldGetCase() {
         SecurityDTO securityDTO = SecurityDTO.builder().build();
-        Optional<CaseResponse> caseResponseOptional = Optional.of(CaseResponse.builder().build());
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCase(EMAIL_ADDRESS, CASE_TYPE, securityDTO)).thenReturn(caseResponseOptional);
 
-        CaseResponse caseResponse = casesService.getCase(EMAIL_ADDRESS, CASE_TYPE);
+        ProbateCaseDetails caseResponse = casesService.getCase(EMAIL_ADDRESS, CASE_TYPE);
 
         assertThat(caseResponse, equalTo(caseResponseOptional.get()));
         verify(securityUtils, times(1)).getSecurityDTO();

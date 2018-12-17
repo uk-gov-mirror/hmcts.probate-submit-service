@@ -8,8 +8,6 @@ import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseState;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
-import uk.gov.hmcts.probate.services.submit.model.v2.PaymentUpdateRequest;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
@@ -19,6 +17,8 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.CollectionMember;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -53,10 +53,10 @@ public class PaymentServiceImpl implements PaymentsService {
                     .build();
 
     @Override
-    public CaseResponse addPaymentToCase(String applicantEmail, PaymentUpdateRequest paymentUpdateRequest) {
+    public ProbateCaseDetails addPaymentToCase(String applicantEmail, ProbatePaymentDetails paymentUpdateRequest) {
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-        CaseType caseType = paymentUpdateRequest.getType();
-        CaseResponse caseResponse = findCase(applicantEmail, caseType, securityDTO);
+        CaseType caseType = paymentUpdateRequest.getCaseType();
+        ProbateCaseDetails caseResponse = findCase(applicantEmail, caseType, securityDTO);
         String caseId = caseResponse.getCaseInfo().getCaseId();
         CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
         CasePayment payment = paymentUpdateRequest.getPayment();
@@ -65,8 +65,8 @@ public class PaymentServiceImpl implements PaymentsService {
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }
 
-    private CaseResponse findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
-        Optional<CaseResponse> caseResponseOptional = coreCaseDataService.
+    private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
+        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
                 findCase(applicantEmail, caseType, securityDTO);
         return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
     }
@@ -78,7 +78,7 @@ public class PaymentServiceImpl implements PaymentsService {
                 .orElseThrow(() -> new CaseStatePreconditionException(caseState, payment.getStatus()));
     }
 
-    private CaseData createCaseData(CaseResponse caseResponse, CasePayment payment) {
+    private CaseData createCaseData(ProbateCaseDetails caseResponse, CasePayment payment) {
         CaseData caseData = caseResponse.getCaseData();
         CollectionMember collectionMember = new CollectionMember();
         collectionMember.setValue(payment);

@@ -5,12 +5,11 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.util.Optional;
 
@@ -23,18 +22,18 @@ public class DraftServiceImpl implements DraftService {
     private final SecurityUtils securityUtils;
 
     @Override
-    public CaseResponse saveDraft(String applicantEmail, CaseRequest caseRequest) {
+    public ProbateCaseDetails saveDraft(String applicantEmail, ProbateCaseDetails caseRequest) {
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        Optional<CaseResponse> caseInfoOptional = coreCaseDataService.findCase(applicantEmail, caseType, securityDTO);
+        Optional<ProbateCaseDetails> caseInfoOptional = coreCaseDataService.findCase(applicantEmail, caseType, securityDTO);
         return saveDraft(securityDTO, caseData, caseInfoOptional);
     }
 
-    private CaseResponse saveDraft(SecurityDTO securityDTO, CaseData caseData,
-                                   Optional<CaseResponse> caseResponseOptional) {
+    private ProbateCaseDetails saveDraft(SecurityDTO securityDTO, CaseData caseData,
+                                   Optional<ProbateCaseDetails> caseResponseOptional) {
         if (caseResponseOptional.isPresent()) {
-            CaseResponse caseResponse = caseResponseOptional.get();
+            ProbateCaseDetails caseResponse = caseResponseOptional.get();
             return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData,
                     EventId.UPDATE_DRAFT, securityDTO);
         }

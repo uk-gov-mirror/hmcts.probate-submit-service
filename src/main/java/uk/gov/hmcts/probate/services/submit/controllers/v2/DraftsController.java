@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseRequest;
 import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import javax.validation.Valid;
 
@@ -38,8 +38,8 @@ public class DraftsController {
     @RequestMapping(path = "/v2/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<CaseRequest> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
-                                                 @Valid @RequestBody CaseRequest caseRequest) {
+    public ResponseEntity<ProbateCaseDetails> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
+                                                        @Valid @RequestBody ProbateCaseDetails caseRequest) {
         return new ResponseEntity(draftService.saveDraft(applicantEmail, caseRequest), OK);
     }
 }

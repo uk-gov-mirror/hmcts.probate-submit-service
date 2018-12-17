@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
-import uk.gov.hmcts.probate.services.submit.model.v2.CaseResponse;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
@@ -15,6 +14,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +30,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private final CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
 
     @Override
-    public CaseResponse updateCase(String caseId, CaseData caseData, EventId eventId,
-                                   SecurityDTO securityDTO) {
+    public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
+                                         SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
         StartEventResponse startEventResponse = coreCaseDataApi.startEventForCitizen(
                 securityDTO.getAuthorisation(),
@@ -57,7 +57,7 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     @Override
-    public CaseResponse createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
+    public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
         StartEventResponse startEventResponse = coreCaseDataApi.startForCitizen(
                 securityDTO.getAuthorisation(),
@@ -81,7 +81,7 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     @Override
-    public Optional<CaseResponse> findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
+    public Optional<ProbateCaseDetails> findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
         List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
@@ -98,12 +98,12 @@ public class CcdClientApi implements CoreCaseDataService {
         return caseDetails.stream().findFirst().map(this::createCaseResponse);
     }
 
-    private CaseResponse createCaseResponse(CaseDetails caseDetails) {
+    private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());
         caseInfo.setState(caseDetails.getState());
 
-        return CaseResponse.builder()
+        return ProbateCaseDetails.builder()
                 .caseData(caseDetailsToCaseDataMapper.map(caseDetails))
                 .caseInfo(caseInfo)
                 .build();

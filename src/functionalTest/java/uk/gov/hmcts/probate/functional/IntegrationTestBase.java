@@ -12,23 +12,29 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = TestContextConfiguration.class)
-public abstract class IntegrationTestBase {
+@ContextConfiguration(classes = FunctionalTestContextConfiguration.class)
+public class IntegrationTestBase {
 
     @Autowired
     protected FunctionalTestUtils utils;
 
-    String submitServiceUrl;
-    String persistenceServiceUrl;
-    String submissionId;
+    protected String submitServiceUrl;
+
+    protected String persistenceServiceUrl;
+
+    protected String submissionId;
+
+    protected String idamUrl;
 
     private static String SESSION_ID = "tom@email.com";
 
     @Autowired
     public void submitServiceConfiguration(@Value("${probate.submit.url}") String submitServiceUrl,
-                                           @Value("${probate.persistence.url}") String persistenceServiceUrl) {
+                                           @Value("${probate.persistence.url}") String persistenceServiceUrl,
+                                           @Value("${user.auth.provider.oauth2.url}") String idamUrl) {
         this.submitServiceUrl = submitServiceUrl;
         this.persistenceServiceUrl = persistenceServiceUrl;
+        this.idamUrl = idamUrl;
     }
 
     @Rule

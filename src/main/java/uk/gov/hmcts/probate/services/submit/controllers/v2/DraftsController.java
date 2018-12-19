@@ -35,11 +35,11 @@ public class DraftsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/v2/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(path = "/drafts/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
                                                         @Valid @RequestBody ProbateCaseDetails caseRequest) {
-        return new ResponseEntity(draftService.saveDraft(applicantEmail, caseRequest), OK);
+        return new ResponseEntity(draftService.saveDraft(applicantEmail.toLowerCase(), caseRequest), OK);
     }
 }

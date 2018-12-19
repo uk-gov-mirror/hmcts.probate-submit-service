@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.NoSecurityContextException;
 import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.ServiceAndUserDetails;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
@@ -32,12 +33,18 @@ public class SecurityUtils {
     }
 
     public String getUserToken() {
+        if (SecurityContextHolder.getContext() == null) {
+            throw new NoSecurityContextException();
+        }
         return "Bearer " + SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getCredentials();
     }
 
     public String getUserId() {
+        if (SecurityContextHolder.getContext() == null) {
+            throw new NoSecurityContextException();
+        }
         return ((ServiceAndUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal())

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {PaymentsController.class}, secure = false)
 public class PaymentsControllerTest {
 
-    private static final String PAYMENTS_URL = "/v2/payments";
+    private static final String PAYMENTS_URL = "/payments";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String APPLICATION_CREATED = "PAAppCreated";

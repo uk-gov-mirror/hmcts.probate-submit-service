@@ -35,11 +35,11 @@ public class SubmissionsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @RequestMapping(path = "/v2/submissions/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(path = "/submissions/{applicantEmail}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> submit(@PathVariable("applicantEmail") String applicantEmail,
                                                      @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
-        return new ResponseEntity(submissionsService.submit(applicantEmail, caseRequest), OK);
+        return new ResponseEntity(submissionsService.submit(applicantEmail.toLowerCase(), caseRequest), OK);
     }
 }

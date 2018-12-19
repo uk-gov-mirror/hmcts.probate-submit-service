@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {SubmissionsController.class}, secure = false)
 public class SubmissionsControllerTest {
 
-    private static final String SUBMISSIONS_URL = "/v2/submissions";
+    private static final String SUBMISSIONS_URL = "/submissions";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String APPLICATION_CREATED = "ApplicationCreated";

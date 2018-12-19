@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {DraftsController.class}, secure = false)
 public class DraftsControllerTest {
 
-    private static final String DRAFTS_URL = "/v2/drafts";
+    private static final String DRAFTS_URL = "/drafts";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String DRAFT = "Draft";

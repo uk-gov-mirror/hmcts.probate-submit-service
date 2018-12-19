@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -45,8 +46,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/favicon.ico",
                 "/submit",
                 "/updatePaymentStatus",
-                "/resubmit",
-                "/");
+                "/resubmit/**",
+                "/")
+                .antMatchers(HttpMethod.POST, "/submit")
+                .antMatchers(HttpMethod.POST, "/updatePaymentStatus");
     }
 
     @Override
@@ -57,6 +60,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .logout().disable()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/submit").permitAll()
+                .antMatchers(HttpMethod.POST, "/updatePaymentStatus").permitAll()
+                .antMatchers("/resubmit/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

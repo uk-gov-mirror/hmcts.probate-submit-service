@@ -57,11 +57,19 @@ public class DraftServiceImplTest {
     public void setUp() {
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentation();
+        caseData.setPrimaryApplicantEmailAddress(APPLICANT_EMAIL);
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionIfEmailsDontMatch() {
+        caseData.setPrimaryApplicantEmailAddress("test1234@hello.com");
+
+        draftService.saveDraft(APPLICANT_EMAIL, caseRequest);
     }
 
     @Test

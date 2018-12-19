@@ -29,7 +29,7 @@ import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseState.PA_A
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_FAILED;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_FAILED_AGAIN;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_FAILED_TO_SUCCESS;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_SUCCESS;
+import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_CASE;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.INITIATED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
@@ -44,7 +44,7 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private final static Map<Pair<CaseState, PaymentStatus>, EventId> PAYMENT_EVENT_MAP =
             ImmutableMap.<Pair<CaseState, PaymentStatus>, EventId>builder()
-                    .put(Pair.of(PA_APP_CREATED, SUCCESS), PAYMENT_SUCCESS)
+                    .put(Pair.of(PA_APP_CREATED, SUCCESS), CREATE_CASE)
                     .put(Pair.of(PA_APP_CREATED, FAILED), PAYMENT_FAILED)
                     .put(Pair.of(PA_APP_CREATED, INITIATED), PAYMENT_FAILED)
                     .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), PAYMENT_FAILED_TO_SUCCESS)

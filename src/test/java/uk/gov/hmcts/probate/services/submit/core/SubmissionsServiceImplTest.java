@@ -60,6 +60,7 @@ public class SubmissionsServiceImplTest {
     public void setUp() {
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentation();
+        caseData.setPrimaryApplicantEmailAddress(APPLICANT_EMAIL);
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
@@ -72,6 +73,13 @@ public class SubmissionsServiceImplTest {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.empty());
+
+        submissionsService.submit(APPLICANT_EMAIL, caseRequest);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionIfEmailsDontMatch() {
+        caseData.setPrimaryApplicantEmailAddress("test1234@hello.com");
 
         submissionsService.submit(APPLICANT_EMAIL, caseRequest);
     }

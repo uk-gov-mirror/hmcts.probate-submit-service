@@ -48,8 +48,8 @@ public class SwaggerConfiguration {
 
     private ApiInfo draftsApiInfo() {
         return new ApiInfoBuilder()
-                .title("Drafts API documentation")
-                .description("Drafts API documentation")
+                .title("Submit Service API documentation")
+                .description("Submit Service API documentation")
                 .build();
     }
 

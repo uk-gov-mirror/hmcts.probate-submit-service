@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.core;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseState;
@@ -26,8 +27,10 @@ public class SubmissionsServiceImpl implements SubmissionsService {
 
     @Override
     public ProbateCaseDetails submit(String applicantEmail, ProbateCaseDetails caseRequest) {
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         CaseData caseData = caseRequest.getCaseData();
+        Assert.isTrue(caseData.getPrimaryApplicantEmailAddress().equals(applicantEmail),
+                "Applicant email on path must match case data");
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         ProbateCaseDetails caseResponse = findCase(applicantEmail, CaseType.getCaseType(caseData), securityDTO);
         CaseState state = CaseState.getState(caseResponse.getCaseInfo().getState());
         checkStatePrecondition(state);

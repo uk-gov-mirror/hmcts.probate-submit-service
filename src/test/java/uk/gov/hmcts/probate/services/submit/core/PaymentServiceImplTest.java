@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_FAILED;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_FAILED_AGAIN;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_FAILED_TO_SUCCESS;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.PAYMENT_SUCCESS;
+import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_CASE;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -90,7 +90,7 @@ public class PaymentServiceImplTest {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.of(caseResponse));
-        when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData), eq(PAYMENT_SUCCESS), eq(securityDTO)))
+        when(mockCoreCaseDataService.updateCase(eq(CASE_ID), eq(caseData), eq(CREATE_CASE), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
         ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
@@ -98,7 +98,7 @@ public class PaymentServiceImplTest {
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
-        verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData), eq(PAYMENT_SUCCESS), eq(securityDTO));
+        verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData), eq(CREATE_CASE), eq(securityDTO));
     }
 
     @Test

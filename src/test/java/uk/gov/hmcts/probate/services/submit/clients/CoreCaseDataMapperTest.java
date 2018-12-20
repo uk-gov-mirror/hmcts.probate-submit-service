@@ -152,6 +152,23 @@ public class CoreCaseDataMapperTest {
     }
 
     @Test
+    public void mapDocumentTest() throws IOException {
+        Map<String, JsonNode> expected = new HashMap<>();
+        expected.put("boDocumentsUploaded", TestUtils.getJsonNodeFromFile("ccdDocumentUploads.json"));
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getDocumentUploadMap(), coreCaseDataMapper::documentUploadMapper);
+        assertEquals(expected, mappedData);
+
+    }
+
+    @Test
+    public void mapNonExistentDocumentTest()  {
+        Optional<JsonNode> expected = Optional.empty();
+        Optional<JsonNode> mappedData = coreCaseDataMapper.documentUploadMapper(submitdata, "noSuchField");
+        assertEquals(expected, mappedData);
+
+    }
+
+    @Test
     public void mapNonExistentExecutorsTest() {
         Optional<JsonNode> expected = Optional.empty();
         Optional<JsonNode> mappedData = coreCaseDataMapper.executorsMapper(submitdata, "noSuchField");

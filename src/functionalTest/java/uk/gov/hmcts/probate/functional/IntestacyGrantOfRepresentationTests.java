@@ -11,10 +11,8 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +22,6 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SerenityRunner.class)
 public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
 
@@ -44,8 +41,8 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
     public void setUp() throws JsonProcessingException {
         RestAssured.defaultParser = Parser.JSON;
         objectMapper = new ObjectMapper();
-        String forename = RandomStringUtils.randomAlphanumeric(5);
-        String surname = RandomStringUtils.randomAlphanumeric(5);
+        String forename = RandomStringUtils.randomAlphanumeric(5).toLowerCase();
+        String surname = RandomStringUtils.randomAlphanumeric(5).toLowerCase();
         email = forename + "." + surname + "@email.com";
         logger.info("Generate user name: {}", email);
 

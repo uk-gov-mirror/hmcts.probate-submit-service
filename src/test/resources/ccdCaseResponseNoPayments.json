@@ -15,9 +15,7 @@
     "deceasedAnyOtherNames": "No",
     "willHasCodicils": "No",
     "deceasedDateOfBirth": "1980-01-01",
-    "willAccessOriginal": "Yes",
     "primaryApplicantEmailAddress": "E5wqQl-c9svjgkGj2Wo3JRMNvJJU42ii",
-    "willExists": "Yes",
     "executorsNotApplying": [],
     "deceasedDateOfDeath": "2018-01-01",
     "primaryApplicantForenames": "asdasas",
@@ -25,7 +23,6 @@
       "AddressLine1": "dsasds"
     },
     "applicationSubmittedDate": "2018-09-17",
-    "deceasedDomicileInEngWales": "Yes",
     "ihtNetValue": "20000000",
     "ihtReferenceNumber": "sdasasaddas",
     "primaryApplicantPhoneNumber": "234234314",
@@ -50,7 +47,6 @@
       "understandItem2": "criminal proceedings for fraud may be brought against me if I am found to have been deliberately untruthful or dishonest"
     },
     "numberOfApplicants": 1,
-    "primaryApplicantIsApplying": "Yes",
     "executorsApplying": [],
     "totalFee": "27050",
     "ihtGrossValue": "20000000",
@@ -105,9 +101,7 @@
     },
     "willHasCodicils": "PUBLIC",
     "deceasedDateOfBirth": "PUBLIC",
-    "willAccessOriginal": "PUBLIC",
     "primaryApplicantEmailAddress": "PUBLIC",
-    "willExists": "PUBLIC",
     "executorsNotApplying": {
       "classification": "PUBLIC",
       "value": []
@@ -121,7 +115,6 @@
       }
     },
     "applicationSubmittedDate": "PUBLIC",
-    "deceasedDomicileInEngWales": "PUBLIC",
     "ihtNetValue": "PUBLIC",
     "ihtReferenceNumber": "PUBLIC",
     "primaryApplicantPhoneNumber": "PUBLIC",
@@ -149,7 +142,6 @@
       }
     },
     "numberOfApplicants": "PUBLIC",
-    "primaryApplicantIsApplying": "PUBLIC",
     "executorsApplying": {
       "classification": "PUBLIC",
       "value": []
@@ -221,9 +213,7 @@
     },
     "willHasCodicils": "PUBLIC",
     "deceasedDateOfBirth": "PUBLIC",
-    "willAccessOriginal": "PUBLIC",
     "primaryApplicantEmailAddress": "PUBLIC",
-    "willExists": "PUBLIC",
     "executorsNotApplying": {
       "classification": "PUBLIC",
       "value": []
@@ -237,7 +227,6 @@
       }
     },
     "applicationSubmittedDate": "PUBLIC",
-    "deceasedDomicileInEngWales": "PUBLIC",
     "ihtNetValue": "PUBLIC",
     "ihtReferenceNumber": "PUBLIC",
     "primaryApplicantPhoneNumber": "PUBLIC",
@@ -265,7 +254,6 @@
       }
     },
     "numberOfApplicants": "PUBLIC",
-    "primaryApplicantIsApplying": "PUBLIC",
     "executorsApplying": {
       "classification": "PUBLIC",
       "value": []

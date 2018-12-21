@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.services.v2.DraftService;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import javax.validation.Valid;

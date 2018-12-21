@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.services.v2.SubmissionsService;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
@@ -40,6 +39,7 @@ public class SubmissionsController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> submit(@PathVariable("applicantEmail") String applicantEmail,
                                                      @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
-        return new ResponseEntity(submissionsService.submit(applicantEmail.toLowerCase(), caseRequest), OK);
+
+        return ResponseEntity.ok(submissionsService.submit(applicantEmail.toLowerCase(), caseRequest));
     }
 }

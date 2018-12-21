@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.services.v2;
+package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId;

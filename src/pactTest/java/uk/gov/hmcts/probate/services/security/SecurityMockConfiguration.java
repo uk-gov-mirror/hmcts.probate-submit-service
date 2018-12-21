@@ -1,13 +1,19 @@
-package uk.gov.hmcts.probate.security;
+package uk.gov.hmcts.probate.services.security;
 
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import uk.gov.hmcts.probate.security.AuthenticationExceptionHandler;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
@@ -16,19 +22,22 @@ import uk.gov.hmcts.reform.auth.checker.spring.serviceanduser.AuthCheckerService
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
+@Profile("SECURITY_MOCK")
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@Order(1)
+public class SecurityMockConfiguration extends WebSecurityConfigurerAdapter {
 
     private AuthCheckerServiceAndUserFilter authCheckerServiceAndUserFilter;
+
 
     private AuthenticationExceptionHandler authenticationExceptionHandler;
 
     @Autowired
-    public SecurityConfiguration(RequestAuthorizer<User> userRequestAuthorizer,
-                                 RequestAuthorizer<Service> serviceRequestAuthorizer,
-                                 AuthenticationManager authenticationManager,
-                                 AuthenticationExceptionHandler authenticationExceptionHandler) {
+    public SecurityMockConfiguration(RequestAuthorizer<User> userRequestAuthorizer,
+                                     RequestAuthorizer<Service> serviceRequestAuthorizer,
+                                     AuthenticationManager authenticationManager,
+                                     AuthenticationExceptionHandler authenticationExceptionHandler) {
         authCheckerServiceAndUserFilter = new AuthCheckerServiceAndUserFilter(serviceRequestAuthorizer, userRequestAuthorizer);
         authCheckerServiceAndUserFilter.setAuthenticationManager(authenticationManager);
         this.authenticationExceptionHandler = authenticationExceptionHandler;
@@ -41,37 +50,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/webjars/springfox-swagger-ui/**",
                 "/swagger-resources/**",
                 "/v2/**",
-                "/v2/cases/**",
+                "/cases/**",
+                "/drafts/**",
+                "/submissions/**",
                 "/health",
                 "/info",
                 "/favicon.ico",
                 "/submit",
                 "/updatePaymentStatus",
-                "/resubmit/**",
-                "/")
-                .antMatchers(HttpMethod.POST, "/submit")
-                .antMatchers(HttpMethod.POST, "/updatePaymentStatus");
+                "/resubmit",
+                "/");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilter(authCheckerServiceAndUserFilter)
-                .sessionManagement().sessionCreationPolicy(STATELESS).and()
-                .csrf().disable()
-                .formLogin().disable()
-                .logout().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/submit").permitAll()
-                .antMatchers(HttpMethod.POST, "/updatePaymentStatus").permitAll()
-                .antMatchers("/resubmit/**").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
-                .antMatchers("/v2/api-docs").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationExceptionHandler);
+        http.authorizeRequests().antMatchers(
+                "/cases/**",
+                "/drafts/**",
+                "/submissions/**"
+        ).permitAll();
+
     }
 }

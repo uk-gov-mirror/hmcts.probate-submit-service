@@ -9,15 +9,17 @@ import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.services.v2.CasesService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
 @Api(tags = {"CasesController"})
 @SwaggerDefinition(tags = {@Tag(name = "CasesController", description = "Cases API")})
@@ -26,6 +28,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 public class CasesController {
 
     private final CasesService casesService;
+
 
     @ApiOperation(value = "Get case to CCD", notes = "Get case to CCD")
     @ApiResponses(value = {
@@ -39,4 +42,5 @@ public class CasesController {
                                                       @PathVariable("applicantEmail") String applicantEmail) {
         return ResponseEntity.ok(casesService.getCase(applicantEmail.toLowerCase(), caseType));
     }
+
 }

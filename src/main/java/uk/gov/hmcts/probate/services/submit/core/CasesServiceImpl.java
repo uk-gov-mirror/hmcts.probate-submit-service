@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
-import uk.gov.hmcts.probate.services.submit.services.v2.CasesService;
-import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.controllers.v2.CasesService;
+import uk.gov.hmcts.probate.services.submit.controllers.v2.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 

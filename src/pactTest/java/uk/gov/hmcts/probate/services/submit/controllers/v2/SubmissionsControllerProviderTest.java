@@ -3,11 +3,8 @@ package uk.gov.hmcts.probate.services.submit.controllers.v2;
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.io.IOException;

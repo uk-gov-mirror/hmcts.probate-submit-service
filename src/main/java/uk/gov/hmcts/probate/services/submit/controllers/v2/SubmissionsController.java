@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
-
-import static org.springframework.http.HttpStatus.OK;
 
 @Api(tags = {"SubmissionsController"})
 @SwaggerDefinition(tags = {@Tag(name = "SubmissionsController", description = "Submissions API")})

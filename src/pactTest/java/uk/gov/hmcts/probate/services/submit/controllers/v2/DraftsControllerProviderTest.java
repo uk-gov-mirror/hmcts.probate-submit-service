@@ -4,10 +4,8 @@ import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.probate.services.submit.services.DraftService;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.io.IOException;
@@ -19,7 +17,7 @@ import static org.mockito.Mockito.when;
 @Provider("probate_submitservice_drafts")
 public class DraftsControllerProviderTest extends ControllerProviderTest {
 
-    @Autowired
+    @MockBean
     private DraftService draftService;
 
     @State({"provider POSTS draft casedata with success",

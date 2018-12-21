@@ -39,7 +39,7 @@ withPipeline("java", product, component) {
   loadVaultSecrets(secrets)
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
-  enableDeployToAKS()
+  installCharts()
 
   after('test') {
     try {

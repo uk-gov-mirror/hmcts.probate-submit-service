@@ -1,4 +1,4 @@
-description: A Helm chart for the HMCTS probate product
+description: A Helm chart for the HMCTS probate-submit product
 name: probate-submit-service
 home: https://github.com/hmcts/probate-submit-service
 version: 0.1.1

@@ -121,7 +121,6 @@ public class CcdClientApiTest {
         assertThat(caseResponse, is(notNullValue()));
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
         assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
-        assertThat(caseResponse.getCaseData().getApplicationType(), is(INTESTACY));
         verify(mockCoreCaseDataApi, times(1)).startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
         verify(mockCoreCaseDataApi, times(1)).submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),

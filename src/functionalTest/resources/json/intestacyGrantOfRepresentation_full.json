@@ -1,7 +1,8 @@
 {
   "caseData": {
     "type": "GrantOfRepresentation",
-    "applicationType": "Intestacy",
+    "applicationType": "Personal",
+    "caseType": "intestacy",
     "primaryApplicantEmailAddress": "XXXXXXXXXX",
     "primaryApplicantForenames": "Jon",
     "primaryApplicantSurname": "Snow",
@@ -31,17 +32,17 @@
         }
       }
     ],
-    "deceasedMaritalStatus": "marriedCivilPartnership",
+    "deceasedMartialStatus": "marriedCivilPartnership",
     "deceasedDivorcedInEnglandOrWales": "No",
     "deceasedSpouseNotApplyingReason": "mentallyIncapable",
     "deceasedOtherChildren": "Yes",
-    "deceasedAllDeceasedChildrenOverEighteen": "Yes",
-    "deceasedAnyDeceasedChildrenDieBeforeDeceased": "No",
-    "deceasedAnyDeceasedGrandchildrenUnderEighteen": "No",
+    "childrenOverEighteenSurvived": "Yes",
+    "childrenDied": "No",
+    "grandChildrenSurvivedUnderEighteen": "No",
     "deceasedAnyChildren": "No",
     "registryLocation": "Birmingham",
     "assetsOverseasNetValue": "10050",
-    "assetsOverseas": "Yes",
+    "deceasedHasAssetsOutsideUK": "Yes",
     "ihtFormId": "IHT205",
     "ihtFormCompletedOnline": "Yes",
     "ihtGrossValue": "100000",
@@ -52,6 +53,19 @@
     },
     "extraCopiesOfGrant": 5,
     "outsideUKGrantCopies": 6,
+    "payments": [
+      {
+        "value": {
+          "status": "Success",
+          "date": "2018-12-03",
+          "reference": "RC-1537-1988-5489-1985",
+          "amount": "22050",
+          "method": "online",
+          "transactionId": "r23k178busa0rp2mh27m0vchja",
+          "siteId": "P223"
+        }
+      }
+    ],
     "uploadDocumentUrl": "http://document-management/document/12345"
   }
 }

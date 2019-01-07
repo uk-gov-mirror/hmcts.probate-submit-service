@@ -90,6 +90,16 @@ public class SubmitControllerTest {
     }
 
     @Test
+    public void shouldReturn400OnSubmitOfInvalidForDataJson() throws Exception {
+        String invalidJson = "invalid json";
+
+        mockMvc.perform(post(SUBMIT_SERVICE_URL)
+                .content(invalidJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void shouldReturn502WhenMailExceptionThrownOnSubmit() throws Exception {
         SubmitData validApplication = new SubmitData(TestUtils.getJsonNodeFromFile("formPayload.json"));
         doThrow(MailSendException.class).when(mockSubmitService).submit(eq(validApplication), eq(userId), eq(authorizationToken));

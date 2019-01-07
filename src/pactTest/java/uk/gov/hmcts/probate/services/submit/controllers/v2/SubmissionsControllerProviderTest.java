@@ -26,4 +26,10 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
                 .thenReturn(getProbateCaseDetails("intestacyGrantOfRepresentation_full.json"));
     }
 
+    @State({"provider POSTS submission with validation errors",
+            "provider POSTS submission with validation errors"})
+    public void toPostSubmissionCaseDetailsWithValidationErrors() throws IOException, JSONException {
+        when(submissionsService.submit(anyString(), any(ProbateCaseDetails.class)))
+                .thenReturn(null);
+    }
 }

@@ -56,4 +56,20 @@ public class SubmissionsControllerTest {
                 .andExpect(status().isOk());
         verify(submissionsService).submit(eq(EMAIL_ADDRESS), eq(caseRequest));
     }
+
+    @Test
+    public void shouldReturn400OnSubmitOfInvalidJson() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentationInvalid.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(APPLICATION_CREATED);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
+        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+                .content(objectMapper.writeValueAsString(caseRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }

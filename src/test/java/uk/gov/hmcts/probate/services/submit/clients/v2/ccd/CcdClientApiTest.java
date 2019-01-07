@@ -17,9 +17,11 @@ import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
+import uk.gov.hmcts.reform.probate.model.forms.Applicant;
 
 import java.util.Map;
 import java.util.Optional;
@@ -94,7 +96,7 @@ public class CcdClientApiTest {
                 .id(CASE_ID)
                 .state(STATE)
                 .caseTypeId(GRANT_OF_REPRESENTATION.getName())
-                .data(ImmutableMap.of("applicationType", INTESTACY.getName()))
+                .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL.getName()))
                 .build();
 
         caseDataContent = CaseDataContent.builder()
@@ -121,7 +123,6 @@ public class CcdClientApiTest {
         assertThat(caseResponse, is(notNullValue()));
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
         assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
-        assertThat(caseResponse.getCaseData().getApplicationType(), is(INTESTACY));
         verify(mockCoreCaseDataApi, times(1)).startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
                 GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
         verify(mockCoreCaseDataApi, times(1)).submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),

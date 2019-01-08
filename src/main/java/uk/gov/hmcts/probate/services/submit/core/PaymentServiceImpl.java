@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
@@ -34,6 +35,7 @@ import static uk.gov.hmcts.reform.probate.model.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.INITIATED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentsService {
@@ -54,9 +56,11 @@ public class PaymentServiceImpl implements PaymentsService {
 
     @Override
     public ProbateCaseDetails addPaymentToCase(String applicantEmail, ProbatePaymentDetails paymentUpdateRequest) {
+        log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         CaseType caseType = paymentUpdateRequest.getCaseType();
         ProbateCaseDetails caseResponse = findCase(applicantEmail, caseType, securityDTO);
+        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
         CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
         CasePayment payment = paymentUpdateRequest.getPayment();

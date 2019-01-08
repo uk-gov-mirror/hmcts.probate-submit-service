@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@Slf4j
 @Api(tags = {"PaymentsController"})
 @SwaggerDefinition(tags = {@Tag(name = "PaymentsController", description = "Payments API")})
 @RestController
@@ -41,6 +43,7 @@ public class PaymentsController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> addPaymentToCase(@PathVariable("applicantEmail") String applicantEmail,
                                                                @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
+        log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
         return new ResponseEntity(paymentsService.addPaymentToCase(applicantEmail.toLowerCase(), probatePaymentDetails), OK);
     }
 }

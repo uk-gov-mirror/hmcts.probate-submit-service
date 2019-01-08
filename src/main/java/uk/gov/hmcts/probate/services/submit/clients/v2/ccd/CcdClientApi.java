@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.services.submit.services.v2.CoreCaseDataService;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CcdClientApi implements CoreCaseDataService {
@@ -33,6 +35,10 @@ public class CcdClientApi implements CoreCaseDataService {
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
                                          SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
+        log.info("Update case for caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), caseId, eventId.getName());
+        log.info("Retrieve event token from CCD for Citizen, caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), caseId, eventId.getName());
         StartEventResponse startEventResponse = coreCaseDataApi.startEventForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
@@ -43,6 +49,8 @@ public class CcdClientApi implements CoreCaseDataService {
                 eventId.getName()
         );
         CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        log.info("Submit event to CCD for Citizen, caseType: {}, caseId: {}",
+                caseType.getName(), caseId);
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
@@ -59,6 +67,10 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
+        log.info("Create case for caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), eventId.getName());
+        log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
+                caseType.getName(), eventId.getName());
         StartEventResponse startEventResponse = coreCaseDataApi.startForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
@@ -68,6 +80,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 eventId.getName()
         );
         CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
         CaseDetails caseDetails = coreCaseDataApi.submitForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
@@ -82,6 +95,7 @@ public class CcdClientApi implements CoreCaseDataService {
 
     @Override
     public Optional<ProbateCaseDetails> findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),

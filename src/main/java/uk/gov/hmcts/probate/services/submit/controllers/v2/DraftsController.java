@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@Slf4j
 @Api(tags = {"DraftsController"})
 @SwaggerDefinition(tags = {@Tag(name = "DraftsController", description = "Drafts API")})
 @RestController
@@ -40,6 +42,7 @@ public class DraftsController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveDraft(@PathVariable("applicantEmail") String applicantEmail,
                                                         @Valid @RequestBody ProbateCaseDetails caseRequest) {
+        log.info("Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(draftService.saveDraft(applicantEmail.toLowerCase(), caseRequest), OK);
     }
 }

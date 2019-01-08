@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.probate.services.submit.services.v2.CasesService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+@Slf4j
 @Api(tags = {"CasesController"})
 @SwaggerDefinition(tags = {@Tag(name = "CasesController", description = "Cases API")})
 @RestController
@@ -37,6 +39,7 @@ public class CasesController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam("caseType") CaseType caseType,
                                                       @PathVariable("applicantEmail") String applicantEmail) {
+        log.info("Retrieving case of caseType: {}", caseType.getName());
         return ResponseEntity.ok(casesService.getCase(applicantEmail.toLowerCase(), caseType));
     }
 }

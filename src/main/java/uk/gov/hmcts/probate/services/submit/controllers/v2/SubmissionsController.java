@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,7 @@ import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
 import static org.springframework.http.HttpStatus.OK;
 
+@Slf4j
 @Api(tags = {"SubmissionsController"})
 @SwaggerDefinition(tags = {@Tag(name = "SubmissionsController", description = "Submissions API")})
 @RestController
@@ -40,6 +42,7 @@ public class SubmissionsController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> submit(@PathVariable("applicantEmail") String applicantEmail,
                                                      @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
+        log.info("Submitting for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(submissionsService.submit(applicantEmail.toLowerCase(), caseRequest), OK);
     }
 }

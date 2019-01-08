@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.probate.services.submit.services.v2.CasesService;
+import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 public class CasesController {
 
     private final CasesService casesService;
+
 
     @ApiOperation(value = "Get case to CCD", notes = "Get case to CCD")
     @ApiResponses(value = {
@@ -42,4 +43,5 @@ public class CasesController {
         log.info("Retrieving case of caseType: {}", caseType.getName());
         return ResponseEntity.ok(casesService.getCase(applicantEmail.toLowerCase(), caseType));
     }
+
 }

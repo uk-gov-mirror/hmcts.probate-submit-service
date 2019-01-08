@@ -142,6 +142,13 @@
     <cve>CVE-2018-1270</cve>
   </suppress>
   <suppress>
+        <notes><![CDATA[
+   file name: feign-form-spring-3.3.0.jar
+   ]]></notes>
+        <gav regex="true">^io\.github\.openfeign\.form:feign-form-spring:.*$</gav>
+        <cve>CVE-2018-1271</cve>
+  </suppress>
+  <suppress>
     <notes><![CDATA[
    file name: feign-form-spring-3.3.0.jar
    ]]></notes>

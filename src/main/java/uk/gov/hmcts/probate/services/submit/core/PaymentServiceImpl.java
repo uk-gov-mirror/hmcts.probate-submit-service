@@ -40,7 +40,7 @@ import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentsService {
 
-    private final static Map<Pair<CaseState, PaymentStatus>, EventId> PAYMENT_EVENT_MAP =
+    private static final Map<Pair<CaseState, PaymentStatus>, EventId> PAYMENT_EVENT_MAP =
             ImmutableMap.<Pair<CaseState, PaymentStatus>, EventId>builder()
                     .put(Pair.of(PA_APP_CREATED, SUCCESS), CREATE_CASE)
                     .put(Pair.of(PA_APP_CREATED, FAILED), PAYMENT_FAILED)

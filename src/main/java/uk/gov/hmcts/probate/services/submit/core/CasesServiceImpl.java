@@ -28,6 +28,6 @@ public class CasesServiceImpl implements CasesService {
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
                 .findCase(applicantEmail, caseType, securityDTO);
-        return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 }

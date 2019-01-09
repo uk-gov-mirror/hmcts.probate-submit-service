@@ -47,7 +47,7 @@ public class SubmissionsServiceImpl implements SubmissionsService {
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
                 findCase(applicantEmail, caseType, securityDTO);
-        return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private void checkStatePrecondition(CaseState caseState) {

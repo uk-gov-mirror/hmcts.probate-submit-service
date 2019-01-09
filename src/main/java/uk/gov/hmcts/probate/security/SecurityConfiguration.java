@@ -24,6 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(authenticationManager);
     }
 
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .requestMatchers()

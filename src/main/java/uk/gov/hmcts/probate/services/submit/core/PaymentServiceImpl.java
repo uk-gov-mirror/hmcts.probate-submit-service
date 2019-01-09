@@ -40,10 +40,6 @@ import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentsService {
 
-    private final CoreCaseDataService coreCaseDataService;
-
-    private final SecurityUtils securityUtils;
-
     private final static Map<Pair<CaseState, PaymentStatus>, EventId> PAYMENT_EVENT_MAP =
             ImmutableMap.<Pair<CaseState, PaymentStatus>, EventId>builder()
                     .put(Pair.of(PA_APP_CREATED, SUCCESS), CREATE_CASE)
@@ -53,6 +49,10 @@ public class PaymentServiceImpl implements PaymentsService {
                     .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), PAYMENT_FAILED_AGAIN)
                     .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), PAYMENT_FAILED_AGAIN)
                     .build();
+
+    private final CoreCaseDataService coreCaseDataService;
+
+    private final SecurityUtils securityUtils;
 
     @Override
     public ProbateCaseDetails addPaymentToCase(String applicantEmail, ProbatePaymentDetails paymentUpdateRequest) {
@@ -72,7 +72,7 @@ public class PaymentServiceImpl implements PaymentsService {
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
                 findCase(applicantEmail, caseType, securityDTO);
-        return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private EventId getEventId(CaseState caseState, CasePayment payment) {

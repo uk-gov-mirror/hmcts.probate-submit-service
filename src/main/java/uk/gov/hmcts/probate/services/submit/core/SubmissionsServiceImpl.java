@@ -19,8 +19,6 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import java.util.Optional;
 
 @Slf4j
-
-
 @Component
 @RequiredArgsConstructor
 public class SubmissionsServiceImpl implements SubmissionsService {

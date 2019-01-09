@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
@@ -12,6 +13,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CasesServiceImpl implements CasesService {
@@ -22,9 +24,10 @@ public class CasesServiceImpl implements CasesService {
 
     @Override
     public ProbateCaseDetails getCase(String applicantEmail, CaseType caseType) {
+        log.info("Getting case of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
                 .findCase(applicantEmail, caseType, securityDTO);
-        return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 }

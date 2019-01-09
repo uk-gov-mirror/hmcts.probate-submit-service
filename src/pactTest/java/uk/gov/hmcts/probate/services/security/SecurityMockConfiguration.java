@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import uk.gov.hmcts.probate.security.AuthenticationExceptionHandler;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
 import uk.gov.hmcts.reform.auth.checker.core.user.User;
@@ -30,17 +29,12 @@ public class SecurityMockConfiguration extends WebSecurityConfigurerAdapter {
 
     private AuthCheckerServiceAndUserFilter authCheckerServiceAndUserFilter;
 
-
-    private AuthenticationExceptionHandler authenticationExceptionHandler;
-
     @Autowired
     public SecurityMockConfiguration(RequestAuthorizer<User> userRequestAuthorizer,
                                      RequestAuthorizer<Service> serviceRequestAuthorizer,
-                                     AuthenticationManager authenticationManager,
-                                     AuthenticationExceptionHandler authenticationExceptionHandler) {
+                                     AuthenticationManager authenticationManager) {
         authCheckerServiceAndUserFilter = new AuthCheckerServiceAndUserFilter(serviceRequestAuthorizer, userRequestAuthorizer);
         authCheckerServiceAndUserFilter.setAuthenticationManager(authenticationManager);
-        this.authenticationExceptionHandler = authenticationExceptionHandler;
     }
 
     @Override

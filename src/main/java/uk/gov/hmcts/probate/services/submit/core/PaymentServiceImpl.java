@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
@@ -34,15 +35,12 @@ import static uk.gov.hmcts.reform.probate.model.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.INITIATED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentsService {
 
-    private final CoreCaseDataService coreCaseDataService;
-
-    private final SecurityUtils securityUtils;
-
-    private final static Map<Pair<CaseState, PaymentStatus>, EventId> PAYMENT_EVENT_MAP =
+    private static final Map<Pair<CaseState, PaymentStatus>, EventId> PAYMENT_EVENT_MAP =
             ImmutableMap.<Pair<CaseState, PaymentStatus>, EventId>builder()
                     .put(Pair.of(PA_APP_CREATED, SUCCESS), CREATE_CASE)
                     .put(Pair.of(PA_APP_CREATED, FAILED), PAYMENT_FAILED)
@@ -52,11 +50,17 @@ public class PaymentServiceImpl implements PaymentsService {
                     .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), PAYMENT_FAILED_AGAIN)
                     .build();
 
+    private final CoreCaseDataService coreCaseDataService;
+
+    private final SecurityUtils securityUtils;
+
     @Override
     public ProbateCaseDetails addPaymentToCase(String applicantEmail, ProbatePaymentDetails paymentUpdateRequest) {
+        log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         CaseType caseType = paymentUpdateRequest.getCaseType();
         ProbateCaseDetails caseResponse = findCase(applicantEmail, caseType, securityDTO);
+        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
         CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
         CasePayment payment = paymentUpdateRequest.getPayment();
@@ -68,7 +72,7 @@ public class PaymentServiceImpl implements PaymentsService {
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
                 findCase(applicantEmail, caseType, securityDTO);
-        return caseResponseOptional.orElseThrow(() -> new CaseNotFoundException());
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
     private EventId getEventId(CaseState caseState, CasePayment payment) {

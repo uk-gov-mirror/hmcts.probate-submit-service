@@ -1,6 +1,7 @@
 {
   "type": "GrantOfRepresentation",
   "applicationType": "Personal",
+  "caseType": "intestacy",
   "primaryApplicantEmailAddress": "jon.snow@thenorth.com",
   "primaryApplicantForenames": "Jon",
   "primaryApplicantSurname": "Snow",
@@ -40,7 +41,7 @@
   "deceasedAnyChildren": "No",
   "registryLocation": "Birmingham",
   "assetsOverseasNetValue": "10050",
-  "deceasedHasAssetsOutsideUk": "Yes",
+  "deceasedHasAssetsOutsideUK": "Yes",
   "ihtFormId": "IHT205",
   "ihtFormCompletedOnline": "Yes",
   "ihtGrossValue": "100000",

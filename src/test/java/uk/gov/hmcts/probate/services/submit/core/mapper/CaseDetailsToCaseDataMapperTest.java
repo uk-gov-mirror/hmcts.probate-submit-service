@@ -27,6 +27,7 @@ public class CaseDetailsToCaseDataMapperTest {
     public void shouldMap() {
         Map<String, Object> map = ImmutableMap.<String,Object>builder()
                 .put("applicationType", "Personal")
+                .put("caseType", "intestacy")
                 .put("deceasedForenames", "Robert")
                 .put("deceasedSurname", "Baratheon")
                 .build();

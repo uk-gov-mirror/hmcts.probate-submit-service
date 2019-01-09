@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDTO;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DraftServiceImpl implements DraftService {
@@ -24,6 +26,7 @@ public class DraftServiceImpl implements DraftService {
 
     @Override
     public ProbateCaseDetails saveDraft(String applicantEmail, ProbateCaseDetails caseRequest) {
+        log.info("saveDraft - Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         CaseData caseData = caseRequest.getCaseData();
         Assert.isTrue(caseData.getPrimaryApplicantEmailAddress().equals(applicantEmail),
                 "Applicant email on path must match case data");
@@ -37,9 +40,11 @@ public class DraftServiceImpl implements DraftService {
                                    Optional<ProbateCaseDetails> caseResponseOptional) {
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
+            log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
             return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData,
                     EventId.UPDATE_DRAFT, securityDTO);
         }
+        log.info("No case found");
         return coreCaseDataService.createCase(caseData, EventId.CREATE_DRAFT, securityDTO);
     }
 }

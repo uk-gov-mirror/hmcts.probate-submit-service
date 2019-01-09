@@ -33,22 +33,24 @@ public class SecurityUtils {
     }
 
     public String getUserToken() {
-        if (SecurityContextHolder.getContext() == null) {
-            throw new NoSecurityContextException();
-        }
+        checkSecurityContext();
         return "Bearer " + SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getCredentials();
     }
 
     public String getUserId() {
-        if (SecurityContextHolder.getContext() == null) {
-            throw new NoSecurityContextException();
-        }
+        checkSecurityContext();
         return ((ServiceAndUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal())
                 .getUsername();
+    }
+
+    private void checkSecurityContext() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new NoSecurityContextException();
+        }
     }
 
     public String generateServiceToken() {

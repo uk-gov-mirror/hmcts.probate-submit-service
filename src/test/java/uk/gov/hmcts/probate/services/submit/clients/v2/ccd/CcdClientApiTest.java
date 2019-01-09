@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
-import uk.gov.hmcts.reform.probate.model.forms.Applicant;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +35,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_DRAFT;
 import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.UPDATE_DRAFT;
-import static uk.gov.hmcts.reform.probate.model.ProbateType.INTESTACY;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.JurisdictionId.PROBATE;
 
@@ -96,7 +95,8 @@ public class CcdClientApiTest {
                 .id(CASE_ID)
                 .state(STATE)
                 .caseTypeId(GRANT_OF_REPRESENTATION.getName())
-                .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL.getName()))
+                .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
+                        "caseType", GrantType.INTESTACY))
                 .build();
 
         caseDataContent = CaseDataContent.builder()

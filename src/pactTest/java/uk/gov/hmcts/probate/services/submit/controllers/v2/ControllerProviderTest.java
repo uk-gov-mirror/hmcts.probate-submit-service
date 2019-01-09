@@ -26,7 +26,7 @@ import java.nio.file.Files;
 @RunWith(SpringRestPactRunner.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
-        "server.port=8888", "spring.application.name=PACT_TEST"
+        "server.port=8889", "spring.application.name=PACT_TEST"
 })
 @PactBroker(host = "${pact.broker.baseUrl}", port = "${pact.broker.port}")
 abstract public class ControllerProviderTest {
@@ -36,7 +36,7 @@ abstract public class ControllerProviderTest {
 
     @TestTarget
     @SuppressWarnings(value = "VisibilityModifier")
-    public final Target target = new HttpTarget("http", "localhost", 8888, "/");
+    public final Target target = new HttpTarget("http", "localhost", 8889, "/");
 
     @Before
     public void setUpTest() {

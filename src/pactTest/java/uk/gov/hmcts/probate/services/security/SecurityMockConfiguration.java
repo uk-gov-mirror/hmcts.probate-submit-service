@@ -46,19 +46,9 @@ public class SecurityMockConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(
-                "/swagger-ui.html",
-                "/webjars/springfox-swagger-ui/**",
-                "/swagger-resources/**",
-                "/v2/**",
                 "/cases/**",
                 "/drafts/**",
                 "/submissions/**",
-                "/health",
-                "/info",
-                "/favicon.ico",
-                "/submit",
-                "/updatePaymentStatus",
-                "/resubmit",
                 "/");
     }
 

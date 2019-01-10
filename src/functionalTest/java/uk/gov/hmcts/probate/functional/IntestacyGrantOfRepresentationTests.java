@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -51,7 +52,7 @@ public class IntestacyGrantOfRepresentationTests extends IntegrationTestBase {
                 .forename(forename)
                 .surname(surname)
                 .password(PASSWORD)
-                .userGroupName(USER_GROUP_NAME)
+                .roles(Arrays.asList(Role.builder().code("citizen").build()))
                 .build();
 
         SerenityRest.given()

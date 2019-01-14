@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
@@ -25,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CcdClientApi implements CoreCaseDataService {
 
-    private static final String CASE_QUERY_PARAM = "case.primaryApplicantEmailAddress";
+    private static final String CASE_QUERY_PARAM = "case.";
 
     private final CoreCaseDataApi coreCaseDataApi;
 
@@ -94,7 +95,7 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     @Override
-    public Optional<ProbateCaseDetails> findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
+    public Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
                 securityDTO.getAuthorisation(),
@@ -102,7 +103,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 securityDTO.getUserId(),
                 JurisdictionId.PROBATE.name(),
                 caseType.getName(),
-                ImmutableMap.of(CASE_QUERY_PARAM, applicantEmail));
+                ImmutableMap.of(CASE_QUERY_PARAM + caseType.getSearchField().getName(), searchField));
         if (caseDetails == null) {
             return Optional.empty();
         }

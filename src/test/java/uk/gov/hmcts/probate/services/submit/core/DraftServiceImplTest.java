@@ -9,10 +9,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
 import java.util.Optional;
 
@@ -22,8 +22,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_DRAFT;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.UPDATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,7 +30,12 @@ public class DraftServiceImplTest {
     private static final String APPLICANT_EMAIL = "test@test.com";
 
     private static final String CASE_ID = "12323213323";
+
     private static final String STATE = "STATE";
+
+    private static final EventId CREATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getCreateDraftEventId();
+
+    private static final EventId UPDATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getUpdateDraftEventId();
 
     @Mock
     private SecurityUtils mockSecurityUtils;
@@ -45,7 +48,7 @@ public class DraftServiceImplTest {
 
     private ProbateCaseDetails caseRequest;
 
-    private CaseData caseData;
+    private GrantOfRepresentationData caseData;
 
     private SecurityDTO securityDTO;
 
@@ -56,7 +59,7 @@ public class DraftServiceImplTest {
     @Before
     public void setUp() {
         securityDTO = SecurityDTO.builder().build();
-        caseData = new GrantOfRepresentation();
+        caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(APPLICANT_EMAIL);
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();

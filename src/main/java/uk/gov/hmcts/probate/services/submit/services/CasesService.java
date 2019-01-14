@@ -5,5 +5,5 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 public interface CasesService {
 
-    ProbateCaseDetails getCase(String applicantEmail, CaseType caseType);
+    ProbateCaseDetails getCase(String searchField, CaseType caseType);
 }

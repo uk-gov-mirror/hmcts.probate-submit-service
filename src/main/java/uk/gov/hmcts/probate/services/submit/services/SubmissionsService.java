@@ -4,5 +4,5 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 public interface SubmissionsService {
 
-    ProbateCaseDetails submit(String applicantEmail, ProbateCaseDetails probateCaseDetails);
+    ProbateCaseDetails submit(String searchField, ProbateCaseDetails probateCaseDetails);
 }

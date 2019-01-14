@@ -8,24 +8,24 @@ import org.junit.Test;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseDetailsToCaseDataMapper;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
-import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class CaseDetailsToCaseDataMapperTest {
 
     private CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
 
     @Before
-    public void  setUp(){
+    public void setUp() {
         caseDetailsToCaseDataMapper = new CaseDetailsToCaseDataMapper(new ObjectMapper());
     }
 
     @Test
     public void shouldMap() {
-        Map<String, Object> map = ImmutableMap.<String,Object>builder()
+        Map<String, Object> map = ImmutableMap.<String, Object>builder()
                 .put("applicationType", "Personal")
                 .put("caseType", "intestacy")
                 .put("deceasedForenames", "Robert")
@@ -35,6 +35,6 @@ public class CaseDetailsToCaseDataMapperTest {
 
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
 
-        assertThat(caseData, Matchers.instanceOf(GrantOfRepresentation.class));
+        assertThat(caseData, Matchers.instanceOf(GrantOfRepresentationData.class));
     }
 }

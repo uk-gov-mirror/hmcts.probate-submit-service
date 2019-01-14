@@ -19,8 +19,9 @@ import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentation;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.util.Map;
@@ -33,8 +34,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.CREATE_DRAFT;
-import static uk.gov.hmcts.probate.services.submit.clients.v2.ccd.EventId.UPDATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.JurisdictionId.PROBATE;
 
@@ -56,6 +55,10 @@ public class CcdClientApiTest {
     private static final String APPLICANT_EMAIL = "test@test.com";
 
     private static final String EMAIL_QUERY_PARAM = "case.primaryApplicantEmailAddress";
+
+    private static final EventId CREATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getCreateDraftEventId();
+
+    private static final EventId UPDATE_DRAFT = GRANT_OF_REPRESENTATION.getCaseEvents().getUpdateDraftEventId();
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
@@ -86,7 +89,7 @@ public class CcdClientApiTest {
                 .userId(USER_ID)
                 .build();
 
-        caseData = new GrantOfRepresentation();
+        caseData = new GrantOfRepresentationData();
         startEventResponse = StartEventResponse.builder()
                 .token(TOKEN)
                 .build();
@@ -118,7 +121,7 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
-        ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, EventId.CREATE_DRAFT, securityDTO);
+        ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, CREATE_DRAFT, securityDTO);
 
         assertThat(caseResponse, is(notNullValue()));
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
@@ -139,7 +142,7 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
-        ProbateCaseDetails caseResponse = ccdClientApi.updateCase(CASE_ID.toString(), caseData, EventId.UPDATE_DRAFT, securityDTO);
+        ProbateCaseDetails caseResponse = ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDTO);
 
         assertThat(caseResponse, is(notNullValue()));
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));

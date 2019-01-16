@@ -4,6 +4,7 @@ import net.thucydides.junit.spring.SpringIntegration;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = FunctionalTestContextConfiguration.class)
+@Ignore
 public class IntegrationTestBase {
 
     @Autowired

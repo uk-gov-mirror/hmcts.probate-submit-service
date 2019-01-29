@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +12,10 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
@@ -26,6 +29,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_APPLICATION;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_DRAFT;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_AGAIN;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionsServiceImplTest {
@@ -40,6 +50,12 @@ public class SubmissionsServiceImplTest {
 
     @Mock
     private CoreCaseDataService coreCaseDataService;
+
+    @Mock
+    private EventFactory eventFactory;
+
+    @Mock
+    private SearchFieldFactory searchFieldFactory;
 
     @InjectMocks
     private SubmissionsServiceImpl submissionsService;
@@ -64,6 +80,19 @@ public class SubmissionsServiceImplTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+
+        when(searchFieldFactory.getSearchFieldValuePair(CaseType.GRANT_OF_REPRESENTATION, caseData))
+                .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", APPLICANT_EMAIL));
+
+        when(eventFactory.getCaseEvents(CaseType.GRANT_OF_REPRESENTATION)).thenReturn(CaseEvents.builder()
+                .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
+                .createCaseEventId(GOP_CREATE_CASE)
+                .createDraftEventId(GOP_CREATE_DRAFT)
+                .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
+                .paymentFailedEventId(GOP_PAYMENT_FAILED)
+                .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
+                .updateDraftEventId(GOP_UPDATE_DRAFT)
+                .build());
     }
 
     @Test(expected = CaseNotFoundException.class)
@@ -75,20 +104,13 @@ public class SubmissionsServiceImplTest {
         submissionsService.submit(APPLICANT_EMAIL, caseRequest);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionIfEmailsDontMatch() {
-        caseData.setPrimaryApplicantEmailAddress("test1234@hello.com");
-
-        submissionsService.submit(APPLICANT_EMAIL, caseRequest);
-    }
-
     @Test
     public void shouldSubmitWhenExistingCase() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.of(caseResponse));
         when(coreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
-                eq(GRANT_OF_REPRESENTATION.getCaseEvents().getCreateCaseApplicationEventId()), eq(securityDTO)))
+                eq(GOP_CREATE_APPLICATION), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
         ProbateCaseDetails caseResponse = submissionsService.submit(APPLICANT_EMAIL, caseRequest);
@@ -98,7 +120,7 @@ public class SubmissionsServiceImplTest {
         verify(mockSecurityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(coreCaseDataService, times(1)).updateCase(eq(CASE_ID), eq(caseData),
-                eq(GRANT_OF_REPRESENTATION.getCaseEvents().getCreateCaseApplicationEventId()), eq(securityDTO));
+                eq(GOP_CREATE_APPLICATION), eq(securityDTO));
     }
 
     @Test(expected = CaseStatePreconditionException.class)

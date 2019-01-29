@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePrecondi
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
@@ -27,20 +28,25 @@ public class SubmissionsServiceImpl implements SubmissionsService {
 
     private final SecurityUtils securityUtils;
 
+    private final EventFactory eventFactory;
+
+    private final SearchFieldFactory searchFieldFactory;
+
     @Override
     public ProbateCaseDetails submit(String searchField, ProbateCaseDetails caseRequest) {
         log.info("Submitting for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        String searchFieldValueInBody = (String) caseType.getSearchField().getFunction().apply(caseData);
+        String searchFieldValueInBody = searchFieldFactory.getSearchFieldValuePair(caseType, caseData).getRight();
         Assert.isTrue(searchFieldValueInBody.equals(searchField), "Applicant email on path must match case data");
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         ProbateCaseDetails caseResponse = findCase(searchField, CaseType.getCaseType(caseData), securityDTO);
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         CaseState state = CaseState.getState(caseResponse.getCaseInfo().getState());
-        checkStatePrecondition(state, caseType.getCaseEvents().getCreateCaseApplicationEventId());
+        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        checkStatePrecondition(state, caseEvents.getCreateCaseApplicationEventId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
-        return coreCaseDataService.updateCase(caseId, caseData, caseType.getCaseEvents().getCreateCaseApplicationEventId(), securityDTO);
+        return coreCaseDataService.updateCase(caseId, caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
     }
 
     private ProbateCaseDetails findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {

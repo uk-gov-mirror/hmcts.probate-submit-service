@@ -14,6 +14,8 @@ import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
+import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -48,7 +50,8 @@ public class SubmissionsControllerTest {
         caseInfo.setState(APPLICATION_CREATED);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
-        when(submissionsService.submit(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(caseResponse);
+        ValidatorResults validatorResults = new ValidatorResults();
+        when(submissionsService.submit(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
 
         mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
                 .content(objectMapper.writeValueAsString(caseRequest))

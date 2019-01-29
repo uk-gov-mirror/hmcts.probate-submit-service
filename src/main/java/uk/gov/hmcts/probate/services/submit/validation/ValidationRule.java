@@ -21,7 +21,7 @@ public class ValidationRule<C extends CaseData> implements Validation<C> {
     }
 
     public ValidationResult test(C caseData) {
-        return predicate.test(caseData) ? ValidationResult.ok() : ValidationResult.fail(message);
+        return predicate.test(caseData) ? ValidationResult.fail(message): ValidationResult.ok();
     }
 
 }

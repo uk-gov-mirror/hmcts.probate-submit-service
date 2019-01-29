@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.validation;
 
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.services.submit.validation.validator.CaseDataValidator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.IntestacyValidator;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -9,6 +10,7 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.util.Optional;
 
+@Component
 public class CaseDataValidatorFactory {
 
     public static Optional<CaseDataValidator> getInstance(CaseData caseData){

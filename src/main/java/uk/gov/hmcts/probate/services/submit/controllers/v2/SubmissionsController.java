@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
-import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidatorFactory;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -43,18 +42,15 @@ public class SubmissionsController {
     @PostMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> submit(@PathVariable("applicantEmail") String applicantEmail,
-                                                     @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest, Errors errors) {
+    public ResponseEntity<SubmitResult> submit(@PathVariable("applicantEmail") String applicantEmail,
+                                               @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
-        CaseDataValidatorFactory.getInstance(caseData).ifPresent(caseDataValidator -> {
-            caseDataValidator.validate(caseData).getValidationMessages().stream().forEach(message -> errors.reject(message));
-
-        });
-        if(errors.hasErrors()){
-        return new ResponseEntity(errors, BAD_REQUEST);
+        SubmitResult submitResult = submissionsService.submit(applicantEmail.toLowerCase(), caseRequest);
+        if(!submitResult.getValidatorResults().isValid()){
+            return new ResponseEntity(submitResult, BAD_REQUEST);
         }
-        return new ResponseEntity(submissionsService.submit(applicantEmail.toLowerCase(), caseRequest), OK);
+        return new ResponseEntity(submitResult, OK);
     }
 
 }

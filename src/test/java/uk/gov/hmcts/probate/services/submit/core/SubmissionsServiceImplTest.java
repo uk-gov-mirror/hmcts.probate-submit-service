@@ -17,7 +17,9 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.util.Optional;
 
@@ -75,6 +77,7 @@ public class SubmissionsServiceImplTest {
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(APPLICANT_EMAIL);
+        caseData.setGrantType(GrantType.INTESTACY);
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
@@ -113,8 +116,8 @@ public class SubmissionsServiceImplTest {
                 eq(GOP_CREATE_APPLICATION), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
-        ProbateCaseDetails caseResponse = submissionsService.submit(APPLICANT_EMAIL, caseRequest);
-
+        SubmitResult submitResult = submissionsService.submit(APPLICANT_EMAIL, caseRequest);
+        caseResponse = submitResult.getProbateCaseDetails();
         assertThat(caseResponse.getCaseData(), is(caseData));
         assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));
         verify(mockSecurityUtils, times(1)).getSecurityDTO();

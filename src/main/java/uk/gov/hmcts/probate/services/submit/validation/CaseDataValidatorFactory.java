@@ -21,13 +21,12 @@ public class CaseDataValidatorFactory {
     private final IntestacyValidator intestacyValidator;
 
     public Optional<CaseDataValidator> getValidator(CaseData caseData){
-
-        CaseDataValidator caseDataValidator = null;
+        Optional<CaseDataValidator> optionalCaseDataValidator = Optional.empty();
         if(CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)){
            GrantOfRepresentationData gop=  (GrantOfRepresentationData)caseData;
            if(gop.getGrantType().equals(GrantType.INTESTACY))
-               caseDataValidator = intestacyValidator;
+            optionalCaseDataValidator =Optional.of(intestacyValidator);
         }
-       return  Optional.of(caseDataValidator);
+       return  optionalCaseDataValidator;
     }
 }

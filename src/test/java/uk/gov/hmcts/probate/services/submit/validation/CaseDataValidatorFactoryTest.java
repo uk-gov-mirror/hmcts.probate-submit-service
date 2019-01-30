@@ -36,4 +36,5 @@ public class CaseDataValidatorFactoryTest {
         Assertions.assertTrue(validator.isPresent());
         Assertions.assertTrue(validator.get() instanceof IntestacyValidator);
     }
+
 }

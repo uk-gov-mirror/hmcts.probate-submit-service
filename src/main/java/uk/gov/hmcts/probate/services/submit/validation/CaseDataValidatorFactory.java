@@ -1,6 +1,9 @@
 package uk.gov.hmcts.probate.services.submit.validation;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.validation.validator.CaseDataValidator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.IntestacyValidator;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -10,16 +13,20 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class CaseDataValidatorFactory {
 
-    public static Optional<CaseDataValidator> getInstance(CaseData caseData){
+    private final IntestacyValidator intestacyValidator;
+
+    public Optional<CaseDataValidator> getValidator(CaseData caseData){
 
         CaseDataValidator caseDataValidator = null;
         if(CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)){
            GrantOfRepresentationData gop=  (GrantOfRepresentationData)caseData;
            if(gop.getGrantType().equals(GrantType.INTESTACY))
-               caseDataValidator = new IntestacyValidator();
+               caseDataValidator = intestacyValidator;
         }
        return  Optional.of(caseDataValidator);
     }

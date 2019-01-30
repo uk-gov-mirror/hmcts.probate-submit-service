@@ -34,13 +34,15 @@ public class SubmissionsServiceImpl implements SubmissionsService {
 
     private final SearchFieldFactory searchFieldFactory;
 
+    private final CaseDataValidatorFactory caseDataValidatorFactory;
+
     @Override
     public SubmitResult submit(String searchField, ProbateCaseDetails caseRequest) {
         log.info("Submitting for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         SubmitResult submitResult = new SubmitResult();
-        CaseDataValidatorFactory.getInstance(caseData).ifPresent(caseDataValidator -> {
+        caseDataValidatorFactory.getValidator(caseData).ifPresent(caseDataValidator -> {
             submitResult.setValidatorResults(caseDataValidator.validate(caseData));
         });
         if (submitResult.getValidatorResults().isValid()) {

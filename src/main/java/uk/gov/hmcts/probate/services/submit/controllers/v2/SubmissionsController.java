@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,15 +43,34 @@ public class SubmissionsController {
     @PostMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SubmitResult> submit(@PathVariable("applicantEmail") String applicantEmail,
+    public ResponseEntity<SubmitResult> createCase(@PathVariable("applicantEmail") String applicantEmail,
                                                @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
-        SubmitResult submitResult = submissionsService.submit(applicantEmail.toLowerCase(), caseRequest);
+        SubmitResult submitResult = submissionsService.createCase(applicantEmail.toLowerCase(), caseRequest);
         if(!submitResult.getValidatorResults().isValid()){
             return new ResponseEntity(submitResult, BAD_REQUEST);
         }
         return new ResponseEntity(submitResult, OK);
     }
 
+
+    @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Draft save to CCD successful"),
+            @ApiResponse(code = 400, message = "Draft save to CCD  failed")
+    })
+    @PutMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable("applicantEmail") String applicantEmail,
+                                               @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
+        CaseData caseData = caseRequest.getCaseData();
+        log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
+        SubmitResult submitResult = submissionsService.updateDraftToCase(applicantEmail.toLowerCase(), caseRequest);
+        if(!submitResult.getValidatorResults().isValid()){
+            return new ResponseEntity(submitResult, BAD_REQUEST);
+        }
+        return new ResponseEntity(submitResult, OK);
+    }
 }

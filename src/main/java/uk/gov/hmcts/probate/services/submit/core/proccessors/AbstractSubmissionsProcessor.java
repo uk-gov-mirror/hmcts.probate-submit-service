@@ -1,9 +1,10 @@
-package uk.gov.hmcts.probate.services.submit.core;
+package uk.gov.hmcts.probate.services.submit.core.proccessors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
+import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidatorFactory;
@@ -15,14 +16,17 @@ import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import java.util.Optional;
 
 @Slf4j
-public abstract class AbstractSubmissionsService {
+public abstract class AbstractSubmissionsProcessor {
 
     private SecurityUtils securityUtils = null;
     private SearchFieldFactory searchFieldFactory = null;
     private CaseDataValidatorFactory caseDataValidatorFactory = null;
     private CoreCaseDataService coreCaseDataService;
 
-    public AbstractSubmissionsService(SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory, CaseDataValidatorFactory caseDataValidatorFactory, CoreCaseDataService coreCaseDataService) {
+    AbstractSubmissionsProcessor(){
+    }
+
+    public AbstractSubmissionsProcessor(SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory, CaseDataValidatorFactory caseDataValidatorFactory, CoreCaseDataService coreCaseDataService) {
         this.securityUtils = securityUtils;
         this.searchFieldFactory = searchFieldFactory;
         this.caseDataValidatorFactory = caseDataValidatorFactory;
@@ -45,7 +49,7 @@ public abstract class AbstractSubmissionsService {
         return submitResult;
     }
 
-    abstract  ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO);
+    abstract  protected ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO);
 
 
     protected ProbateCaseDetails findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {

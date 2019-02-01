@@ -49,6 +49,9 @@
       basename: messages
       cache-seconds: -1
       encoding: UTF-8
+    jackson:
+      deserialization:
+        FAIL_ON_UNKNOWN_PROPERTIES: true
 
   server:
     port: 8181
@@ -189,3 +192,12 @@
         Line 2 man
         Line 3 man
         PostCode Manchester
+
+  authorised.services: probate_backend,probate_frontend
+
+  auth.idam.client.baseUrl: http://localhost:4501
+  s2s.auth.totp.secret: ${auth.provider.service.client.key}
+  service.name: ${auth.provider.service.client.microservice}
+
+  core_case_data.api.url: ${services.coreCaseData.baseUrl}
+

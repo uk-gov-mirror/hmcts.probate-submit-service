@@ -198,7 +198,9 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
   compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+    force = true
+  }
 
   compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
   compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
@@ -228,6 +230,9 @@ dependencies {
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
   testCompile group: 'org.springframework.security', name: 'spring-security-test'
   testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
+  testCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+    force = true
+  }
 
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
@@ -235,6 +240,9 @@ dependencies {
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
+  testFunctionalCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+    force = true
+  }
   testFunctionalCompile sourceSets.main.runtimeClasspath
   testFunctionalCompile sourceSets.test.runtimeClasspath
 
@@ -245,6 +253,9 @@ dependencies {
 
   testSmokeCompile sourceSets.main.runtimeClasspath
   testSmokeCompile sourceSets.test.runtimeClasspath
+  testSmokeCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+    force = true
+  }
   
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
@@ -252,6 +263,9 @@ dependencies {
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
+  testContractCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+    force = true
+  }
   testContractCompile sourceSets.main.runtimeClasspath
   testContractCompile sourceSets.test.runtimeClasspath
 

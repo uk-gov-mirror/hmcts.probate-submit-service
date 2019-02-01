@@ -198,6 +198,7 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
   compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
 
   compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
   compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger

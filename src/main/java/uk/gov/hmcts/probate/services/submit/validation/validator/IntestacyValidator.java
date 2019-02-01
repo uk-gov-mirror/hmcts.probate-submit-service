@@ -8,7 +8,7 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepr
 import java.util.Arrays;
 import java.util.List;
 
-public class IntestacyValidator extends CaseDataValidator<GrantOfRepresentationData> {
+public class IntestacyValidator implements CaseDataValidator<GrantOfRepresentationData> {
 
     private static ValidationRule<GrantOfRepresentationData> isAliasNameListPopulated() {
         return ValidationRule.from(gop ->
@@ -98,7 +98,7 @@ public class IntestacyValidator extends CaseDataValidator<GrantOfRepresentationD
     }
 
     @Override
-    List<ValidationRule<GrantOfRepresentationData>> getRules() {
+    public List<ValidationRule<GrantOfRepresentationData>> getRules() {
         return Arrays.asList(
                 IntestacyValidator.isAliasNameListPopulated(),
                 IntestacyValidator.isDeceasedAssetsOutsideUKPopulated(),

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.validation.validator;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.Before;
 import uk.gov.hmcts.reform.probate.model.Relationship;
 import uk.gov.hmcts.reform.probate.model.cases.AliasName;
@@ -11,7 +10,6 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.SpouseNotApplyingReason;
-import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

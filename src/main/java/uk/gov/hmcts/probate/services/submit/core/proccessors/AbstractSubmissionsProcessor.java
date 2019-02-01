@@ -1,6 +1,8 @@
 package uk.gov.hmcts.probate.services.submit.core.proccessors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
@@ -16,40 +18,38 @@ import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public abstract class AbstractSubmissionsProcessor {
 
-    private SecurityUtils securityUtils = null;
-    private SearchFieldFactory searchFieldFactory = null;
-    private CaseDataValidatorFactory caseDataValidatorFactory = null;
-    private CoreCaseDataService coreCaseDataService;
-
-    AbstractSubmissionsProcessor(){
-    }
-
-    public AbstractSubmissionsProcessor(SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory, CaseDataValidatorFactory caseDataValidatorFactory, CoreCaseDataService coreCaseDataService) {
-        this.securityUtils = securityUtils;
-        this.searchFieldFactory = searchFieldFactory;
-        this.caseDataValidatorFactory = caseDataValidatorFactory;
-        this.coreCaseDataService = coreCaseDataService;
-    }
+    private final SecurityUtils securityUtils;
+    private final SearchFieldFactory searchFieldFactory;
+    private final CaseDataValidatorFactory caseDataValidatorFactory;
+    private final CoreCaseDataService coreCaseDataService;
 
     public SubmitResult process(String identifier, ProbateCaseDetails caseRequest) {
         log.info("Processing case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
+        assertIndentifierMatchesCase(identifier, caseData, caseType);
         SubmitResult submitResult = new SubmitResult();
         validateCase(caseData, submitResult);
-        if (submitResult.getValidatorResults().isValid()) {
-            assertIndentifierMatchesCase(identifier, caseData, caseType);
-            SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-            processCase(identifier, caseData, caseType, securityDTO);
+        if (noValidationCaseErrorsFound(submitResult)) {
+            submitResult.setProbateCaseDetails(processCase(identifier, caseData, caseType, securityUtils.getSecurityDTO()));
         } else {
             submitResult.setProbateCaseDetails(caseRequest);
         }
         return submitResult;
     }
 
-    abstract  protected ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO);
+    private Boolean noValidationCaseErrorsFound(SubmitResult submitResult) {
+        if (submitResult.getValidatorResults().isPresent()) {
+            return submitResult.isValid();
+        }
+        return true;
+    }
+
+    protected abstract ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO);
 
 
     protected ProbateCaseDetails findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {

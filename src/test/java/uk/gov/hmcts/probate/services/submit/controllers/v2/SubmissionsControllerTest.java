@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -42,7 +43,7 @@ public class SubmissionsControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void shouldSubmit() throws Exception {
+    public void shouldUpdateDraftToCase() throws Exception {
         String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -51,13 +52,13 @@ public class SubmissionsControllerTest {
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
         ValidatorResults validatorResults = new ValidatorResults();
-        when(submissionsService.submit(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+        when(submissionsService.updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
 
-        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+        mockMvc.perform(put(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
                 .content(objectMapper.writeValueAsString(caseRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(submissionsService).submit(eq(EMAIL_ADDRESS), eq(caseRequest));
+        verify(submissionsService).updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest));
     }
 
     @Test

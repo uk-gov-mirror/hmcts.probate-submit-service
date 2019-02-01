@@ -3,7 +3,6 @@ package uk.gov.hmcts.probate.services.submit.validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.validation.validator.CaseDataValidator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.IntestacyValidator;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -20,13 +19,13 @@ public class CaseDataValidatorFactory {
 
     private final IntestacyValidator intestacyValidator;
 
-    public Optional<CaseDataValidator> getValidator(CaseData caseData){
+    public Optional<CaseDataValidator> getValidator(CaseData caseData) {
         Optional<CaseDataValidator> optionalCaseDataValidator = Optional.empty();
-        if(CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)){
-           GrantOfRepresentationData gop=  (GrantOfRepresentationData)caseData;
-           if(gop.getGrantType().equals(GrantType.INTESTACY))
-            optionalCaseDataValidator =Optional.of(intestacyValidator);
+        if (CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)) {
+            GrantOfRepresentationData gop = (GrantOfRepresentationData) caseData;
+            if (gop.getGrantType().equals(GrantType.INTESTACY))
+                optionalCaseDataValidator = Optional.of(intestacyValidator);
         }
-       return  optionalCaseDataValidator;
+        return optionalCaseDataValidator;
     }
 }

@@ -30,7 +30,6 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
         super(securityUtils, searchFieldFactory, caseDataValidatorFactory, coreCaseDataService);
         this.coreCaseDataService = coreCaseDataService;
         this.eventFactory = eventFactory;
-
     }
 
     @Override
@@ -41,8 +40,7 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         checkStatePrecondition(state, caseEvents.getCreateCaseApplicationEventId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
-        caseResponse = coreCaseDataService.updateCase(caseId, caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
-        return caseResponse;
+        return coreCaseDataService.updateCase(caseId, caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
     }
 
 

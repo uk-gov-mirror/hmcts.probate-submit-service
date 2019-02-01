@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -40,11 +39,11 @@ public class DraftServiceImpl implements DraftService {
         Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseInfoOptional = coreCaseDataService.findCase(searchField, caseType, securityDTO);
-        return saveDraft(securityDTO,caseType, caseData, caseInfoOptional);
+        return saveDraft(securityDTO, caseType, caseData, caseInfoOptional);
     }
 
     private ProbateCaseDetails saveDraft(SecurityDTO securityDTO, CaseType caseType, CaseData caseData,
-                                   Optional<ProbateCaseDetails> caseResponseOptional) {
+                                         Optional<ProbateCaseDetails> caseResponseOptional) {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();

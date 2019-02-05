@@ -33,6 +33,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class SubmissionsController {
 
+    public static final String APPLICANT_EMAIL = "applicantEmail";
     private final SubmissionsService submissionsService;
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
@@ -43,7 +44,7 @@ public class SubmissionsController {
     @PostMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SubmitResult> createCase(@PathVariable("applicantEmail") String applicantEmail,
+    public ResponseEntity<SubmitResult> createCase(@PathVariable(APPLICANT_EMAIL) String applicantEmail,
                                                    @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
@@ -60,7 +61,7 @@ public class SubmissionsController {
     @PutMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable("applicantEmail") String applicantEmail,
+    public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICANT_EMAIL) String applicantEmail,
                                                           @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
@@ -69,10 +70,8 @@ public class SubmissionsController {
     }
 
     private ResponseEntity<SubmitResult> getCorrectResponse(SubmitResult submitResult) {
-        if (submitResult.getValidatorResults().isPresent()) {
-            if (!submitResult.isValid()) {
+        if (submitResult.getValidatorResults().isPresent() && !submitResult.isValid() ) {
                 return new ResponseEntity(submitResult, BAD_REQUEST);
-            }
         }
         return new ResponseEntity(submitResult, OK);
     }

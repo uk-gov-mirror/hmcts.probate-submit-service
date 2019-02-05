@@ -7,15 +7,16 @@ import org.junit.jupiter.api.Assertions;
 public class ValidatorUtilsTest {
 
     @Test
-    public void shouldReturnTrueIfAllValuesNotNull(){
+    public void shouldReturnTrueIfAllValuesNotNull() {
         Boolean result = ValidatorUtils.allValuesNotNull("blah", "blah");
         Assertions.assertTrue(result);
     }
 
     @Test
-    public void shouldReturnFalseIfaValuesNull(){
+    public void shouldReturnFalseIfaValuesNull() {
         Boolean result = ValidatorUtils.allValuesNotNull("blah", null);
         Assertions.assertFalse(result);
     }
+
 
 }

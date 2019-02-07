@@ -58,7 +58,8 @@ withPipeline("java", product, component) {
       ]
       cat 'build/reports/tests/Pacttest/index.html'
     } finally {
-        //steps.archiveArtifacts "build/reports/pitest/**/*.*"
+        archiveArtifacts "build/reports/tests/**/*.*"
+        archiveArtifacts "build/reports/pitest/**/*.*"
     }
 
     junit 'build/test-results/test/**/*.xml'

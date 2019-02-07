@@ -46,6 +46,15 @@ withPipeline("java", product, component) {
     try {
        // sh './gradlew pitest'
       sh './gradlew pactTask'
+      publishHTML target: [
+              allowMissing         : true,
+              alwaysLinkToLastBuild: true,
+              keepAll              : true,
+              reportDir            : "build/reports/tests/Pacttest",
+              reportFiles          : "index.html",
+              reportName           : "probate-submit-service Pact Report"
+      ]
+
     } finally {
         //steps.archiveArtifacts "build/reports/pitest/**/*.*"
     }

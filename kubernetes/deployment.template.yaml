@@ -58,7 +58,7 @@ spec:
               memory: "2048Mi"
               cpu: "200m"
             limits:
-              memory: "2048Mi"
+              memory: "4096i"
               cpu: "2500m"
           ports:
             - containerPort: 8181

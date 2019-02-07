@@ -55,7 +55,7 @@ spec:
                 name: ${SERVICE_NAME}-config
           resources:
             requests:
-              memory: "1024Mi"
+              memory: "2048Mi"
               cpu: "200m"
             limits:
               memory: "2048Mi"

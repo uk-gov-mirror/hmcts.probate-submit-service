@@ -45,7 +45,7 @@ withPipeline("java", product, component) {
   after('test') {
     try {
        // sh './gradlew pitest'
-      sh './gradlew pactTask --stacktrace'
+      sh './gradlew pactTask --debug'
       archiveArtifacts 'build/reports/pact-report.html'
 
       publishHTML target: [
@@ -58,7 +58,8 @@ withPipeline("java", product, component) {
       ]
       cat 'build/reports/tests/Pacttest/index.html'
     } finally {
-        //steps.archiveArtifacts "build/reports/pitest/**/*.*"
+        archiveArtifacts "build/reports/tests/**/*.*"
+        archiveArtifacts "build/reports/pitest/**/*.*"
     }
 
     junit 'build/test-results/test/**/*.xml'

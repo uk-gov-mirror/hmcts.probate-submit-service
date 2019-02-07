@@ -26,7 +26,7 @@ import java.nio.file.Files;
 @RunWith(SpringRestPactRunner.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
-        "server.port=8889", "spring.application.name=PACT_TEST"
+        "server.port=8123", "spring.application.name=PACT_TEST"
 })
 @PactBroker(host = "${pact.broker.baseUrl}", port = "${pact.broker.port}")
 abstract public class ControllerProviderTest {

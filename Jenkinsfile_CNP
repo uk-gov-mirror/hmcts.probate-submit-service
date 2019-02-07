@@ -46,7 +46,7 @@ withPipeline("java", product, component) {
     try {
        // sh './gradlew pitest'
       sh './gradlew pactTask --stacktrace'
-      archiveArtifacts  'build/reports/pact-report.html'
+      archiveArtifacts 'build/reports/pact-report.html'
 
       publishHTML target: [
               allowMissing         : true,
@@ -56,7 +56,7 @@ withPipeline("java", product, component) {
               reportFiles          : "index.html",
               reportName           : "probate-submit-service Pact Report"
       ]
-
+      cat 'build/reports/tests/Pacttest/index.html'
     } finally {
         //steps.archiveArtifacts "build/reports/pitest/**/*.*"
     }

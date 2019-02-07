@@ -46,7 +46,7 @@ withPipeline("java", product, component) {
     try {
        // sh './gradlew pitest'
       sh './gradlew pactTask'
-#      archiveArtifacts 'build/reports/pact-report.html'
+//      archiveArtifacts 'build/reports/pact-report.html'
 
       publishHTML target: [
               allowMissing         : true,
@@ -59,7 +59,7 @@ withPipeline("java", product, component) {
 
     } finally {
         archiveArtifacts "build/reports/tests/**/*.*"
-#        archiveArtifacts "build/reports/pitest/**/*.*"
+//        archiveArtifacts "build/reports/pitest/**/*.*"
     }
 
     junit 'build/test-results/test/**/*.xml'

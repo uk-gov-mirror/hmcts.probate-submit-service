@@ -45,7 +45,7 @@ withPipeline("java", product, component) {
   after('test') {
     try {
        // sh './gradlew pitest'
-      sh './gradlew pactTask --stacktrace'
+      sh './gradlew pactTask --debug'
       archiveArtifacts 'build/reports/pact-report.html'
 
       publishHTML target: [

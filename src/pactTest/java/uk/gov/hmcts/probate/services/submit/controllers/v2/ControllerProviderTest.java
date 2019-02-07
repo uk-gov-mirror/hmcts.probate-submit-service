@@ -36,7 +36,7 @@ abstract public class ControllerProviderTest {
 
     @TestTarget
     @SuppressWarnings(value = "VisibilityModifier")
-    public final Target target = new HttpTarget("http", "localhost", 8889, "/");
+    public final Target target = new HttpTarget("http", "localhost", 8123, "/");
 
     @Before
     public void setUpTest() {

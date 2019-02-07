@@ -46,6 +46,8 @@ withPipeline("java", product, component) {
     try {
        // sh './gradlew pitest'
       sh './gradlew pactTask --stacktrace'
+      archiveArtifacts  'build/reports/pact-report.html'
+
       publishHTML target: [
               allowMissing         : true,
               alwaysLinkToLastBuild: true,

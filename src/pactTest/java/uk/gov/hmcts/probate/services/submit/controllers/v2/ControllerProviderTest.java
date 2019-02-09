@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
+import au.com.dius.pact.provider.junit.IgnoreNoPactsToVerify;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 
-
+//@IgnoreNoPactsToVerify
 abstract public class ControllerProviderTest {
 
     @Autowired

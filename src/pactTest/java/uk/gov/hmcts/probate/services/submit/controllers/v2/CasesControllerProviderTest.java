@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
         "server.port=8123", "spring.application.name=PACT_TEST"
 })
-@PactBroker(host = "${pact.broker.baseUrl}", port = "${pact.broker.port}")
+@PactBroker(host = "${pact.broker.baseUrl}", port = "${pact.broker.port}" , tags={"latest", "master"})
 public class CasesControllerProviderTest extends ControllerProviderTest {
 
     @TestTarget

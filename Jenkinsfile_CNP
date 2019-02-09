@@ -37,6 +37,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withPipeline("java", product, component) {
   setVaultName('probate')
   env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
+  env.pact.provider.version = getCheckedOutGitCommitHash()
+  env.pact.verifier.publishResults=true
   loadVaultSecrets(secrets)
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
@@ -109,4 +111,7 @@ withPipeline("java", product, component) {
               alwaysLinkToLastBuild: true
       ]
   }
+}
+def getCheckedOutGitCommitHash() {
+  'git rev-parse --verify --short HEAD'.execute().text.trim()
 }

@@ -38,23 +38,24 @@ withPipeline("java", product, component) {
     setVaultName('probate')
     env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
     //env.PACT_BROKER_VERSION = sh 'git rev-parse --verify --short HEAD'.execute().text.trim()
-    env.PACT_BROKER_CONSUMER_TAG = "Tag"
+    env.PACT_BROKER_CONSUMER_TAG = env.CHANGE_BRANCH
     loadVaultSecrets(secrets)
     enableSlackNotifications('#probate-jenkins')
     enableDockerBuild()
     enableDeployToAKS()
 
-    before('test') {
-        try {
-            sh 'printenv'
-        }
-        finally {
-
-        }
-    }
+//    before('test') {
+//        try {
+//            sh 'printenv'
+//        }
+//        finally {
+//
+//        }
+//    }
     after('test') {
         try {
             // sh './gradlew pitest'
+            sh 'printenv'
             sh './gradlew pactTask'
 //      archiveArtifacts 'build/reports/pact-report.html'
 

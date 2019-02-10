@@ -129,6 +129,7 @@ task functionalTask(type: Test) {
 
 task pactTask(type: Test) {
   description = "Runs pact Tests"
+  environment "PACT_BROKER_CONSUMER_TAG", "$System.env.CHANGE_BRANCH"
   testClassesDirs = sourceSets.testPact.output.classesDirs
   classpath = sourceSets.testPact.runtimeClasspath
 }

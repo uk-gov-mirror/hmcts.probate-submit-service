@@ -50,6 +50,8 @@ spec:
           value: "pact-broker.platform.hmcts.net"
         - name: PACT_BROKER_PORT
           value: "80"
+        - name: PACT_BROKER_CONSUMER_TAG
+          value: "Dev"
         envFrom:
         - configMapRef:
             name: ${SERVICE_NAME}-config

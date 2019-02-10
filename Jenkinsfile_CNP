@@ -38,7 +38,8 @@ withPipeline("java", product, component) {
     setVaultName('probate')
     env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
     //env.PACT_BROKER_VERSION = sh 'git rev-parse --verify --short HEAD'.execute().text.trim()
-    env.PACT_BROKER_CONSUMER_TAG = ${env.CHANGE_BRANCH}
+    env.PACT_CONSUMER_TAG = env.CHANGE_BRANCH
+    sh 'printenv'
     loadVaultSecrets(secrets)
     enableSlackNotifications('#probate-jenkins')
     enableDockerBuild()

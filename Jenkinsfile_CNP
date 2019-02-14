@@ -47,7 +47,7 @@ withPipeline("java", product, component) {
             // sh './gradlew pitest'
             env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
             sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
-///      archiveArtifacts 'build/reports/pact-report.html'
+//      archiveArtifacts 'build/reports/pact-report.html'
 
             publishHTML target: [
                     allowMissing         : true,

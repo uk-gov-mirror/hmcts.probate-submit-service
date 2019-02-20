@@ -2,9 +2,18 @@ package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
+import au.com.dius.pact.provider.junit.loader.PactBroker;
+import au.com.dius.pact.provider.junit.target.HttpTarget;
+import au.com.dius.pact.provider.junit.target.Target;
+import au.com.dius.pact.provider.junit.target.TestTarget;
+import au.com.dius.pact.provider.spring.SpringRestPactRunner;
 import org.json.JSONException;
 import org.junit.Before;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
@@ -23,13 +32,20 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 
 @Provider("probate_submitservice_submissions")
+@RunWith(SpringRestPactRunner.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
+        "server.port=8125", "spring.application.name=PACT_TEST"
+})
 public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     private static final String APPLICANT_EMAIL = "jsnow@bbc.co.uk";
 
     private static final String CASE_ID = "12323213323";
     private static final String STATE = "Draft";
-
+    @TestTarget
+    @SuppressWarnings(value = "VisibilityModifier")
+    public final Target target = new HttpTarget("http", "localhost", 8125, "/");
 
     @MockBean
     private CoreCaseDataService coreCaseDataService;

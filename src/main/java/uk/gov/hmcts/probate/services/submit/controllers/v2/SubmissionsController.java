@@ -58,7 +58,7 @@ public class SubmissionsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @PutMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/submissions/update/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICANT_EMAIL) String applicantEmail,
@@ -70,9 +70,12 @@ public class SubmissionsController {
     }
 
     private ResponseEntity<SubmitResult> getCorrectResponse(SubmitResult submitResult) {
+        ResponseEntity responseEntity = null;
         if (submitResult.getValidatorResults().isPresent() && !submitResult.isValid() ) {
-                return new ResponseEntity(submitResult, BAD_REQUEST);
+            responseEntity=  new ResponseEntity(submitResult, BAD_REQUEST);
+        }else {
+            responseEntity = new ResponseEntity(submitResult, OK);
         }
-        return new ResponseEntity(submitResult, OK);
+        return responseEntity;
     }
 }

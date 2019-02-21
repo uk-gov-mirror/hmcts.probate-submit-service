@@ -39,6 +39,11 @@ withPipeline("java", product, component) {
     env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
     env.PACT_BROKER_PORT = "443"
     env.PACT_BROKER_SCHEME = "https"
+    if (env.BRANCH_NAME != 'master') {
+        env.PACT_BRANCH_NAME = env.CHANGE_BRANCH
+    } else {
+        env.PACT_BRANCH_NAME = env.BRANCH_NAME
+    }
     loadVaultSecrets(secrets)
     enableSlackNotifications('#probate-jenkins')
     enableDockerBuild()
@@ -49,16 +54,6 @@ withPipeline("java", product, component) {
             // sh './gradlew pitest'
             env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
             sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
-///      archiveArtifacts 'build/reports/pact-report.html'
-
-            publishHTML target: [
-                    allowMissing         : true,
-                    alwaysLinkToLastBuild: true,
-                    keepAll              : true,
-                    reportDir            : "build/reports/tests/Pacttest",
-                    reportFiles          : "index.html",
-                    reportName           : "probate-submit-service Pact Report"
-            ]
 
         } finally {
             archiveArtifacts "build/reports/tests/**/*.*"

@@ -11,7 +11,11 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 @Component
 class MailMessageBuilder {
@@ -23,7 +27,7 @@ class MailMessageBuilder {
         this.templateEngine = templateEngine;
     }
 
-    public MimeMessage buildMessage(JsonNode submitData, JsonNode registryData, Properties messageProperties,  Calendar submissionTimestamp) throws MessagingException {
+    public MimeMessage buildMessage(JsonNode submitData, JsonNode registryData, Properties messageProperties, Calendar submissionTimestamp) throws MessagingException {
         MimeMessage mailMessage = new MimeMessage(Session.getDefaultInstance(messageProperties));
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
         messageHelper.setSubject(messageProperties.getProperty("subject"));

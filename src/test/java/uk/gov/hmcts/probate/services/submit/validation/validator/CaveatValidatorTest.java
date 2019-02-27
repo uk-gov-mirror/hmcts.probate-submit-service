@@ -39,6 +39,14 @@ public class CaveatValidatorTest {
     }
 
     @Test
+    public void shouldNotRaiseErrorWhenDobIsNull() {
+        caveatData.setDeceasedDateOfBirth(null);
+        caveatData.setDeceasedDateOfDeath(afterDate);
+        ValidatorResults validateResults = caveatValidator.validate(caveatData);
+        Assertions.assertThat(validateResults.getValidationMessages()).isEmpty();
+    }
+
+    @Test
     public void shouldNotRaiseErrorWhenDodIsAfterDob() {
         caveatData.setDeceasedDateOfBirth(beforeDate);
         caveatData.setDeceasedDateOfDeath(afterDate);

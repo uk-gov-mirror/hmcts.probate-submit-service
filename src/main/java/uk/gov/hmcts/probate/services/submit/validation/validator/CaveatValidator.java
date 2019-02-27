@@ -10,7 +10,7 @@ public class CaveatValidator implements CaseDataValidator<CaveatData> {
 
 
     private static ValidationRule<CaveatData> isDeceasedDateOfDeathAfterDateOfBirth() {
-        return ValidationRule.from(caveat -> ValidatorUtils.allValuesNotNull(caveat.getDeceasedDateOfDeath(), caveat.getDeceasedDateOfDeath()) &&
+        return ValidationRule.from(caveat -> allValueNotNull(caveat.getDeceasedDateOfBirth(), caveat.getDeceasedDateOfDeath()) &&
                         caveat.getDeceasedDateOfDeath().isBefore(caveat.getDeceasedDateOfBirth())
                 , "DeceasedDateOfDeath before DeceasedDateOfBirth");
     }
@@ -21,4 +21,13 @@ public class CaveatValidator implements CaseDataValidator<CaveatData> {
                 CaveatValidator.isDeceasedDateOfDeathAfterDateOfBirth());
     }
 
+    private static Boolean allValueNotNull(Object... values) {
+        Object[] valuesList = values;
+        for (Object value : values) {
+            if (value == null) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

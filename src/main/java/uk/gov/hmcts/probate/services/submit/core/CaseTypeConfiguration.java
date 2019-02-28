@@ -12,6 +12,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseType.CAVEAT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.STANDING_SEARCH;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.WILL_LODGEMENT;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.CAVEAT_APPLY_FOR_CAVEAT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_DRAFT;
@@ -36,7 +37,7 @@ public class CaseTypeConfiguration {
                         .updateDraftEventId(GOP_UPDATE_DRAFT)
                         .build())
                 .put(CAVEAT, CaseEvents.builder()
-                        .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
+                        .createCaseApplicationEventId(CAVEAT_APPLY_FOR_CAVEAT)
                         .createCaseEventId(GOP_CREATE_CASE)
                         .paymentFailedAgainEventId(GOP_PAYMENT_FAILED_AGAIN)
                         .paymentFailedEventId(GOP_PAYMENT_FAILED)

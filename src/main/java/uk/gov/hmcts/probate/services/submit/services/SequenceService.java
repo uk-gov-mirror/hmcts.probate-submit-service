@@ -75,7 +75,7 @@ public class SequenceService {
         return persistenceClient.getNextSequenceNumber(registry.getName());
     }
 
-    Registry identifyNextRegistry() {
+    public Registry identifyNextRegistry() {
         Registry nextRegistry =
                 registryMap.get(registryCounter % registryMap.size());
         registryCounter++;

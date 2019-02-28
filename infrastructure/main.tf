@@ -67,7 +67,8 @@ module "probate-submit-service" {
   capacity     = "${var.capacity}"
   common_tags  = "${var.common_tags}"
   asp_rg       = "${var.asp_rg}"
-  
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+
   app_settings = {
 
 	  // Logging vars

@@ -1,6 +1,9 @@
+provider "azurerm" {
+  version = "1.22.1"
+}
 
 locals {
-  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+  aseName = "core-compute-${var.env}"
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
 
   //probate_frontend_hostname = "probate-frontend-aat.service.core-compute-aat.internal"
@@ -78,14 +81,6 @@ module "probate-submit-service" {
   
 
     DEPLOYMENT_ENV= "${var.deployment_env}"
-    //JAVA_OPTS = "${local.java_proxy_variables}"
-
-    # MAIL_USERNAME = "${data.vault_generic_secret.probate_mail_username.data["value"]}"
-    # MAIL_PASSWORD = "${data.vault_generic_secret.probate_mail_password.data["value"]}"
-    # MAIL_HOST = "${data.vault_generic_secret.probate_mail_host.data["value"]}"
-    # MAIL_PORT = "${data.vault_generic_secret.probate_mail_port.data["value"]}"
-    # MAIL_JAVAMAILPROPERTIES_SENDER = "${data.vault_generic_secret.probate_mail_sender.data["value"]}"
-    # MAIL_JAVAMAILPROPERTIES_RECIPIENT = "${data.vault_generic_secret.probate_mail_recipient.data["value"]}"
 
     MAIL_USERNAME = "${data.azurerm_key_vault_secret.probate_mail_username.value}"
     MAIL_PASSWORD = "${data.azurerm_key_vault_secret.probate_mail_password.value}"
@@ -107,7 +102,6 @@ module "probate-submit-service" {
    
     java_app_name = "${var.microservice}"
     LOG_LEVEL = "${var.log_level}"
-    //ROOT_APPENDER = "JSON_CONSOLE" //Remove json logging
 
   }
 }

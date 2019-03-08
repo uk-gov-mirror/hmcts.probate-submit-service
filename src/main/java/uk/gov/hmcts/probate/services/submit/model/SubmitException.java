@@ -17,7 +17,7 @@ public class SubmitException extends RuntimeException {
     }
 
     @Override
-    public Throwable getCause() {
+    public synchronized Throwable getCause() {
         return cause;
     }
 }

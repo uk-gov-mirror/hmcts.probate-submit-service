@@ -67,6 +67,10 @@ variable "idam_service_api" {
   type = "string"
 }
 
+variable "auth_idam_client_baseurl" {
+
+}
+
 variable "ccd_baseUrl" {
   default = "/"
 }

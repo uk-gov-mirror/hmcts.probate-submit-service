@@ -13,6 +13,7 @@ import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -103,11 +104,56 @@ public class SequenceServiceTest {
     }
 
     @Test
-    public void identifyNextRegistry() {
-        when(registryMap.size()).thenReturn(2);
-        when(registryMap.get(anyInt())).thenReturn(mockRegistry);
+    public void identifyNextRegistryRatios() {
+        String oxf = "Oxford";
+        String bir = "Birmingham";
+        String man = "Manchester";
+        Map<Integer, Registry> newRegistryMap = new HashMap<>();
+        newRegistryMap.put(0, buildRegistry(oxf));
+        newRegistryMap.put(1, buildRegistry(bir));
+        newRegistryMap.put(2, buildRegistry(man));
+        newRegistryMap.put(3, buildRegistry(man));
+        newRegistryMap.put(4, buildRegistry(man));
+        newRegistryMap.put(5, buildRegistry(man));
+        newRegistryMap.put(6, buildRegistry(man));
+        newRegistryMap.put(7, buildRegistry(man));
 
-        Registry result = sequenceService.identifyNextRegistry();
-        assertThat(result, is(equalTo(mockRegistry)));
+        SequenceService sequenceServiceTest = new SequenceService(newRegistryMap, persistenceClient, mailSender, mapper);
+
+        double numOxf = 0;
+        double numBirm = 0;
+        double numMan = 0;
+        double totalCalls = 200;
+
+        for (double i = 0; i < totalCalls; i++) {
+            Registry result = sequenceServiceTest.identifyNextRegistry();
+            switch (result.getName()) {
+                case "Oxford":
+                    numOxf++;
+                    break;
+                case "Birmingham":
+                    numBirm++;
+                    break;
+                case "Manchester":
+                    numMan++;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        double oxfRatio = 100 * numOxf / totalCalls;
+        double birmRatio = 100 * numBirm / totalCalls;
+        double manRatio = 100 * numMan / totalCalls;
+        assertThat(12.5, is(equalTo(oxfRatio)));
+        assertThat(12.5, is(equalTo(birmRatio)));
+        assertThat(75.0, is(equalTo(manRatio)));
+
+    }
+
+    private Registry buildRegistry(String name) {
+        Registry registry = new Registry();
+        registry.setName(name);
+        return registry;
     }
 }

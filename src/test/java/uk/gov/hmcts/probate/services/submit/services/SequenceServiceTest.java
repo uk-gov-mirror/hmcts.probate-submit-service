@@ -57,8 +57,8 @@ public class SequenceServiceTest {
         JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
 
         Registry registry = new Registry();
-        registry.setName("oxford");
-        when(persistenceClient.getNextSequenceNumber("oxford")).thenReturn(1234L);
+        registry.setName("Oxford");
+        when(persistenceClient.getNextSequenceNumber("Oxford")).thenReturn(1234L);
         when(sequenceService.getRegistrySequenceNumber(registry)).thenReturn(20013L);
         registry.setEmail("oxford@email.com");
         registry.setAddress("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
@@ -74,7 +74,7 @@ public class SequenceServiceTest {
 
         JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
-        when(mockRegistry.getName()).thenReturn("oxford");
+        when(mockRegistry.getName()).thenReturn("Oxford");
         when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(20013L);
         when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");

@@ -43,7 +43,7 @@ public class SequenceService {
         ObjectNode registryMapper = mapper.createObjectNode();
 
         registryDataObject.put(SUBMISSION_REFERENCE, submissionReference);
-        registryMapper.put("name", registry.capitalizeRegistryName());
+        registryMapper.put("name", registry.getName());
         registryMapper.put(SEQUENCE_NUMBER, getRegistrySequenceNumber(registry));
         registryMapper.put(EMAIL, registry.getEmail());
         registryMapper.put("address", registry.getAddress());

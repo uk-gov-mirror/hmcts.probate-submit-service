@@ -40,7 +40,11 @@ withPipeline("java", product, component) {
     enableSlackNotifications('#probate-jenkins')
     enableDockerBuild()
     enableDeployToAKS()
-
+    
+    before('buildinfra:prod') {
+        error 'Deliberately breaking pipeline to prevent prod deployment'
+    }
+    
     after('test') {
         try {
             if (env.CHANGE_BRANCH || env.BRANCH_NAME == 'master') {

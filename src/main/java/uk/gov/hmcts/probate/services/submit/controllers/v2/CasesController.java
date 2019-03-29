@@ -34,12 +34,12 @@ public class CasesController {
             @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
             @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
-    @GetMapping(path = "/cases/{applicantEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam("caseType") CaseType caseType,
-                                                      @PathVariable("applicantEmail") String applicantEmail) {
+                                                      @PathVariable("applicationId") String applicationId) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
-        return ResponseEntity.ok(casesService.getCase(applicantEmail.toLowerCase(), caseType));
+        return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
 }

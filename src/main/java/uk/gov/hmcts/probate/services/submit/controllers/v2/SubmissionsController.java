@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +32,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class SubmissionsController {
 
-    public static final String APPLICANT_EMAIL = "applicantEmail";
+    public static final String APPLICATION_ID = "applicationId";
     private final SubmissionsService submissionsService;
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
@@ -41,14 +40,14 @@ public class SubmissionsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @PostMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/submissions/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SubmitResult> createCase(@PathVariable(APPLICANT_EMAIL) String applicantEmail,
+    public ResponseEntity<SubmitResult> createCase(@PathVariable(APPLICATION_ID) String applicationId,
                                                    @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
-        SubmitResult submitResult = submissionsService.createCase(applicantEmail.toLowerCase(), caseRequest);
+        SubmitResult submitResult = submissionsService.createCase(applicationId.toLowerCase(), caseRequest);
         return getCorrectResponse(submitResult);
     }
 
@@ -58,22 +57,22 @@ public class SubmissionsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @PostMapping(path = "/submissions/update/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/submissions/update/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICANT_EMAIL) String applicantEmail,
+    public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICATION_ID) String applicationId,
                                                           @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
-        SubmitResult submitResult = submissionsService.updateDraftToCase(applicantEmail.toLowerCase(), caseRequest);
+        SubmitResult submitResult = submissionsService.updateDraftToCase(applicationId.toLowerCase(), caseRequest);
         return getCorrectResponse(submitResult);
     }
 
     private ResponseEntity<SubmitResult> getCorrectResponse(SubmitResult submitResult) {
         ResponseEntity responseEntity = null;
-        if (submitResult.getValidatorResults().isPresent() && !submitResult.isValid() ) {
-            responseEntity=  new ResponseEntity(submitResult, BAD_REQUEST);
-        }else {
+        if (submitResult.getValidatorResults().isPresent() && !submitResult.isValid()) {
+            responseEntity = new ResponseEntity(submitResult, BAD_REQUEST);
+        } else {
             responseEntity = new ResponseEntity(submitResult, OK);
         }
         return responseEntity;

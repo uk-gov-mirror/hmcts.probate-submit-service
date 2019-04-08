@@ -60,7 +60,7 @@ public abstract class AbstractSubmissionsProcessor {
 
     private void assertIndentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {
         String searchFieldValueInBody = searchFieldFactory.getSearchFieldValuePair(caseType, caseData).getRight();
-        Assert.isTrue(searchFieldValueInBody.equals(identifier), "Applicant email on path must match case data");
+        Assert.isTrue(searchFieldValueInBody.equals(identifier), "Application id email on path must match case data");
     }
 
     private void validateCase(CaseData caseData, SubmitResult submitResult) {

@@ -301,7 +301,17 @@ public class CoreCaseDataMapper {
         String executorName = executor.get(fullName).asText();
 
         if (executor.has(isApplying) && executor.get(isApplying).asBoolean()) {
-            value.set(applyingExecutorName, new TextNode(executorName.trim()));
+            if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean()) {
+                String executorOtherName = executor.get(currentName).asText();
+                value.set(applyingExecutorOtherNames, new TextNode(executorName.trim()));
+                value.set(applyingExecutorName, new TextNode(executorOtherName.trim()));
+                if (executor.has(currentNameReason)) {
+                    String executorOtherNameReason = executor.get(currentNameReason).asText();
+                    value.set(applyingExecutorOtherNamesReason, new TextNode(executorOtherNameReason.trim()));
+                }
+            } else {
+                value.set(applyingExecutorName, new TextNode(executorName.trim()));
+            }
             String executorPhoneNumber = executor.get(mobile).asText();
             value.set(applyingExecutorPhoneNumber, new TextNode(executorPhoneNumber.trim()));
             String executorEmail = executor.get(email).asText();
@@ -315,14 +325,13 @@ public class CoreCaseDataMapper {
             String reason = executor.get(notApplyingKey).asText();
             JsonNode mappedReason = new TextNode(reasonMap.get(reason));
             value.set(notApplyingExecutorReason, mappedReason);
-        }
-
-        if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean()) {
-            String executorOtherName = executor.get(currentName).asText();
-            value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
-            if (executor.has(currentNameReason)) {
-                String executorOtherNameReason = executor.get(currentNameReason).asText();
-                value.set(applyingExecutorOtherNamesReason, new TextNode(executorOtherNameReason.trim()));
+            if (executor.has(hasOtherName) && executor.get(hasOtherName).asBoolean()) {
+                String executorOtherName = executor.get(currentName).asText();
+                value.set(applyingExecutorOtherNames, new TextNode(executorOtherName.trim()));
+                if (executor.has(currentNameReason)) {
+                    String executorOtherNameReason = executor.get(currentNameReason).asText();
+                    value.set(applyingExecutorOtherNamesReason, new TextNode(executorOtherNameReason.trim()));
+                }
             }
         }
 

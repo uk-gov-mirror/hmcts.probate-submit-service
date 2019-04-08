@@ -1,13 +1,12 @@
 package uk.gov.hmcts.probate.functional;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -172,7 +171,7 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     private void validateSequenceNumberSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/sequence-number/oxford")
+                .when().get(persistenceServiceUrl + "/sequence-number/ctsc")
                 .then().assertThat().statusCode(200);
     }
 

@@ -18,18 +18,26 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.util.Map;
+import java.util.Optional;
+
 @Slf4j
 @Component
 public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsProcessor {
 
     private final CoreCaseDataService coreCaseDataService;
     private final EventFactory eventFactory;
+    private final Map<CaseType, CaseState> createdStateMap;
 
     @Autowired
-    public UpdateCaseToDraftSubmissionsProcessor(CoreCaseDataService coreCaseDataService, EventFactory eventFactory, SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory, CaseDataValidatorFactory caseDataValidatorFactory) {
+    public UpdateCaseToDraftSubmissionsProcessor(CoreCaseDataService coreCaseDataService, EventFactory eventFactory,
+                                                 SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory,
+                                                 CaseDataValidatorFactory caseDataValidatorFactory,
+                                                 Map<CaseType, CaseState> createdStateMap) {
         super(securityUtils, searchFieldFactory, caseDataValidatorFactory, coreCaseDataService);
         this.coreCaseDataService = coreCaseDataService;
         this.eventFactory = eventFactory;
+        this.createdStateMap = createdStateMap;
     }
 
     @Override
@@ -38,15 +46,22 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         CaseState state = CaseState.getState(caseResponse.getCaseInfo().getState());
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        if (isCreateState(state, caseType)) {
+            return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData, caseEvents.getUpdateCaseApplicationEventId(), securityDTO);
+        }
         checkStatePrecondition(state, caseEvents.getCreateCaseApplicationEventId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
         return coreCaseDataService.updateCase(caseId, caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
     }
 
-
     private void checkStatePrecondition(CaseState caseState, EventId eventId) {
         if (!caseState.equals(CaseState.DRAFT)) {
             throw new CaseStatePreconditionException(caseState, eventId);
         }
+    }
+
+    private boolean isCreateState(CaseState caseState, CaseType caseType){
+        CaseState createdState = Optional.ofNullable(createdStateMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+        return createdState.equals(caseState);
     }
 }

@@ -11,12 +11,13 @@ import java.util.List;
 public interface CaseDataValidator<C extends CaseData> {
 
 
-    public default ValidatorResults validate(C caseData) {
+    default ValidatorResults validate(C caseData) {
         ValidatorResults results = new ValidatorResults();
-        getRules().stream().map(rule -> rule.test(caseData)).filter(validationResult -> !validationResult.isValid()).forEach(validationResult -> results.getValidationMessages().add(validationResult.getMessage()));
+        getRules().stream().map(rule -> rule.test(caseData)).filter(validationResult -> !validationResult.isValid())
+                .forEach(validationResult -> results.getValidationMessages().add(validationResult.getMessage()));
         return results;
 
     }
 
-    public List<ValidationRule<C>> getRules();
+    List<ValidationRule<C>> getRules();
 }

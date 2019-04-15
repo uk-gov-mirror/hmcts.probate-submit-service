@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.services.submit.validation.validator.CaseDataValidator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.CaveatValidator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.IntestacyValidator;
+import uk.gov.hmcts.probate.services.submit.validation.validator.PaValidator;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
@@ -20,13 +21,17 @@ public class CaseDataValidatorFactory {
 
     private final IntestacyValidator intestacyValidator;
     private final CaveatValidator caveatValidator;
+    private final PaValidator paValidator;
 
     public Optional<CaseDataValidator> getValidator(CaseData caseData) {
         Optional<CaseDataValidator> optionalCaseDataValidator = Optional.empty();
         if (CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)) {
             GrantOfRepresentationData gop = (GrantOfRepresentationData) caseData;
-            if (gop.getGrantType().equals(GrantType.INTESTACY))
+            if (gop.getGrantType().equals(GrantType.INTESTACY)) {
                 optionalCaseDataValidator = Optional.of(intestacyValidator);
+            } else if (gop.getGrantType().equals(GrantType.GRANT_OF_PROBATE)) {
+                optionalCaseDataValidator = Optional.of(paValidator);
+            }
         } else if (CaseType.getCaseType(caseData).equals(CaseType.CAVEAT)) {
             optionalCaseDataValidator = Optional.of(caveatValidator);
         }

@@ -58,7 +58,7 @@ public class SubmissionsController {
             @ApiResponse(code = 200, message = "Draft save to CCD successful"),
             @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
-    @PostMapping(path = "/submissions/update/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(path = "/submissions/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICANT_EMAIL) String applicantEmail,

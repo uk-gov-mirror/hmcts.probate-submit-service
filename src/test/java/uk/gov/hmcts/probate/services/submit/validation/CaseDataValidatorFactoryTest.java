@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.services.submit.validation.validator.CaveatCreator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.CaveatValidator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.GrantOfRepresentationCreator;
 import uk.gov.hmcts.probate.services.submit.validation.validator.IntestacyValidator;
+import uk.gov.hmcts.probate.services.submit.validation.validator.PaValidator;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 
 import java.util.Optional;
@@ -27,9 +28,12 @@ public class CaseDataValidatorFactoryTest {
     private CaveatValidator caveatValidator;
 
 
+    @Mock
+    private PaValidator paValidator;
+
     @Before
     public void setUpTest() {
-        caseDataValidatorFactory = new CaseDataValidatorFactory(intestacyValidator, caveatValidator);
+        caseDataValidatorFactory = new CaseDataValidatorFactory(intestacyValidator, caveatValidator, paValidator);
     }
 
     @Test

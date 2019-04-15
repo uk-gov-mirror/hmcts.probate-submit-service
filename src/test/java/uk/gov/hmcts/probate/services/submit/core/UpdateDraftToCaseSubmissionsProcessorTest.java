@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -75,10 +77,13 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
 
     private ProbateCaseDetails caseResponse;
 
+    private Map<CaseType, CaseState> createdStateMap;
+
     @Before
     public void setUp() {
+        createdStateMap = ImmutableMap.of(GRANT_OF_REPRESENTATION, CaseState.PA_APP_CREATED);
         updateCaseToDraftSubmissionsProcessor = new UpdateCaseToDraftSubmissionsProcessor(
-                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory, caseDataValidatorFactory);
+                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory, caseDataValidatorFactory, createdStateMap);
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(APPLICANT_EMAIL);
@@ -136,7 +141,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
     public void shouldThrowExceptionWhenStateIsNotDraftWhenSubmitting() {
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(CaseState.PA_APP_CREATED.getName());
+        caseInfo.setState(CaseState.CASE_CREATED.getName());
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
 
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);

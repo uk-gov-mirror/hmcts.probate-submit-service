@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
@@ -40,6 +41,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_AGAIN;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED_TO_SUCCESS;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -105,6 +107,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
                 .paymentFailedEventId(GOP_PAYMENT_FAILED)
                 .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
                 .updateDraftEventId(GOP_UPDATE_DRAFT)
+                .updateCaseApplicationEventId(GOP_UPDATE_APPLICATION)
                 .build());
     }
 
@@ -135,6 +138,26 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(coreCaseDataService, times(1)).updateCase(eq(CASE_ID), eq(caseData),
                 eq(GOP_CREATE_APPLICATION), eq(securityDTO));
+    }
+
+    @Test
+    public void shouldSubmitWhenExistingCaseIsAppCreated() {
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        caseInfo.setState(CaseState.PA_APP_CREATED.getName());
+        when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
+                .thenReturn(Optional.of(caseResponse));
+        when(coreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
+                eq(GOP_UPDATE_APPLICATION), eq(securityDTO)))
+                .thenReturn(caseResponse);
+
+        SubmitResult submitResult = updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, caseRequest);
+        caseResponse = submitResult.getProbateCaseDetails();
+        assertThat(caseResponse.getCaseData(), is(caseData));
+        assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(coreCaseDataService, times(1)).updateCase(eq(CASE_ID), eq(caseData),
+                eq(GOP_UPDATE_APPLICATION), eq(securityDTO));
     }
 
     @Test(expected = CaseStatePreconditionException.class)

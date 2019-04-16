@@ -52,4 +52,12 @@ public class CaseDataValidatorFactoryTest {
         Assertions.assertTrue(validator.get() instanceof CaveatValidator);
     }
 
+    @Test
+    public void shouldReturnPaValidator() {
+        CaseData caseData = GrantOfRepresentationCreator.createPaCase();
+        Optional<CaseDataValidator> validator = caseDataValidatorFactory.getValidator(caseData);
+        Assertions.assertTrue(validator.isPresent());
+        Assertions.assertTrue(validator.get() instanceof PaValidator);
+    }
 }
+

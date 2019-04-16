@@ -62,4 +62,43 @@ public class SubmissionsControllerTest {
         verify(submissionsService).updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest));
     }
 
+    @Test
+    public void shouldCreateCase() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(APPLICATION_CREATED);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
+        ValidatorResults validatorResults = new ValidatorResults();
+        when(submissionsService.createCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+
+        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+                .content(objectMapper.writeValueAsString(caseRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(submissionsService).createCase(eq(EMAIL_ADDRESS), eq(caseRequest));
+    }
+
+    @Test
+    public void shouldThrowBadRequestOnCreateCaseWithInvalidPayload() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(APPLICATION_CREATED);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
+        ValidatorResults validatorResults = new ValidatorResults();
+        validatorResults.getValidationMessages().add("Error");
+        when(submissionsService.createCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+
+        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+                .content(objectMapper.writeValueAsString(caseRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        verify(submissionsService).createCase(eq(EMAIL_ADDRESS), eq(caseRequest));
+    }
+
 }

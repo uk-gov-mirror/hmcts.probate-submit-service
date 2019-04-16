@@ -71,7 +71,7 @@ public class CaseTypeConfiguration {
     public Map<CaseType, String> searchFieldsMap() {
         return ImmutableMap.<CaseType, String>builder()
                 .put(GRANT_OF_REPRESENTATION, "primaryApplicantEmailAddress")
-                .put(CAVEAT, "caveatorEmailAddress")
+                .put(CAVEAT, "applicationId")
                 .put(WILL_LODGEMENT, "deceasedEmailAddress")
                 .put(STANDING_SEARCH, "applicantEmailAddress")
                 .build();

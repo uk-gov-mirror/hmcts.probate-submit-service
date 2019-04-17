@@ -25,11 +25,6 @@ public class FormDataTest {
     }
 
     @Test
-    public void shouldGetSubmissionReference() {
-        assertThat(formData.getSubmissionReference(), is(17L));
-    }
-
-    @Test
     public void shouldGetCcdCaseId() {
         assertThat(formData.getCcdCaseId(), is(1535574519543819L));
     }

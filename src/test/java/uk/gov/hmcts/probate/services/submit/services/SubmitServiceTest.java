@@ -30,8 +30,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -108,13 +106,12 @@ public class SubmitServiceTest {
         when(submitData.getCaseId()).thenReturn(CASE_ID);
 
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
-        when(persistenceClient.saveSubmission(submitData)).thenReturn(persistenceResponse);
 
         when(persistenceResponse.getIdAsLong()).thenReturn(ID);
         when(persistenceResponse.getIdAsJsonNode()).thenReturn(submissionReference);
 
         when(submissionReference.asLong()).thenReturn(ID);
-        when(sequenceService.nextRegistry(ID)).thenReturn(registryData);
+        when(sequenceService.nextRegistry()).thenReturn(registryData);
 
         when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
         when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
@@ -168,11 +165,10 @@ public class SubmitServiceTest {
         assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
         verify(persistenceClient, never()).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
-        verify(persistenceClient, never()).saveSubmission(submitData);
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, never()).createCase(any());
         verify(coreCaseDataClient, never()).saveCase(any(), any());
-        verify(sequenceService, never()).nextRegistry(ID);
+        verify(sequenceService, never()).nextRegistry();
     }
 
     @Test
@@ -185,12 +181,11 @@ public class SubmitServiceTest {
         assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
         verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
-        verify(persistenceClient, times(1)).saveSubmission(submitData);
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
         verify(mockMailClient, never()).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry(ID);
+        verify(sequenceService, times(1)).nextRegistry();
     }
 
     @Test
@@ -202,12 +197,11 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
-        verify(persistenceClient, times(1)).saveSubmission(submitData);
         verify(coreCaseDataClient, never()).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, never()).createCase(any());
         verify(coreCaseDataClient, never()).saveCase(any(), any());
         verify(mockMailClient, never()).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry(ID);
+        verify(sequenceService, times(1)).nextRegistry();
     }
 
     @Test
@@ -217,12 +211,11 @@ public class SubmitServiceTest {
         assertThat(submitResponse, is(notNullValue()));
         verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
-        verify(persistenceClient, times(1)).saveSubmission(submitData);
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
         verify(coreCaseDataClient, times(1)).saveCase(any(), any());
         verify(mockMailClient, never()).execute(any(), any(), any());
-        verify(sequenceService, times(1)).nextRegistry(ID);
+        verify(sequenceService, times(1)).nextRegistry();
     }
 
 
@@ -275,26 +268,6 @@ public class SubmitServiceTest {
         verify(coreCaseDataClient, times(1)).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
         verify(coreCaseDataClient, times(1)).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_PAYMENT_FAILED_CCD_EVENT_ID);
         verify(mockMailClient, times(1)).execute(any(), any(), any());
-    }
-
-    @Test
-    public void shouldResubmitWithSuccess() {
-        when(persistenceClient.loadSubmission(Long.parseLong("112233"))).thenReturn(jsonNode);
-        when(persistenceClient.loadFormDataBySubmissionReference(Long.parseLong("112233"))).thenReturn(objectMapper.createObjectNode());
-        when(sequenceService.populateRegistryResubmitData(Long.parseLong("112233"), objectMapper.createObjectNode())).thenReturn(registryData);
-        when(mockMailClient.execute(eq(jsonNode), eq(registryData), any(Calendar.class))).thenReturn("12345678");
-
-        String response = submitService.resubmit(Long.parseLong("112233"));
-
-        assertThat(response, is("12345678"));
-    }
-
-    @Test
-    public void shouldResubmitWithFailureWhenPersistenceClientThrowsException() {
-        doThrow(HttpClientErrorException.class).when(persistenceClient).loadSubmission(999);
-        String response = submitService.resubmit(Long.parseLong("999"));
-
-        assertThat(response, is("Invalid submission reference entered.  Please enter a valid submission reference."));
     }
 
     @Test

@@ -138,21 +138,6 @@ public class SubmitService {
         return Optional.of(coreCaseDataClient.saveCase(ccdCreateCaseParams, ccdStartCaseResponse));
     }
 
-    public String resubmit(long submissionId) {
-        try {
-            JsonNode resubmitData = persistenceClient.loadSubmission(submissionId);
-            JsonNode formData = persistenceClient.loadFormDataBySubmissionReference(submissionId);
-            JsonNode registryData = sequenceService
-                    .populateRegistryResubmitData(submissionId, formData);
-            Calendar submissionTimestamp = Calendar.getInstance();
-            logger.info("Application re-submitted, registry data payload: " + registryData);
-            return mailClient.execute(resubmitData, registryData, submissionTimestamp);
-        } catch (HttpClientErrorException e) {
-            logger.error("Invalid Submission Reference Exception: ", e);
-            return "Invalid submission reference entered.  Please enter a valid submission reference.";
-        }
-    }
-
     public JsonNode updatePaymentStatus(SubmitData submitData, String userId, String authorization) {
         PaymentResponse paymentResponse = submitData.getPaymentResponse();
         Optional<CcdCaseResponse> ccdCaseResponse = getCCDCase(submitData, userId, authorization);

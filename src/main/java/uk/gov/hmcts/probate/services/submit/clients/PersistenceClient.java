@@ -26,9 +26,6 @@ public class PersistenceClient {
     @Value("${services.persistence.formdata.url}")
     private String formDataPersistenceUrl;
 
-    @Value("${services.persistence.submissions.url}")
-    private String submissionsPersistenceUrl;
-
     @Value("${services.persistence.sequenceNumber.url}")
     private String sequenceNumberPersistenceUrl;
 
@@ -42,22 +39,9 @@ public class PersistenceClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode loadSubmission(long sequenceId) {
-        HttpEntity<JsonNode> loadResponse = restTemplate.getForEntity(submissionsPersistenceUrl + "/" + sequenceId, JsonNode.class);
-        return loadResponse.getBody();
-    }
-
-    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public FormData loadFormDataById(String emailId) {
         HttpEntity<JsonNode> loadResponse = restTemplate.getForEntity(formDataPersistenceUrl + "/" + emailId, JsonNode.class);
         return new FormData(loadResponse.getBody());
-    }
-
-    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public JsonNode loadFormDataBySubmissionReference(long submissionReference) {
-        HttpEntity<JsonNode> loadResponse =
-                restTemplate.getForEntity(formDataPersistenceUrl + "/search/findBySubmissionReference?submissionReference=" + submissionReference, JsonNode.class);
-        return loadResponse.getBody();
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))

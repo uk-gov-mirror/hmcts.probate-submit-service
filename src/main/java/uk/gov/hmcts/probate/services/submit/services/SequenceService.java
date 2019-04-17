@@ -51,25 +51,6 @@ public class SequenceService {
         return registryDataObject;
     }
 
-    JsonNode populateRegistryResubmitData(long submissionReference, JsonNode formDataObject) {
-        ObjectNode registryDataObject = mapper.createObjectNode();
-        ObjectNode registryMapper = mapper.createObjectNode();
-
-        JsonNode formData = formDataObject.get("formdata");
-        registryDataObject.put(SUBMISSION_REFERENCE, submissionReference);
-
-        if (formData.has(REGISTRY)) {
-            registryMapper.set(SEQUENCE_NUMBER, formData.get(REGISTRY).get(SEQUENCE_NUMBER));
-            registryMapper.set(EMAIL, formData.get(REGISTRY).get(EMAIL));
-        } else {
-            registryMapper.put(SEQUENCE_NUMBER, submissionReference);
-            registryMapper.put(EMAIL, mailSender.getJavaMailProperties().getProperty("recipient"));
-        }
-
-        registryDataObject.set(REGISTRY, registryMapper);
-        return registryDataObject;
-    }
-
     long getRegistrySequenceNumber(Registry registry) {
         return persistenceClient.getNextSequenceNumber(registry.getName());
     }

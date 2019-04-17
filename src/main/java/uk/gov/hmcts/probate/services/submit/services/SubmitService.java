@@ -60,36 +60,29 @@ public class SubmitService {
     public JsonNode submit(SubmitData submitData, String userId, String authorization) {
         Optional<CcdCaseResponse> caseResponseOptional = getCCDCase(submitData, userId, authorization);
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
+
         if (!caseResponseOptional.isPresent()) {
-            if (formData.getSubmissionReference() != 0) {
-                return new TextNode(DUPLICATE_SUBMISSION);
-            }
-            PersistenceResponse persistenceResponse = persistenceClient.saveSubmission(submitData);
-            JsonNode submissionReference = persistenceResponse.getIdAsJsonNode();
-            Calendar submissionTimestamp = Calendar.getInstance();
             logger.info(append("tags", "Analytics"), generateMessage(submitData));
-            persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
-                    submissionReference.asLong(), formData.getJson());
 
-            JsonNode registryData = sequenceService.nextRegistry(persistenceResponse.getIdAsLong());
+            JsonNode registryData = sequenceService.nextRegistry();
 
+            Calendar submissionTimestamp = Calendar.getInstance();
             CcdCreateCaseParams ccdCreateCaseParams = new Builder()
                     .withAuthorisation(authorization)
                     .withRegistryData(registryData)
-                    .withSubmissionReference(persistenceResponse.getIdAsJsonNode())
                     .withSubmitData(submitData)
-                    .withUserId(userId)
                     .withSubmissionTimestamp(submissionTimestamp)
+                    .withUserId(userId)
                     .build();
-
             caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
 
-            updateFormData(formData, submissionReference, registryData);
+            updateFormData(formData, registryData);
             caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, ((ObjectNode) formData.getJson())));
-            persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
-                    submissionReference.asLong(), formData.getJson());
+//            persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
+//                    submissionReference.asLong(), formData.getJson());
         }
         ObjectNode response = createResponse(caseResponseOptional, formData);
+        System.out.println("reached");
         logger.info("Response on submit: {}", response);
         return response;
     }
@@ -97,14 +90,12 @@ public class SubmitService {
     private ObjectNode createResponse(Optional<CcdCaseResponse> caseResponseOptional, FormData formData) {
         ObjectNode response = objectMapper.createObjectNode();
         response.set(REGISTRY_FIELD_NAME, formData.getRegistry());
-        response.set("submissionReference", formData.getSubmissionReferenceAsJsonNode());
         setCCDItemsOnResponse(caseResponseOptional, response);
         return response;
     }
 
-    private void updateFormData(FormData formData, JsonNode submissionReference, JsonNode registryData) {
+    private void updateFormData(FormData formData, JsonNode registryData) {
         ((ObjectNode) formData.getJson().get("formdata")).set(REGISTRY_FIELD_NAME, registryData.get(REGISTRY_FIELD_NAME));
-        ((ObjectNode) formData.getJson()).set("submissionReference", submissionReference);
         ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
     }
 
@@ -169,7 +160,6 @@ public class SubmitService {
         if (ccdCaseResponse.isPresent() &&
                 ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
             logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
-            persistenceClient.saveSubmission(submitData);
 
             String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
             JsonNode tokenJson = coreCaseDataClient

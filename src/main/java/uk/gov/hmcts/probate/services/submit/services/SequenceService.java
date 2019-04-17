@@ -33,16 +33,15 @@ public class SequenceService {
         this.mapper = mapper;
     }
 
-    public synchronized JsonNode nextRegistry(long submissionReference) {
+    public synchronized JsonNode nextRegistry() {
         Registry nextRegistry = identifyNextRegistry();
-        return populateRegistrySubmitData(submissionReference, nextRegistry);
+        return populateRegistrySubmitData(nextRegistry);
     }
 
-    JsonNode populateRegistrySubmitData(long submissionReference, Registry registry) {
+    JsonNode populateRegistrySubmitData(Registry registry) {
         ObjectNode registryDataObject = mapper.createObjectNode();
         ObjectNode registryMapper = mapper.createObjectNode();
 
-        registryDataObject.put(SUBMISSION_REFERENCE, submissionReference);
         registryMapper.put("name", registry.getName());
         registryMapper.put(SEQUENCE_NUMBER, getRegistrySequenceNumber(registry));
         registryMapper.put(EMAIL, registry.getEmail());

@@ -42,13 +42,6 @@ public class PersistenceClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public PersistenceResponse saveSubmission(SubmitData submitData) {
-        HttpEntity<JsonNode> persistenceRequest = requestFactory.createPersistenceRequest(submitData.getJson());
-        HttpEntity<JsonNode> persistenceResponse = restTemplate.postForEntity(submissionsPersistenceUrl, persistenceRequest, JsonNode.class);
-        return new PersistenceResponse(persistenceResponse.getBody());
-    }
-
-    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public JsonNode loadSubmission(long sequenceId) {
         HttpEntity<JsonNode> loadResponse = restTemplate.getForEntity(submissionsPersistenceUrl + "/" + sequenceId, JsonNode.class);
         return loadResponse.getBody();
@@ -70,7 +63,6 @@ public class PersistenceClient {
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public void updateFormData(String emailId, long sequenceNumber, JsonNode formData) {
         ObjectNode persistenceRequestBody = new ObjectMapper().createObjectNode();
-        persistenceRequestBody.put("submissionReference", sequenceNumber);
         persistenceRequestBody.set("formdata", formData.get("formdata"));
         HttpEntity<JsonNode> persistenceRequest = requestFactory.createPersistenceRequest(persistenceRequestBody);
         try {

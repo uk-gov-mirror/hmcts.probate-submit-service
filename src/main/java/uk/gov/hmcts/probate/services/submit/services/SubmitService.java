@@ -82,7 +82,6 @@ public class SubmitService {
 //                    submissionReference.asLong(), formData.getJson());
         }
         ObjectNode response = createResponse(caseResponseOptional, formData);
-        System.out.println("reached");
         logger.info("Response on submit: {}", response);
         return response;
     }

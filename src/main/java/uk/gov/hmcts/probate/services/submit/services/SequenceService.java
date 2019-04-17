@@ -13,7 +13,6 @@ import java.util.Map;
 
 @Service
 public class SequenceService {
-    private static final String SUBMISSION_REFERENCE = "submissionReference";
     private static final String REGISTRY = "registry";
     private static final String SEQUENCE_NUMBER = "sequenceNumber";
     private static final String EMAIL = "email";

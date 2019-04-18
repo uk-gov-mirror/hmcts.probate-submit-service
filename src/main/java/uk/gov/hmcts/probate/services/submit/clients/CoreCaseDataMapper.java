@@ -14,7 +14,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -32,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 
 @Configuration
 @ConfigurationProperties(prefix = "ccd")
@@ -394,7 +394,14 @@ public class CoreCaseDataMapper {
         Optional<JsonNode> optionalAddress = Optional.ofNullable(probateData.get(fieldname));
         if (optionalAddress.isPresent()) {
             ObjectNode ccdAddressObject = mapper.createObjectNode();
-            ccdAddressObject.set("AddressLine1", optionalAddress.get());
+            ccdAddressObject.set("AddressLine1", optionalAddress.get().get("addressLine1"));
+            ccdAddressObject.set("AddressLine2", optionalAddress.get().get("addressLine2"));
+            ccdAddressObject.set("AddressLine3", optionalAddress.get().get("addressLine3"));
+            ccdAddressObject.set("PostTown", optionalAddress.get().get("postTown"));
+            ccdAddressObject.set("County", optionalAddress.get().get("county"));
+            ccdAddressObject.set("PostCode", optionalAddress.get().get("postCode"));
+            ccdAddressObject.set("Country", optionalAddress.get().get("country"));
+
             return Optional.of(ccdAddressObject);
         }
         return ret;

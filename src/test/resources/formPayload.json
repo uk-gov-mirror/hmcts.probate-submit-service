@@ -1,166 +1,185 @@
 {
-    "id": 12345678,
-    "submissionReference": "null",
-    "submitdata": {
-        "applicantFirstName": "Applicant",
-        "applicantLastName": "NAme",
-        "applicantSameWillName":"No",
-        "applicantAlias":"Lead_Applicant_Alias",
-        "applicantAliasReason":"other",
-        "applicantOtherReason":"nickname",
-        "applicantAddress": "my address\r\n",
-        "applicantPhone": "324234",
-        "applicantEmail": "nigel@haworthconsulting.co.uk",
-        "deceasedFirstname": "deceased",
-        "deceasedSurname": "person",
-        "deceasedAliasAssets": "Yes",
-        "deceasedOtherNames": {
-            "name_0": {
-                "lastName": "name",
-                "firstName": "another"
-            },
-            "name_1": {
-                "lastName": "alias",
-                "firstName": "an"
-            },
-            "name_2": {
-                "lastName": "someoneelse",
-                "firstName": "aka"
-            }
-        },
-        "deceasedMarriedAfterDateOnWill": "Yes",
-        "deceasedAddress": "their address\r\n",
-        "deceasedDod": "1 February 2000",
-        "deceasedDob": "1 February 1900",
-        "willWithCodicils": "Yes",
-        "willCodicilsNumber": "2",
-        "documentUploads": [{
-                    "filename": "document_1",
-                    "url": "url_link1"
-                },
-                {
-                    "filename": "document_2",
-                    "url": "url_link2"
-                },
-                {
-                    "filename": "document_3",
-                    "url": "url_link3"
-                }
-
-            ]
-        ,
-        "ihtCompleted": "Yes",
-        "ihtForm": "online",
-        "ihtFormId": "IHT205",
-        "ihtIdentifier": "12345678F12345",
-        "ihtGrossValue": 222222,
-        "ihtNetValue": 22222,
-        "copiesUK": 1,
-        "copiesOverseas": 2,
-        "totalFee": "216.50",
-        "paymentReference": "PRO1$$$person3222$$$P223$$$X0250$X0251-3/1$X0251-4/2",
-        "legalStatement":{
-            "applicant": "We, Bob Richard Smith of Adam & Eve 81 Petty France London SW1H 9EX and exec_3_new_name of exec_3_address\r\n, make the following statement:",
-            "deceased": "died_firstname died_lastname was born on 1 January 1950 and died on 1 January 2018, domiciled in England and Wales.",
-            "deceasedOtherNames": "They were also known as new_died_firstname new_died_lastname.",
-            "executorsApplying": [
-                {
-                    "name": "Bob Richard Smith, an executor named in the will or codicils, is applying for probate.",
-                    "sign": "Bob Richard Smith will sign and send to the probate registry what they believe to be the true and original last will and testament of died_firstname died_lastname."
-                },
-                {
-                    "name": "exec_3_new_name , an executor named in the will or codicils as executor_3_name, is applying for probate.",
-                    "sign": "exec_3_new_name will sign a photocopy of what they believe to be the true and original last will and testament of died_firstname died_lastname. Bob Richard Smith will send the signed photocopy to the probate registry."
-                }
-            ],
-            "deceasedEstateValue": "The gross value for the estate amounts to &pound;123456 and the net value for the estate amounts to &pound;12345.",
-            "deceasedEstateLand": "To the best of our knowledge, information and belief, there was no land vested in died_firstname died_lastname which was settled previously to the death (and not by the will) of died_firstname died_lastname and which remained settled land notwithstanding such death.",
-            "executorsNotApplying": [
-                "executor_2_name, an executor named in the will or codicils, is not making this application because they died before died_firstname died_lastname died.",
-                "executor_4_name, an executor named in the will or codicils, is not making this application now and gives up the right to do so in the future."
-            ],
-            "intro": "This statement is based on the information Bob Richard Smith has given in their application. It will be stored as a public record."
-        },
-        "declaration": {
-            "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
-            "confirm": "We confirm that we will administer the estate of deceased person, according to law. We will:",
-            "requests": "If the probate registry (court) asks us to do so, we will:",
-            "understand": "We understand that:",
-            "confirmItem1": "collect the whole estate",
-            "confirmItem2": "keep full details (an inventory) of the estate",
-            "confirmItem3": "keep a full account of how the estate has been distributed",
-            "requestsItem1": "provide the full details of the estate and how it has been distributed",
-            "requestsItem2": "return the grant of probate to the court",
-            "understandItem1": "our application will be rejected if we do not provide information (if asked)",
-            "understandItem2": "criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest"
-        },
-        "noOfApplicants": 2,
-        "noOfExecutors": 5,
-        "executorsNotApplying": [
-            {
-                "fullName" : "Second Executor Name",
-                "isApplying": false,
-                "isDead": true,
-                "notApplyingKey": "optionDiedBefore",
-                "notApplyingReason": "This executor died (before the person who has died)"
-            }, {
-                "fullName" : "Third Executor Name",
-                "isApplying": false,
-                "isDead": true,
-                "notApplyingKey": "optionDiedAfter",
-                "notApplyingReason": "This executor died (after the person who has died)"
-            }, {
-                "fullName" : "Fourth Executor Name",
-                "isApplying": false,
-                "isDead": false,
-                "executorNotified": "Yes",
-                "notApplyingKey": "optionPowerReserved",
-                "notApplyingReason": "This executor doesn&rsquo;t want to apply now, but may do in the future (this is also known as power reserved)"
-            }, {
-                "fullName" : "Fifth Executor Name",
-                "isApplying": false,
-                "isDead": false,
-                "notApplyingKey": "optionRenunciated",
-                "notApplyingReason": "This executor doesn&rsquo;t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)"
-            },
-            {
-                "fullName" : "Eighth Executor Name",
-                "isDead": false,
-                "notApplyingKey": "optionRenunciated",
-                "notApplyingReason": "This executor doesn&rsquo;t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)"
-            }],
-        "executorsApplying": [
-            {
-                "fullName": "Sixth Executor Name",
-                "isApplying": true,
-                "hasOtherName": false,
-                "email": "hello@hotmail.co.uk",
-                "mobile": "11111111111",
-                "address": "exec_6_address\r\n",
-                "freeTextAddress": "exec_6_address\r\n",
-                "inviteId": {},
-                "emailSent": true
-            },
-            {
-                "fullName": "Seventh Executor Name",
-                "isApplying": true,
-                "hasOtherName": true,
-                "currentName": "exec_7_new_name ",
-                "currentNameReason": "other",
-                "otherReason": "nickname",
-                "email": "hi@hotmail.co.uk",
-                "mobile": "2222222222",
-                "address": "exec_7_address\r\n",
-                "freeTextAddress": "exec_7_address\r\n",
-                "inviteId": {},
-                "emailSent": true
-            }
-        ],
-        "softStop": "True"
+  "id": 12345678,
+  "submissionReference": "null",
+  "submitdata": {
+    "applicantFirstName": "Applicant",
+    "applicantLastName": "NAme",
+    "applicantSameWillName": "No",
+    "applicantAlias": "Lead_Applicant_Alias",
+    "applicantAliasReason": "other",
+    "applicantOtherReason": "nickname",
+    "applicantAddress": {
+      "addressLine1": "address line 1",
+      "addressLine2": "address line 2",
+      "addressLine3": "address line 3",
+      "postTown": "post town",
+      "county": "county",
+      "postCode": "post code",
+      "country": "country"
     },
-    "registry": {
-        "sequenceNumber": 12345,
-        "email": "test@email.com",
-        "address": "test address"
-    }
+    "applicantPhone": "324234",
+    "applicantEmail": "nigel@haworthconsulting.co.uk",
+    "deceasedFirstname": "deceased",
+    "deceasedSurname": "person",
+    "deceasedAliasAssets": "Yes",
+    "deceasedOtherNames": {
+      "name_0": {
+        "lastName": "name",
+        "firstName": "another"
+      },
+      "name_1": {
+        "lastName": "alias",
+        "firstName": "an"
+      },
+      "name_2": {
+        "lastName": "someoneelse",
+        "firstName": "aka"
+      }
+    },
+    "deceasedMarriedAfterDateOnWill": "Yes",
+    "deceasedAddress": {
+      "addressLine1": "address line 1",
+      "addressLine2": "address line 2",
+      "addressLine3": "address line 3",
+      "postTown": "post town",
+      "county": "county",
+      "postCode": "post code",
+      "country": "country"
+    },
+    "deceasedDod": "1 February 2000",
+    "deceasedDob": "1 February 1900",
+    "willWithCodicils": "Yes",
+    "willCodicilsNumber": "2",
+    "documentUploads": [
+      {
+        "filename": "document_1",
+        "url": "url_link1"
+      },
+      {
+        "filename": "document_2",
+        "url": "url_link2"
+      },
+      {
+        "filename": "document_3",
+        "url": "url_link3"
+      }
+    ],
+    "ihtCompleted": "Yes",
+    "ihtForm": "online",
+    "ihtFormId": "IHT205",
+    "ihtIdentifier": "12345678F12345",
+    "ihtGrossValue": 222222,
+    "ihtNetValue": 22222,
+    "copiesUK": 1,
+    "copiesOverseas": 2,
+    "totalFee": "216.50",
+    "paymentReference": "PRO1$$$person3222$$$P223$$$X0250$X0251-3/1$X0251-4/2",
+    "legalStatement": {
+      "applicant": "We, Bob Richard Smith of Adam & Eve 81 Petty France London SW1H 9EX and exec_3_new_name of exec_3_address\r\n, make the following statement:",
+      "deceased": "died_firstname died_lastname was born on 1 January 1950 and died on 1 January 2018, domiciled in England and Wales.",
+      "deceasedOtherNames": "They were also known as new_died_firstname new_died_lastname.",
+      "executorsApplying": [
+        {
+          "name": "Bob Richard Smith, an executor named in the will or codicils, is applying for probate.",
+          "sign": "Bob Richard Smith will sign and send to the probate registry what they believe to be the true and original last will and testament of died_firstname died_lastname."
+        },
+        {
+          "name": "exec_3_new_name , an executor named in the will or codicils as executor_3_name, is applying for probate.",
+          "sign": "exec_3_new_name will sign a photocopy of what they believe to be the true and original last will and testament of died_firstname died_lastname. Bob Richard Smith will send the signed photocopy to the probate registry."
+        }
+      ],
+      "deceasedEstateValue": "The gross value for the estate amounts to &pound;123456 and the net value for the estate amounts to &pound;12345.",
+      "deceasedEstateLand": "To the best of our knowledge, information and belief, there was no land vested in died_firstname died_lastname which was settled previously to the death (and not by the will) of died_firstname died_lastname and which remained settled land notwithstanding such death.",
+      "executorsNotApplying": [
+        "executor_2_name, an executor named in the will or codicils, is not making this application because they died before died_firstname died_lastname died.",
+        "executor_4_name, an executor named in the will or codicils, is not making this application now and gives up the right to do so in the future."
+      ],
+      "intro": "This statement is based on the information Bob Richard Smith has given in their application. It will be stored as a public record."
+    },
+    "declaration": {
+      "accept": "I confirm that I will administer the estate of the person who died according to law, and that my application is truthful.",
+      "confirm": "We confirm that we will administer the estate of deceased person, according to law. We will:",
+      "requests": "If the probate registry (court) asks us to do so, we will:",
+      "understand": "We understand that:",
+      "confirmItem1": "collect the whole estate",
+      "confirmItem2": "keep full details (an inventory) of the estate",
+      "confirmItem3": "keep a full account of how the estate has been distributed",
+      "requestsItem1": "provide the full details of the estate and how it has been distributed",
+      "requestsItem2": "return the grant of probate to the court",
+      "understandItem1": "our application will be rejected if we do not provide information (if asked)",
+      "understandItem2": "criminal proceedings for fraud may be brought against us if we are found to have been deliberately untruthful or dishonest"
+    },
+    "noOfApplicants": 2,
+    "noOfExecutors": 5,
+    "executorsNotApplying": [
+      {
+        "fullName": "Second Executor Name",
+        "isApplying": false,
+        "isDead": true,
+        "notApplyingKey": "optionDiedBefore",
+        "notApplyingReason": "This executor died (before the person who has died)"
+      },
+      {
+        "fullName": "Third Executor Name",
+        "isApplying": false,
+        "isDead": true,
+        "notApplyingKey": "optionDiedAfter",
+        "notApplyingReason": "This executor died (after the person who has died)"
+      },
+      {
+        "fullName": "Fourth Executor Name",
+        "isApplying": false,
+        "isDead": false,
+        "executorNotified": "Yes",
+        "notApplyingKey": "optionPowerReserved",
+        "notApplyingReason": "This executor doesn&rsquo;t want to apply now, but may do in the future (this is also known as power reserved)"
+      },
+      {
+        "fullName": "Fifth Executor Name",
+        "isApplying": false,
+        "isDead": false,
+        "notApplyingKey": "optionRenunciated",
+        "notApplyingReason": "This executor doesn&rsquo;t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)"
+      },
+      {
+        "fullName": "Eighth Executor Name",
+        "isDead": false,
+        "notApplyingKey": "optionRenunciated",
+        "notApplyingReason": "This executor doesn&rsquo;t want to apply now, and gives up the right to do so in the future (this is also known as renunciation, and the executor will need to fill in a form)"
+      }
+    ],
+    "executorsApplying": [
+      {
+        "fullName": "Sixth Executor Name",
+        "isApplying": true,
+        "hasOtherName": false,
+        "email": "hello@hotmail.co.uk",
+        "mobile": "11111111111",
+        "address": "exec_6_address\r\n",
+        "freeTextAddress": "exec_6_address\r\n",
+        "inviteId": {},
+        "emailSent": true
+      },
+      {
+        "fullName": "Seventh Executor Name",
+        "isApplying": true,
+        "hasOtherName": true,
+        "currentName": "exec_7_new_name ",
+        "currentNameReason": "other",
+        "otherReason": "nickname",
+        "email": "hi@hotmail.co.uk",
+        "mobile": "2222222222",
+        "address": "exec_7_address\r\n",
+        "freeTextAddress": "exec_7_address\r\n",
+        "inviteId": {},
+        "emailSent": true
+      }
+    ],
+    "softStop": "True"
+  },
+  "registry": {
+    "sequenceNumber": 12345,
+    "email": "test@email.com",
+    "address": "test address"
+  }
 }

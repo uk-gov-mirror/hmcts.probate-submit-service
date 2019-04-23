@@ -70,8 +70,8 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     }
 
-    @State({"provider POSTS submission with success",
-            "provider POSTS submission with success"})
+    @State({"provider PUTS submission with success",
+            "provider PUTS submission with success"})
     public void toPostSubmissionCaseDetailsWithSuccess() throws IOException, JSONException {
 
         caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_full_submission.json");
@@ -85,8 +85,8 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     }
 
-    @State({"provider POSTS submission with validation errors",
-            "provider POSTS submission with validation errors"})
+    @State({"provider PUTS submission with validation errors",
+            "provider PUTS submission with validation errors"})
     public void toPostSubmissionCaseDetailsWithValidationErrors() throws IOException, JSONException {
 
         caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_invalid.json");
@@ -97,10 +97,4 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
                 .thenReturn(caseResponse);
     }
 
-
-    @State({"provider POSTS submission with presubmit validation errors",
-            "provider POSTS submission with presubmit validation errors"})
-    public void toPostSubmissionCaseDetailsWithPresubmitValidationErrors() throws IOException, JSONException {
-
-    }
 }

@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
@@ -22,9 +23,13 @@ abstract public class ControllerProviderTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Value("${pact.broker.version}")
+    private String providerVersion;
+
     @Before
     public void setUpTest() {
         System.getProperties().setProperty("pact.verifier.publishResults", "true");
+        System.getProperties().setProperty("pact.provider.version", providerVersion);
     }
 
     protected JSONObject createJsonObject(String fileName) throws JSONException, IOException {

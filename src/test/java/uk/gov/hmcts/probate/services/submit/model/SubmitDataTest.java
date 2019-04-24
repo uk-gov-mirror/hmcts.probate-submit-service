@@ -77,8 +77,7 @@ public class SubmitDataTest {
                 "      \"email\": \"birmingham@email.com\",\n" +
                 "      \"address\": \"Line 1 Bham\\nLine 2 Bham\\nLine 3 Bham\\nPostCode Bham\",\n" +
                 "      \"sequenceNumber\": 20075\n" +
-                "    },\n" +
-                "    \"submissionReference\": 17\n" +
+                "    }\n" +
                 "  }");
         assertThat(submitData.getRegistry(), is(equalTo(jsonNode)));
     }

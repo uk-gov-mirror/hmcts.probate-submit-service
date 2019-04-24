@@ -67,7 +67,7 @@ public class MailClientTest {
         objectMapper = new ObjectMapper();
 
         submitData = objectMapper.createObjectNode();
-        submitData.set("submitdata", objectMapper.createObjectNode().set("submissionReference", new LongNode(1234)));
+//        submitData.set("submitdata", objectMapper.createObjectNode().set("submissionReference", new LongNode(1234)));
     }
 
 
@@ -80,7 +80,7 @@ public class MailClientTest {
         String response = mailClient.execute(submitData, registryData,
                 submissionTimestamp);
 
-        assertThat(response, is("1234"));
+        assertThat(response, is(""));
     }
 
     @Test(expected = ParsingSubmitException.class)

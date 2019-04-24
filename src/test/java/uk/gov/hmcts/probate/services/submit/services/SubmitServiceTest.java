@@ -70,9 +70,6 @@ public class SubmitServiceTest {
     private SubmitData submitData;
 
     @Mock
-    private JsonNode submissionReference;
-
-    @Mock
     private JsonNode jsonNode;
 
     @Mock
@@ -107,10 +104,6 @@ public class SubmitServiceTest {
 
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
 
-        when(persistenceResponse.getIdAsLong()).thenReturn(ID);
-        when(persistenceResponse.getIdAsJsonNode()).thenReturn(submissionReference);
-
-        when(submissionReference.asLong()).thenReturn(ID);
         when(sequenceService.nextRegistry()).thenReturn(registryData);
 
         when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
@@ -132,7 +125,6 @@ public class SubmitServiceTest {
 
     private void setupFormData() {
         ObjectNode formDataObjectNode = objectMapper.createObjectNode();
-        formDataObjectNode.set("submissionReference", new LongNode(0L));
         ObjectNode ccdObjectNode = objectMapper.createObjectNode();
         ccdObjectNode.set("id", new LongNode(CASE_ID));
         ccdObjectNode.set("state", new TextNode(CASE_STATE));
@@ -141,16 +133,6 @@ public class SubmitServiceTest {
         formDataNode.set("registry", registryData.get("registry"));
         formDataObjectNode.set("formdata", formDataNode);
         formData = new FormData(formDataObjectNode);
-    }
-
-    @Test
-    public void shouldReturnDuplicateSubmissionWhenSubmissionReferenceExists() {
-        ((ObjectNode) formData.getJson()).set("submissionReference", new LongNode(12345L));
-        when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(Optional.empty());
-
-        JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
-
-        assertThat(submitResponse.asText(), is("DUPLICATE_SUBMISSION"));
     }
 
     @Test
@@ -179,7 +161,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
         assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
         assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
-        verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());
@@ -195,7 +176,6 @@ public class SubmitServiceTest {
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
-        verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(coreCaseDataClient, never()).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, never()).createCase(any());
@@ -209,7 +189,6 @@ public class SubmitServiceTest {
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
-        verify(persistenceClient, times(2)).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, times(1)).createCase(any());

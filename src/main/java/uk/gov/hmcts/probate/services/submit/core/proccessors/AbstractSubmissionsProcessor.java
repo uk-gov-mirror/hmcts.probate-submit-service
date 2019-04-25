@@ -14,43 +14,39 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
+import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public abstract class AbstractSubmissionsProcessor {
 
-    private final SecurityUtils securityUtils;
+    protected final SecurityUtils securityUtils;
     private final SearchFieldFactory searchFieldFactory;
     private final CaseDataValidatorFactory caseDataValidatorFactory;
     private final CoreCaseDataService coreCaseDataService;
 
-    public SubmitResult process(String identifier, ProbateCaseDetails caseRequest) {
+    public SubmitResult process(String identifier, Supplier<ProbateCaseDetails> caseRequestSupplier) {
+        ProbateCaseDetails caseRequest = caseRequestSupplier.get();
         log.info("Processing case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        assertIndentifierMatchesCase(identifier, caseData, caseType);
-        SubmitResult submitResult = new SubmitResult();
-        validateCase(caseData, submitResult);
-        if (noValidationCaseErrorsFound(submitResult)) {
-            submitResult.setProbateCaseDetails(processCase(identifier, caseData, caseType, securityUtils.getSecurityDTO()));
-        } else {
-            submitResult.setProbateCaseDetails(caseRequest);
-        }
-        return submitResult;
+        assertIdentifierMatchesCase(identifier, caseData, caseType);
+        ValidatorResults validatorResults = validateCase(caseData);
+        return SubmitResult.builder()
+                .probateCaseDetails(isValid(validatorResults) ?  processCase(identifier, caseData) : caseRequest)
+                .validatorResults(validatorResults)
+                .build();
     }
 
-    private Boolean noValidationCaseErrorsFound(SubmitResult submitResult) {
-        if (submitResult.getValidatorResults().isPresent()) {
-            return submitResult.isValid();
-        }
-        return true;
+    private Boolean isValid(ValidatorResults validatorResults) {
+        return validatorResults.getValidationMessages().isEmpty();
     }
 
-    protected abstract ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO);
-
+    protected abstract ProbateCaseDetails processCase(String identifier, CaseData caseData);
 
     protected ProbateCaseDetails findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
@@ -58,16 +54,12 @@ public abstract class AbstractSubmissionsProcessor {
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
-    private void assertIndentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {
+    private void assertIdentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {
         String searchFieldValueInBody = searchFieldFactory.getSearchFieldValuePair(caseType, caseData).getRight();
         Assert.isTrue(searchFieldValueInBody.equals(identifier), "Application id email on path must match case data");
     }
 
-    private void validateCase(CaseData caseData, SubmitResult submitResult) {
-        caseDataValidatorFactory.getValidator(caseData).ifPresent(caseDataValidator -> {
-            submitResult.setValidatorResults(caseDataValidator.validate(caseData));
-        });
+    private ValidatorResults validateCase(CaseData caseData) {
+        return caseDataValidatorFactory.getValidator(caseData).validate(caseData);
     }
-
-
 }

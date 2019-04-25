@@ -1,12 +1,16 @@
-package uk.gov.hmcts.probate.services.submit.validation.validator;
+package uk.gov.hmcts.probate.services.submit.validation;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.probate.model.Relationship;
 import uk.gov.hmcts.reform.probate.model.cases.AliasName;
 import uk.gov.hmcts.reform.probate.model.cases.CollectionMember;
 import uk.gov.hmcts.reform.probate.model.cases.MaritalStatus;
-import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.SpouseNotApplyingReason;
@@ -16,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class IntestacyValidatorTest {
 
     private static final String APPLICANT_EMAIL = "test@test.com";
@@ -23,20 +29,23 @@ public class IntestacyValidatorTest {
     private static final String STATE = "Draft";
     private List<String> errors = new ArrayList<>();
     private GrantOfRepresentationData grantOfRepresentationData;
-    IntestacyValidator intestacyValidator = new IntestacyValidator();
 
     LocalDate afterDate = LocalDate.of(2018, 9, 12);
     LocalDate beforeDate = LocalDate.of(1954, 9, 18);
 
-    private ProbateCaseDetails caseResponse;
+    @Autowired
+    private CaseDataValidatorFactory caseDataValidatorFactory;
+
+    private CaseDataValidator<GrantOfRepresentationData> intestacyValidator;
 
     @Before
     public void setUpTest() {
         grantOfRepresentationData = GrantOfRepresentationCreator.createIntestacyCase();
+        intestacyValidator = caseDataValidatorFactory.getValidator(grantOfRepresentationData);
     }
 
 
-    @org.junit.Test
+    @Test
     public void shouldRaiseErrorIfDeceasedHasOtherNamesAndAliasListIsNull() {
         grantOfRepresentationData.setDeceasedAnyOtherNames(Boolean.TRUE);
         grantOfRepresentationData.setDeceasedAliasNameList(Collections.emptyList());
@@ -45,7 +54,7 @@ public class IntestacyValidatorTest {
     }
 
 
-    @org.junit.Test
+    @Test
     public void shouldNotReturnErrorIfDeceasedDoesNotHaveOtherNamesAndAliasListNotPopulated() {
         grantOfRepresentationData.setDeceasedAnyOtherNames(Boolean.FALSE);
         ValidatorResults validateResults = intestacyValidator.validate(grantOfRepresentationData);
@@ -53,7 +62,7 @@ public class IntestacyValidatorTest {
     }
 
 
-    @org.junit.Test
+    @Test
     public void shouldNotRaiseErrorIfDeceasedHasOtherNamesAndAliasListIsPopulated() {
         CollectionMember<AliasName> alias = new CollectionMember<AliasName>();
         grantOfRepresentationData.setDeceasedAnyOtherNames(Boolean.TRUE);
@@ -61,7 +70,7 @@ public class IntestacyValidatorTest {
         Assertions.assertThat(validateResults.getValidationMessages()).isEmpty();
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationWhenDodIsBeforeDob() {
         grantOfRepresentationData.setDeceasedDateOfBirth(afterDate);
         grantOfRepresentationData.setDeceasedDateOfDeath(beforeDate);
@@ -69,7 +78,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "DeceasedDateOfDeath before DeceasedDateOfBirth");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldNotRaiseErrorWhenDodIsAfterDob() {
 
         grantOfRepresentationData.setDeceasedDateOfBirth(beforeDate);
@@ -78,7 +87,7 @@ public class IntestacyValidatorTest {
         Assertions.assertThat(validateResults.getValidationMessages()).isEmpty();
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationWhenRelationshipToDeceasedIsAdoptedChildAndDeceasedOtherChildrenIsNull() {
         grantOfRepresentationData.setPrimaryApplicantRelationshipToDeceased(Relationship.ADOPTED_CHILD);
         grantOfRepresentationData.setDeceasedSpouseNotApplyingReason(SpouseNotApplyingReason.MENTALLY_INCAPABLE);
@@ -88,7 +97,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "RelationshipToDeceasedIsAdoptedChild and DeceasedOtherChildren is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationWhenRelationshipToDeceasedIsChildAndDeceasedOtherChildrenIsNull() {
         grantOfRepresentationData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
         grantOfRepresentationData.setDeceasedOtherChildren(null);
@@ -96,7 +105,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "RelationshipToDeceasedIsChild and DeceasedOtherChildren is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldNotFailValidationWhenRelationshipToDeceasedIsChildAndDeceasedOtherChildrenIsPopulated() {
         grantOfRepresentationData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);
         grantOfRepresentationData.setDeceasedOtherChildren(Boolean.TRUE);
@@ -104,7 +113,7 @@ public class IntestacyValidatorTest {
         Assertions.assertThat(validateResults.getValidationMessages()).isEmpty();
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationWhenDeceasedMaritalStatusIsDivorcedAndDivorcedInEnglandOrWalesIsNull() {
         grantOfRepresentationData.setDeceasedMartialStatus(MaritalStatus.DIVORCED);
         grantOfRepresentationData.setDeceasedDivorcedInEnglandOrWales(null);
@@ -112,7 +121,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "DeceasedMaritalStatusIsDivorced and DivorcedInEnglandOrWales is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationDeceasedMaritalStatusIsSeparatedAndDivorcedInEnglandOrWalesIsNull() {
         grantOfRepresentationData.setDeceasedMartialStatus(MaritalStatus.JUDICIALLY_SEPARATED);
         grantOfRepresentationData.setDeceasedDivorcedInEnglandOrWales(null);
@@ -121,7 +130,7 @@ public class IntestacyValidatorTest {
 
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationWhenDeceasedHasOtherChildrenAndAllDeceasedChildrenOverEighteenIsNull() {
         grantOfRepresentationData.setDeceasedOtherChildren(Boolean.TRUE);
         grantOfRepresentationData.setChildrenOverEighteenSurvived(null);
@@ -130,7 +139,7 @@ public class IntestacyValidatorTest {
                 "AllDeceasedChildrenOverEighteen is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldNotFailValidationWhenDeceasedHasOtherChildrenAllDeceasedChildrenOverEighteenIsPopulated() {
         grantOfRepresentationData.setDeceasedOtherChildren(Boolean.TRUE);
         grantOfRepresentationData.setChildrenOverEighteenSurvived(Boolean.FALSE);
@@ -138,7 +147,7 @@ public class IntestacyValidatorTest {
         Assertions.assertThat(validateResults.getValidationMessages()).isEmpty();
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailWhenDeceasedHasOtherChildrenAndDeceasedHasChildrenOverEighteenAndChildrenDiedIsNull() {
         grantOfRepresentationData.setDeceasedOtherChildren(Boolean.TRUE);
         grantOfRepresentationData.setChildrenOverEighteenSurvived(Boolean.TRUE);
@@ -147,7 +156,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "ChildrenDied is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailWhenDeceasedHasOtherChildrenAndDeceasedGrandchildrenUnderEighteenIsNull() {
         grantOfRepresentationData.setDeceasedOtherChildren(Boolean.TRUE);
         grantOfRepresentationData.setChildrenOverEighteenSurvived(Boolean.TRUE);
@@ -157,7 +166,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "GrandChildrenSurvivedUnderEighteen is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldFailValidationWhenAssetsOverseasNotPopulatedAndIhtNetValueLessThanOrEqualTo250000() {
         grantOfRepresentationData.setIhtNetValue(250000L);
         grantOfRepresentationData.setDeceasedHasAssetsOutsideUK(null);
@@ -165,7 +174,7 @@ public class IntestacyValidatorTest {
         assertValidationErrorMessage(validateResults, "DeceasedHasAssetsOutsideUK is Null");
     }
 
-    @org.junit.Test
+    @Test
     public void shouldPassValidationWhenAssetsOverseasNotPopulatedAndIhtNetValueMoreThan250000() {
         grantOfRepresentationData.setIhtNetValue(250001L);
         grantOfRepresentationData.setIhtGrossValue(250002L);
@@ -173,7 +182,7 @@ public class IntestacyValidatorTest {
         Assertions.assertThat(validateResults.getValidationMessages()).isEmpty();
     }
 
-    @org.junit.Test
+    @Test
     public void shouldRaiseMultipleConstraintViolations() {
         grantOfRepresentationData.setDeceasedMartialStatus(MaritalStatus.JUDICIALLY_SEPARATED);
         grantOfRepresentationData.setPrimaryApplicantRelationshipToDeceased(Relationship.CHILD);

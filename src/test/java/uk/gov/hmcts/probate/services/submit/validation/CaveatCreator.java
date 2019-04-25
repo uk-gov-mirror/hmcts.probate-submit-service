@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.validation.validator;
+package uk.gov.hmcts.probate.services.submit.validation;
 
 import uk.gov.hmcts.reform.probate.model.cases.Address;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;

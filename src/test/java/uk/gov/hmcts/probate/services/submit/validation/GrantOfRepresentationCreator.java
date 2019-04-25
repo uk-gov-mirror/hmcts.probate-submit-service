@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.validation.validator;
+package uk.gov.hmcts.probate.services.submit.validation;
 
 import com.google.common.collect.Lists;
 import uk.gov.hmcts.reform.probate.model.IhtFormType;

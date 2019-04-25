@@ -2,6 +2,7 @@ package uk.gov.hmcts.probate.services.submit.validation;
 
 
 public class ValidationResult {
+
 	private boolean valid;
 	private String message;
 

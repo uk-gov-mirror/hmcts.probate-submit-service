@@ -65,9 +65,7 @@ public class MailClientTest {
         submissionTimestamp = Calendar.getInstance();
         registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json").get("registry");
         objectMapper = new ObjectMapper();
-
         submitData = objectMapper.createObjectNode();
-//        submitData.set("submitdata", objectMapper.createObjectNode().set("submissionReference", new LongNode(1234)));
     }
 
 

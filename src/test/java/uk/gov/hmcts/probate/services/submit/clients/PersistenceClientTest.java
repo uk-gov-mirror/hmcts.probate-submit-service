@@ -33,23 +33,10 @@ public class PersistenceClientTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Mock
-    private RequestFactory entityBuilder;
-
-    @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
     private PersistenceClient persistenceClient;
-
-    @Test
-    public void updateFormDataSuccessTest() {
-        HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
-        when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
-
-        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
-
-        verify(restTemplate, times(1)).put(endsWith("/emailId"), eq(persistenceReq));
-    }
 
     @Test
     public void loadFormDataByIdSuccessTest() {
@@ -70,15 +57,5 @@ public class PersistenceClientTest {
         Long result = persistenceClient.getNextSequenceNumber("RegistryName");
         verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
         assertEquals(result, mockResponse.getBody());
-    }
-
-
-    @Test(expected = HttpClientErrorException.class)
-    public void shouldThrowUpdateFormDataSuccessTest() {
-        doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST, "{}")).when(restTemplate).put(anyString(), any());
-        HttpEntity<JsonNode> persistenceReq = new HttpEntity<>(new TextNode("requestBody"), new HttpHeaders());
-        when(entityBuilder.createPersistenceRequest(any())).thenReturn(persistenceReq);
-
-        persistenceClient.updateFormData("emailId", Long.parseLong("123456789"), new TextNode("requestBody"));
     }
 }

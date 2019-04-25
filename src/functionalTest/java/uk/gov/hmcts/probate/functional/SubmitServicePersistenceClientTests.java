@@ -25,26 +25,6 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     }
 
     @Test
-    public void saveSubmissionSuccess() {
-        validateSaveSubmissionSuccess();
-    }
-
-    @Test
-    public void saveSubmissionFailure() {
-        validateSaveSubmissionFailure("invalid_id", 400);
-    }
-
-    @Test
-    public void loadSubmissionSuccess() {
-        validateLoadSubmissionSuccess(submissionId);
-    }
-
-    @Test
-    public void loadSubmissionFailure() {
-        validateLoadSubmissionFailure(9999, 404);
-    }
-
-    @Test
     public void loadFormDataByIdSuccess() {
         validateLoadFormDataIdSuccess();
     }
@@ -73,39 +53,6 @@ public class SubmitServicePersistenceClientTests extends IntegrationTestBase {
     public void getNextSequenceNumberFailure() {
         String errorMessage = "Registry not configured: dundee";
         validateSequenceNumberFailure("dundee", 404, errorMessage);
-    }
-
-    private void validateSaveSubmissionSuccess() {
-        SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
-                .body(utils.getJsonFromFile("submitData.json"))
-                .when().get(persistenceServiceUrl + "/submissions/")
-                .then().assertThat().statusCode(200);
-    }
-
-    private void validateSaveSubmissionFailure(String sessionId, int errorCode) {
-        Response response = SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(sessionId))
-                .when().post(persistenceServiceUrl + "/submissions")
-                .thenReturn();
-
-        response.then().assertThat().statusCode(errorCode);
-    }
-
-    private void validateLoadSubmissionSuccess(String submissionId) {
-        SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/submissions/" + submissionId)
-                .then().assertThat().statusCode(200);
-    }
-
-    private void validateLoadSubmissionFailure(long sequenceId, int errorCode) {
-        Response response = SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.getHeaders(SESSION_ID))
-                .when().get(persistenceServiceUrl + "/submissions/" + sequenceId)
-                .thenReturn();
-
-        response.then().assertThat().statusCode(errorCode);
     }
 
     private void validateLoadFormDataIdSuccess() {

@@ -45,19 +45,6 @@ public class PersistenceClient {
     }
 
     @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public void updateFormData(String emailId, long sequenceNumber, JsonNode formData) {
-        ObjectNode persistenceRequestBody = new ObjectMapper().createObjectNode();
-        persistenceRequestBody.set("formdata", formData.get("formdata"));
-        HttpEntity<JsonNode> persistenceRequest = requestFactory.createPersistenceRequest(persistenceRequestBody);
-        try {
-            restTemplate.put(formDataPersistenceUrl + "/" + emailId, persistenceRequest);
-        } catch (HttpClientErrorException e) {
-            logHttpClientErrorException(e);
-            throw e;
-        }
-    }
-
-    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
     public Long getNextSequenceNumber(String registryName) {
         ResponseEntity<Long> response = restTemplate.getForEntity(sequenceNumberPersistenceUrl + "/" + registryName, Long.class);
         return response.getBody();

@@ -78,8 +78,6 @@ public class SubmitService {
 
             updateFormData(formData, registryData);
             caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, ((ObjectNode) formData.getJson())));
-//            persistenceClient.updateFormData(submitData.getApplicantEmailAddress(),
-//                    submissionReference.asLong(), formData.getJson());
         }
         ObjectNode response = createResponse(caseResponseOptional, formData);
         logger.info("Response on submit: {}", response);

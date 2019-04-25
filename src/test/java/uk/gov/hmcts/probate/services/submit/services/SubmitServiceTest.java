@@ -145,7 +145,6 @@ public class SubmitServiceTest {
         assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
         assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
         assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
-        verify(persistenceClient, never()).updateFormData(APPLICANT_EMAIL_ADDRESS, ID, formData.getJson());
         verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
         verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
         verify(coreCaseDataClient, never()).createCase(any());

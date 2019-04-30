@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.validation.validator;
+package uk.gov.hmcts.probate.services.submit.validation.rules;
 
 public final class ValidatorUtils {
 

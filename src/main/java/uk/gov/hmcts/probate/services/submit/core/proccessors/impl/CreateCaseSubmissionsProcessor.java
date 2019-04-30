@@ -39,7 +39,9 @@ public class CreateCaseSubmissionsProcessor extends AbstractSubmissionsProcessor
     }
 
     @Override
-    protected ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO) {
+    protected ProbateCaseDetails processCase(String identifier, CaseData caseData) {
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        CaseType caseType = CaseType.getCaseType(caseData);
         checkDoesCaseExist(identifier, CaseType.getCaseType(caseData), securityDTO);
         log.info("Case not found with case Id: {}", identifier);
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);

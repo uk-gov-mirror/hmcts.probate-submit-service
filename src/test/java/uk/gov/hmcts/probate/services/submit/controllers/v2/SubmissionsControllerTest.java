@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {SubmissionsController.class}, secure = false)
 public class SubmissionsControllerTest {
 
-    private static final String SUBMISSIONS_URL = "/submissions/update";
+    private static final String SUBMISSIONS_URL = "/submissions";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String APPLICATION_CREATED = "ApplicationCreated";
@@ -52,32 +53,52 @@ public class SubmissionsControllerTest {
         caseInfo.setState(APPLICATION_CREATED);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
-        ValidatorResults validatorResults = new ValidatorResults();
-        when(submissionsService.updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+        when(submissionsService.updateDraftToCase(eq(EMAIL_ADDRESS), eq(CaseType.GRANT_OF_REPRESENTATION))).thenReturn(new SubmitResult(caseResponse, new ValidatorResults(Lists.newArrayList())));
 
-        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+        mockMvc.perform(put(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS + "?caseType=GRANT_OF_REPRESENTATION")
                 .content(objectMapper.writeValueAsString(caseRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(submissionsService).updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest));
+        verify(submissionsService).updateDraftToCase(eq(EMAIL_ADDRESS), eq(CaseType.GRANT_OF_REPRESENTATION));
     }
 
     @Test
-    public void shouldReturn400OnSubmitOfInvalidJson() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentationInvalid.json");
+    public void shouldCreateCase() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(APPLICATION_CREATED);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
-        MvcResult result  = mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+        ValidatorResults validatorResults = new ValidatorResults(Lists.newArrayList());
+        when(submissionsService.createCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+
+        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
                 .content(objectMapper.writeValueAsString(caseRequest))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-        String content = result.getResponse().getContentAsString();
-        System.out.println(content);
+                .andExpect(status().isOk());
+        verify(submissionsService).createCase(eq(EMAIL_ADDRESS), eq(caseRequest));
+    }
+
+    @Test
+    public void shouldThrowBadRequestOnCreateCaseWithInvalidPayload() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(APPLICATION_CREATED);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
+        ValidatorResults validatorResults = new ValidatorResults(Lists.newArrayList());
+        validatorResults.getValidationMessages().add("Error");
+        when(submissionsService.createCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+
+        mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
+                .content(objectMapper.writeValueAsString(caseRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        verify(submissionsService).createCase(eq(EMAIL_ADDRESS), eq(caseRequest));
     }
 
 }

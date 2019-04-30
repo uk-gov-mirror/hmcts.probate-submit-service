@@ -11,7 +11,7 @@ public class ValidationRule<C extends CaseData> implements Validation<C> {
 
 
     public static <C extends CaseData> ValidationRule<C> from(Predicate<C> predicate, String onErrorMessage) {
-        return new ValidationRule<C>(predicate, onErrorMessage);
+        return new ValidationRule<>(predicate, onErrorMessage);
     }
 
     private ValidationRule(Predicate<C> predicate, String onErrorMessage) {

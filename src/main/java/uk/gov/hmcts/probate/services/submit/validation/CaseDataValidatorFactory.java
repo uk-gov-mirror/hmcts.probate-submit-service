@@ -3,33 +3,23 @@ package uk.gov.hmcts.probate.services.submit.validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.probate.services.submit.validation.validator.CaseDataValidator;
-import uk.gov.hmcts.probate.services.submit.validation.validator.CaveatValidator;
-import uk.gov.hmcts.probate.services.submit.validation.validator.IntestacyValidator;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
-import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
-import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CaseDataValidatorFactory {
 
-    private final IntestacyValidator intestacyValidator;
-    private final CaveatValidator caveatValidator;
+    private final Map<CaseType, Function<CaseData, CaseDataValidator<? extends CaseData>>> validatorMap;
 
-    public Optional<CaseDataValidator> getValidator(CaseData caseData) {
-        Optional<CaseDataValidator> optionalCaseDataValidator = Optional.empty();
-        if (CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)) {
-            GrantOfRepresentationData gop = (GrantOfRepresentationData) caseData;
-            if (gop.getGrantType().equals(GrantType.INTESTACY))
-                optionalCaseDataValidator = Optional.of(intestacyValidator);
-        } else if (CaseType.getCaseType(caseData).equals(CaseType.CAVEAT)) {
-            optionalCaseDataValidator = Optional.of(caveatValidator);
-        }
-        return optionalCaseDataValidator;
+    public CaseDataValidator getValidator(CaseData caseData) {
+        CaseType caseType = CaseType.getCaseType(caseData);
+        return Optional.ofNullable(validatorMap.get(caseType)).orElseThrow(IllegalArgumentException::new)
+                .apply(caseData);
     }
 }

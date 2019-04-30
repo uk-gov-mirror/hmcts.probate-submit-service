@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,14 +14,15 @@ import uk.gov.hmcts.probate.services.submit.core.proccessors.impl.UpdateCaseToDr
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidator;
 import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidatorFactory;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
-import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
+import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
@@ -67,6 +69,9 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
     @Mock
     private CaseDataValidatorFactory caseDataValidatorFactory;
 
+    @Mock
+    private CaseDataValidator caseDataValidator;
+
     private UpdateCaseToDraftSubmissionsProcessor updateCaseToDraftSubmissionsProcessor;
 
     private ProbateCaseDetails caseRequest;
@@ -109,6 +114,11 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
                 .updateDraftEventId(GOP_UPDATE_DRAFT)
                 .updateCaseApplicationEventId(GOP_UPDATE_APPLICATION)
                 .build());
+
+        when(caseDataValidatorFactory.getValidator(caseData)).thenReturn(caseDataValidator);
+        when(caseDataValidator.validate(caseData)).thenReturn(ValidatorResults.builder()
+                .validationMessages(Lists.newArrayList())
+                .build());
     }
 
     @Test(expected = CaseNotFoundException.class)
@@ -117,7 +127,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.empty());
 
-        updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, caseRequest);
+        updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
     }
 
@@ -130,7 +140,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
                 eq(GOP_CREATE_APPLICATION), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
-        SubmitResult submitResult = updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, caseRequest);
+        SubmitResult submitResult = updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
         caseResponse = submitResult.getProbateCaseDetails();
         assertThat(caseResponse.getCaseData(), is(caseData));
         assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));
@@ -150,7 +160,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
                 eq(GOP_UPDATE_APPLICATION), eq(securityDTO)))
                 .thenReturn(caseResponse);
 
-        SubmitResult submitResult = updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, caseRequest);
+        SubmitResult submitResult = updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
         caseResponse = submitResult.getProbateCaseDetails();
         assertThat(caseResponse.getCaseData(), is(caseData));
         assertThat(caseResponse.getCaseInfo(), is(equalTo(caseInfo)));
@@ -171,7 +181,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.of(caseResponse));
 
-        updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, caseRequest);
+        updateCaseToDraftSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
 
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
     }

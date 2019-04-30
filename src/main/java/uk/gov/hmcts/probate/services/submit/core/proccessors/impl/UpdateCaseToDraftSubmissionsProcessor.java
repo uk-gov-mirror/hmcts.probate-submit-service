@@ -41,8 +41,10 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
     }
 
     @Override
-    protected ProbateCaseDetails processCase(String identifier, CaseData caseData, CaseType caseType, SecurityDTO securityDTO) {
-        ProbateCaseDetails caseResponse = findCase(identifier, CaseType.getCaseType(caseData), securityDTO);
+    protected ProbateCaseDetails processCase(String identifier, CaseData caseData) {
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        CaseType caseType = CaseType.getCaseType(caseData);
+        ProbateCaseDetails caseResponse = findCase(identifier, caseType, securityDTO);
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         CaseState state = CaseState.getState(caseResponse.getCaseInfo().getState());
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);

@@ -1,32 +1,34 @@
-package uk.gov.hmcts.probate.services.submit.validation.validator;
+package uk.gov.hmcts.probate.services.submit.validation;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class CaveatValidatorTest {
 
-    private List<String> errors = new ArrayList<>();
     private CaveatData caveatData;
-    CaveatValidator caveatValidator;
+    private CaseDataValidator<CaveatData> caveatValidator;
 
     LocalDate afterDate = LocalDate.of(2018, 9, 12);
     LocalDate beforeDate = LocalDate.of(1954, 9, 18);
 
-    private ProbateCaseDetails caseResponse;
+    @Autowired
+    private CaseDataValidatorFactory caseDataValidatorFactory;
 
     @Before
     public void setUpTest() {
-
-        caveatValidator = new CaveatValidator();
         caveatData = CaveatCreator.createCaveatCase();
+        caveatValidator = caseDataValidatorFactory.getValidator(caveatData);
     }
 
 

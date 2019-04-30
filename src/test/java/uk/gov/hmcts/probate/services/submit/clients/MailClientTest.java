@@ -75,10 +75,10 @@ public class MailClientTest {
         when(mailMessageBuilderMock.buildMessage(any(JsonNode.class), any(JsonNode.class), any(Properties.class), any(Calendar.class))).thenReturn(mimeMessageMock);
         when(mimeMessageMock.getHeader(anyString(), any())).thenReturn("1234");
 
-        String response = mailClient.execute(submitData, registryData,
+        Boolean response = mailClient.execute(submitData, registryData,
                 submissionTimestamp);
 
-        assertThat(response, is(""));
+        assertThat(response, is(true));
     }
 
     @Test(expected = ParsingSubmitException.class)

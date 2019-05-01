@@ -219,34 +219,20 @@
         <gav regex="true">^io\.github\.openfeign\.form:feign-form-spring:.*$</gav>
         <cve>CVE-2018-1272</cve>
     </suppress>
-
-    <suppress>
+ 
+    <suppress>   
         <notes><![CDATA[
-   file name: tomcat-embed-websocket-9.0.12.jar
-   ]]></notes>
-        <gav regex="true">^org\.apache\.tomcat:tomcat-embed-websocket:.*$</gav>
+tomcat-embed-websocket-9.0.12.jar (cpe:/a:apache:tomcat:9.0.12, org.apache.tomcat.embed:tomcat-embed-websocket:9.0.12, cpe:/a:apache_tomcat:apache_tomcat:9.0.12, cpe:/a:apache_software_foundation:tomcat:9.0.12) : CVE-2019-0199
+tomcat-embed-core-9.0.12.jar (cpe:/a:apache:tomcat:9.0.12, cpe:/a:apache_tomcat:apache_tomcat:9.0.12, cpe:/a:apache_software_foundation:tomcat:9.0.12, org.apache.tomcat.embed:tomcat-embed-core:9.0.12) : CVE-2019-0199
+        ]]></notes>
         <cve>CVE-2019-0199</cve>
-    </suppress>
-    <suppress>
+	</suppress>    
+    <suppress>   
         <notes><![CDATA[
-   file name: tomcat-embed-websocket-9.0.12.jar
-   ]]></notes>
-        <gav regex="true">^org\.apache\.tomcat:tomcat-embed-websocket:.*$</gav>
+tomcat-embed-websocket-9.0.12.jar (cpe:/a:apache:tomcat:9.0.12, org.apache.tomcat.embed:tomcat-embed-websocket:9.0.12, cpe:/a:apache_tomcat:apache_tomcat:9.0.12, cpe:/a:apache_software_foundation:tomcat:9.0.12) : CVE-2019-0232
+tomcat-embed-core-9.0.12.jar (cpe:/a:apache:tomcat:9.0.12, cpe:/a:apache_tomcat:apache_tomcat:9.0.12, cpe:/a:apache_software_foundation:tomcat:9.0.12, org.apache.tomcat.embed:tomcat-embed-core:9.0.12) : CVE-2019-0232
+        ]]></notes>
         <cve>CVE-2019-0232</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: tomcat-embed-core-9.0.12.jar
-   ]]></notes>
-        <gav regex="true">^org\.apache\.tomcat:tomcat-embed-core:.*$</gav>
-        <cve>CVE-2019-0199</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: tomcat-embed-core-9.0.12.jar
-   ]]></notes>
-        <gav regex="true">^org\.apache\.tomcat:tomcat-embed-core:.*$</gav>
-        <cve>CVE-2019-0232</cve>
-    </suppress>
+	</suppress>  
 
 </suppressions>

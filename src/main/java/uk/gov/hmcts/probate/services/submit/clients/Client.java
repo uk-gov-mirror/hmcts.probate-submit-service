@@ -6,5 +6,5 @@ import java.util.Calendar;
 
 @FunctionalInterface
 interface Client<T, R> {
-    R execute(T t, JsonNode sequenceNumber, Calendar submissionTimestamp);
+    Boolean execute(T t, JsonNode sequenceNumber, Calendar submissionTimestamp);
 }

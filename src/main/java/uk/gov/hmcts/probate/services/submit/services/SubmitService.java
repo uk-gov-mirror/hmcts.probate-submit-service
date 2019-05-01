@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.probate.services.submit.clients.CcdCreateCaseParams;
 import uk.gov.hmcts.probate.services.submit.clients.CcdCreateCaseParams.Builder;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
@@ -19,7 +18,6 @@ import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
 import uk.gov.hmcts.probate.services.submit.model.FormData;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
-import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 
 import java.util.Calendar;
@@ -63,7 +61,6 @@ public class SubmitService {
 
         if (!caseResponseOptional.isPresent()) {
             logger.info(append("tags", "Analytics"), generateMessage(submitData));
-
             JsonNode registryData = sequenceService.nextRegistry();
 
             Calendar submissionTimestamp = Calendar.getInstance();
@@ -75,13 +72,14 @@ public class SubmitService {
                     .withUserId(userId)
                     .build();
             caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
+            caseResponseOptional.ifPresent(ccdCase -> addDetailsToFormData(ccdCase, registryData, formData));
 
-            updateFormData(formData, registryData);
-            caseResponseOptional.ifPresent(ccdCase -> addCaseDetailsToFormData(ccdCase, ((ObjectNode) formData.getJson())));
+            ObjectNode response = createResponse(caseResponseOptional, formData);
+            logger.info("Response on submit: {}", response);
+            return response;
+        } else {
+            return new TextNode(DUPLICATE_SUBMISSION);
         }
-        ObjectNode response = createResponse(caseResponseOptional, formData);
-        logger.info("Response on submit: {}", response);
-        return response;
     }
 
     private ObjectNode createResponse(Optional<CcdCaseResponse> caseResponseOptional, FormData formData) {
@@ -89,11 +87,6 @@ public class SubmitService {
         response.set(REGISTRY_FIELD_NAME, formData.getRegistry());
         setCCDItemsOnResponse(caseResponseOptional, response);
         return response;
-    }
-
-    private void updateFormData(FormData formData, JsonNode registryData) {
-        ((ObjectNode) formData.getJson().get("formdata")).set(REGISTRY_FIELD_NAME, registryData.get(REGISTRY_FIELD_NAME));
-        ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
     }
 
     private void setCCDItemsOnResponse(Optional<CcdCaseResponse> caseResponseOptional, ObjectNode response) {
@@ -119,10 +112,14 @@ public class SubmitService {
                 + ", number of executors: " + submitData.getNoOfExecutors();
     }
 
-    private void addCaseDetailsToFormData(CcdCaseResponse ccdCaseResponse, ObjectNode response) {
+    private void addDetailsToFormData(CcdCaseResponse ccdCaseResponse, JsonNode registryData, FormData formData) {
+        ((ObjectNode) formData.getJson().get("formdata")).set(REGISTRY_FIELD_NAME, registryData.get(REGISTRY_FIELD_NAME));
+        ((ObjectNode) formData.getJson()).set("processState", new TextNode("SUBMIT_SERVICE_SUBMITTED_TO_CCD"));
+
         ObjectNode ccdCase = objectMapper.createObjectNode();
         ccdCase.set("id", new LongNode(ccdCaseResponse.getCaseId()));
         ccdCase.set("state", new TextNode(ccdCaseResponse.getState()));
+        ObjectNode response = (ObjectNode) formData.getJson();
         response.set("ccdCase", ccdCase);
         logger.info("submitted case - caseId: {}, caseState: {}", ccdCaseResponse.getCaseId(), ccdCaseResponse.getState());
     }

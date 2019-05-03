@@ -2,7 +2,6 @@ package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
-import au.com.dius.pact.provider.junit.loader.PactBroker;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
 import au.com.dius.pact.provider.junit.target.Target;
 import au.com.dius.pact.provider.junit.target.TestTarget;
@@ -21,6 +20,10 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
+import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
+import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -71,7 +74,7 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
     }
 
     @State({"provider PUTS submission with success",
-            "provider PUTS submission with success"})
+            "provider PUTSgit  submission with success"})
     public void toPostSubmissionCaseDetailsWithSuccess() throws IOException, JSONException {
 
         caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_full_submission.json");
@@ -85,16 +88,20 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     }
 
-    @State({"provider PUTS submission with validation errors",
-            "provider PUTS submission with validation errors"})
-    public void toPostSubmissionCaseDetailsWithValidationErrors() throws IOException, JSONException {
+    @State({"provider PUTS submission with errors",
+            "provider PUTS submission with errors"})
+    public void verifyExecutePostSubmissionWithClientErrors() {
 
-        caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_invalid.json");
+        ApiClientError apiClientError = new ApiClientError();
+        apiClientError.setException("uk.gov.hmcts.ccd.endpoint.exceptions.ResourceNotFoundException");
+        apiClientError.setStatus(400);
+        apiClientError.setError("Not Found");
+        apiClientError.setPath("/citizens/36/jurisdictions/PROBATE/case-types/GrantOfRepresentation/cases");
+
+        ErrorResponse errorResponse = new ApiClientErrorResponse(apiClientError);
+        ApiClientException apiClientException = new ApiClientException(400, errorResponse);
+
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
-                .thenReturn(Optional.of(caseResponse));
-        when(coreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
-                eq(EventId.GOP_CREATE_APPLICATION), eq(securityDTO)))
-                .thenReturn(caseResponse);
+                .thenThrow(apiClientException);
     }
-
 }

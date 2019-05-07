@@ -136,15 +136,21 @@ public class SubmitServiceTest {
     }
 
     @Test
-    public void shouldReturnDuplicateSubmissionReferenceWhenCaseAlreadyExists() {
+    public void shouldSubmitSuccessfullyWhenCaseAlreadyExists() {
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
-        assertThat(submitResponse.asText(), is("DUPLICATE_SUBMISSION"));
+        assertThat(submitResponse.at("/caseId").longValue(), is(equalTo(CASE_ID)));
+        assertThat(submitResponse.at("/caseState").asText(), is(equalTo(CASE_STATE)));
+        assertThat(submitResponse.at("/registry"), is(equalTo(registryData.get("registry"))));
+        verify(persistenceClient, times(1)).loadFormDataById(APPLICANT_EMAIL_ADDRESS);
+        verify(coreCaseDataClient, times(1)).getCase(submitData, USER_ID, AUTHORIZATION_TOKEN);
+        verify(coreCaseDataClient, never()).createCase(any());
+        verify(coreCaseDataClient, never()).saveCase(any(), any());
+        verify(sequenceService, never()).nextRegistry();
     }
-
     @Test
     public void shouldSubmitSuccessfullyAfterCreatingCase() {
         JsonNode submitResponse = submitService.submit(submitData, USER_ID, AUTHORIZATION_TOKEN);

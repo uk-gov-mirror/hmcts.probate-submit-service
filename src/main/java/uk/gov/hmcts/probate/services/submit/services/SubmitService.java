@@ -36,7 +36,6 @@ public class SubmitService {
     private static final String CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID = "createCasePaymentFailedMultiple";
     private static final String CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID = "createCasePaymentSuccess";
     private static final String CASE_PAYMENT_FAILED_STATE = "CasePaymentFailed";
-    private static final String DUPLICATE_SUBMISSION = "DUPLICATE_SUBMISSION";
     private MailClient mailClient;
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
@@ -58,7 +57,6 @@ public class SubmitService {
     public JsonNode submit(SubmitData submitData, String userId, String authorization) {
         Optional<CcdCaseResponse> caseResponseOptional = getCCDCase(submitData, userId, authorization);
         FormData formData = persistenceClient.loadFormDataById(submitData.getApplicantEmailAddress());
-
         if (!caseResponseOptional.isPresent()) {
             logger.info(append("tags", "Analytics"), generateMessage(submitData));
             JsonNode registryData = sequenceService.nextRegistry();
@@ -73,13 +71,10 @@ public class SubmitService {
                     .build();
             caseResponseOptional = submitCcdCase(ccdCreateCaseParams);
             caseResponseOptional.ifPresent(ccdCase -> addDetailsToFormData(ccdCase, registryData, formData));
-
-            ObjectNode response = createResponse(caseResponseOptional, formData);
-            logger.info("Response on submit: {}", response);
-            return response;
-        } else {
-            return new TextNode(DUPLICATE_SUBMISSION);
         }
+        ObjectNode response = createResponse(caseResponseOptional, formData);
+        logger.info("Response on submit: {}", response);
+        return response;
     }
 
     private ObjectNode createResponse(Optional<CcdCaseResponse> caseResponseOptional, FormData formData) {

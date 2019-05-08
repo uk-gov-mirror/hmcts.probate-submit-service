@@ -317,9 +317,7 @@ public class CoreCaseDataMapper {
             String executorEmail = executor.get(email).asText();
             value.set(applyingExecutorEmail, new TextNode(executorEmail.trim()));
             JsonNode executorAddress = executor.get(address);
-            ObjectNode ccdExecutorAddressObject = mapper.createObjectNode();
-            ccdExecutorAddressObject.set("AddressLine1", executorAddress);
-            value.set(applyingExecutorAddress, ccdExecutorAddressObject);
+            value.set(applyingExecutorAddress, executorAddress);
         } else {
             value.set(notApplyingExecutorName, new TextNode(executorName.trim()));
             String reason = executor.get(notApplyingKey).asText();

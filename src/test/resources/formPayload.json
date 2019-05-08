@@ -155,8 +155,11 @@
         "hasOtherName": false,
         "email": "hello@hotmail.co.uk",
         "mobile": "11111111111",
-        "address": "exec_6_address\r\n",
-        "freeTextAddress": "exec_6_address\r\n",
+        "address": {
+          "addressLine1": "exec_6_address",
+          "postTown": "town",
+          "postCode": "postCode"
+        },
         "inviteId": {},
         "emailSent": true
       },
@@ -169,8 +172,11 @@
         "otherReason": "nickname",
         "email": "hi@hotmail.co.uk",
         "mobile": "2222222222",
-        "address": "exec_7_address\r\n",
-        "freeTextAddress": "exec_7_address\r\n",
+        "address": {
+          "addressLine1": "exec_7_address",
+          "postTown": "town",
+          "postCode": "postCode"
+        },
         "inviteId": {},
         "emailSent": true
       }

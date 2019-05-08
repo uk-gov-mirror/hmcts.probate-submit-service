@@ -3,7 +3,9 @@
     "value": {
       "applyingExecutorName": "Sixth Executor Name",
       "applyingExecutorAddress": {
-        "AddressLine1": "exec_6_address\r\n"
+        "addressLine1": "exec_6_address",
+        "postCode": "postCode",
+        "postTown": "town"
       },
       "applyingExecutorPhoneNumber": "11111111111",
       "applyingExecutorEmail": "hello@hotmail.co.uk"
@@ -13,7 +15,9 @@
     "value": {
       "applyingExecutorName": "exec_7_new_name",
       "applyingExecutorAddress": {
-        "AddressLine1": "exec_7_address\r\n"
+        "addressLine1": "exec_7_address",
+        "postCode": "postCode",
+        "postTown": "town"
       },
       "applyingExecutorPhoneNumber": "2222222222",
       "applyingExecutorEmail": "hi@hotmail.co.uk",

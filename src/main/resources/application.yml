@@ -68,6 +68,8 @@
       url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
       enabled: ${USE_CCD:true}
 
+  payment.api.url: http://localhost:8383
+
   auth.provider.service.client:
     baseUrl: http://localhost:4502
     microservice: 'probate_backend'

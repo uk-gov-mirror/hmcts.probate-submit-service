@@ -31,6 +31,7 @@ import static uk.gov.hmcts.reform.probate.model.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.INITIATED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.CASE_PAYMENT_FAILED;
+import static uk.gov.hmcts.reform.probate.model.cases.CaseState.DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.PA_APP_CREATED;
 
 @Slf4j
@@ -40,6 +41,7 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private static final Map<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>> PAYMENT_EVENT_MAP =
             ImmutableMap.<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>>builder()
+                    .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
                     .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
                     .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
                     .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getPaymentFailedEventId)
@@ -72,9 +74,9 @@ public class PaymentServiceImpl implements PaymentsService {
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }
 
-    private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
+    private ProbateCaseDetails findCase(String correlationId, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
-                findCase(applicantEmail, caseType, securityDTO);
+                findCase(correlationId, caseType, securityDTO);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 

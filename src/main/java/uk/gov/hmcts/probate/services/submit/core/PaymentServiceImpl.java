@@ -62,6 +62,21 @@ public class PaymentServiceImpl implements PaymentsService {
         ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDTO);
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
+        return updateCase(caseId, paymentUpdateRequest, securityDTO, caseType, caseResponse);
+    }
+
+    @Override
+    public ProbateCaseDetails updatePaymentByCaseId(String caseId, ProbatePaymentDetails paymentUpdateRequest) {
+        log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        CaseType caseType = paymentUpdateRequest.getCaseType();
+        ProbateCaseDetails caseResponse = findCaseById(caseId, caseType, securityDTO);
+        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
+        return updateCase(caseId, paymentUpdateRequest, securityDTO, caseType, caseResponse);
+    }
+
+    private ProbateCaseDetails updateCase(String caseId, ProbatePaymentDetails paymentUpdateRequest,
+                                          SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse) {
         CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
         CasePayment payment = paymentUpdateRequest.getPayment();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
@@ -73,6 +88,12 @@ public class PaymentServiceImpl implements PaymentsService {
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
                 findCase(applicantEmail, caseType, securityDTO);
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
+    }
+
+    private ProbateCaseDetails findCaseById(String caseId, CaseType caseType, SecurityDTO securityDTO) {
+        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
+                findCaseById(caseId, caseType, securityDTO);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 

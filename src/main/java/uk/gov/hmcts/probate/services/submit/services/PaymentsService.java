@@ -6,4 +6,6 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 public interface PaymentsService {
 
     ProbateCaseDetails addPaymentToCase(String searchField, ProbatePaymentDetails probatePaymentDetails);
+
+    ProbateCaseDetails updatePaymentByCaseId(String caseId, ProbatePaymentDetails paymentUpdateRequest);
 }

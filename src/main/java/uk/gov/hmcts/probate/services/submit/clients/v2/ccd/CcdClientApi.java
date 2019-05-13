@@ -116,6 +116,22 @@ public class CcdClientApi implements CoreCaseDataService {
         return caseDetails.stream().findFirst().map(this::createCaseResponse);
     }
 
+    @Override
+    public Optional<ProbateCaseDetails> findCaseById(String caseId, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        CaseDetails caseDetails = coreCaseDataApi.readForCitizen(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                caseId);
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        return Optional.of(createCaseResponse(caseDetails));
+    }
+
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());

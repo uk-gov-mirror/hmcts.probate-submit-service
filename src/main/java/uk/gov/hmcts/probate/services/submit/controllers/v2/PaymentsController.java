@@ -45,4 +45,13 @@ public class PaymentsController {
         log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
         return new ResponseEntity(paymentsService.addPaymentToCase(applicationId.toLowerCase(), probatePaymentDetails), OK);
     }
+
+    @PostMapping(path = "/ccd-case-payments/{caseId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> updatePaymentByCaseId(@PathVariable("caseId") String caseId,
+                                                                    @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
+        log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
+        return new ResponseEntity(paymentsService.updatePaymentByCaseId(caseId, probatePaymentDetails), OK);
+    }
 }

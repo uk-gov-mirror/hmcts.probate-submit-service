@@ -14,4 +14,5 @@ java:
   configmap:
     SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","email":"test.probate.inbox@gmail.com","id":0,"name":"ctsc"}]}'
 
-
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}

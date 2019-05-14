@@ -123,7 +123,6 @@
     "applicantEmail":"Z0z2xbPhdNEO7k59Mj3zlkvADO0qEZKU",
     "payloadVersion":"3.0.0",
     "paymentPending":"false",
-    "creatingPayment":"false",
-    "submissionReference":17
+    "creatingPayment":"false"
   }
 }

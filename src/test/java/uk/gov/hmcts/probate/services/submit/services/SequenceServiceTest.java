@@ -63,7 +63,7 @@ public class SequenceServiceTest {
         registry.setEmail("oxford@email.com");
         registry.setAddress("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
-        JsonNode result = sequenceService.populateRegistrySubmitData(SUBMISSION_REFERENCE, registry);
+        JsonNode result = sequenceService.populateRegistrySubmitData(registry);
         assertEquals(result.toString(), registryData.toString());
     }
 
@@ -79,27 +79,7 @@ public class SequenceServiceTest {
         when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
-        JsonNode response = sequenceService.populateRegistrySubmitData(SUBMISSION_REFERENCE, mockRegistry);
-        assertEquals(response.toString(), registryData.toString());
-    }
-
-    @Test
-    public void populateRegistryResubmitDataNewApplication() throws IOException {
-        JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
-        JsonNode formData = TestUtils.getJsonNodeFromFile("formData.json");
-        JsonNode response = sequenceService.populateRegistryResubmitData(SUBMISSION_REFERENCE, formData);
-        assertEquals(response.toString(), registryData.toString());
-    }
-
-    @Test
-    public void populateRegistryResubmitDataOldApplication() throws IOException {
-        Properties messageProperties = new Properties();
-        messageProperties.put("recipient", "oxford@email.com");
-        JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataResubmitOldApplication.json");
-        JsonNode formData = TestUtils.getJsonNodeFromFile("formDataOldApplication.json");
-        when(mailSender.getJavaMailProperties()).thenReturn(messageProperties);
-
-        JsonNode response = sequenceService.populateRegistryResubmitData(SUBMISSION_REFERENCE, formData);
+        JsonNode response = sequenceService.populateRegistrySubmitData(mockRegistry);
         assertEquals(response.toString(), registryData.toString());
     }
 

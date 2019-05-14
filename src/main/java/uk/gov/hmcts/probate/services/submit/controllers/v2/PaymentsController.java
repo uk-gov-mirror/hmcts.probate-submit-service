@@ -51,7 +51,6 @@ public class PaymentsController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> updatePaymentByCaseId(@PathVariable("caseId") String caseId,
                                                                     @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
-        log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
         return new ResponseEntity(paymentsService.updatePaymentByCaseId(caseId, probatePaymentDetails), OK);
     }
 }

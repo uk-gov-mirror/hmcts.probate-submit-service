@@ -89,42 +89,42 @@ public class CcdClientApiTest {
         when(searchFieldFactory.getSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
         securityDTO = SecurityDTO.builder()
-                .authorisation(AUTHORIZATION)
-                .serviceAuthorisation(SERVICE_AUTHORIZATION)
-                .userId(USER_ID)
-                .build();
+            .authorisation(AUTHORIZATION)
+            .serviceAuthorisation(SERVICE_AUTHORIZATION)
+            .userId(USER_ID)
+            .build();
 
         caseData = new GrantOfRepresentationData();
         startEventResponse = StartEventResponse.builder()
-                .token(TOKEN)
-                .build();
+            .token(TOKEN)
+            .build();
 
         caseDetails = CaseDetails.builder()
-                .id(CASE_ID)
-                .state(STATE)
-                .caseTypeId(GRANT_OF_REPRESENTATION.getName())
-                .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
-                        "caseType", GrantType.INTESTACY))
-                .build();
+            .id(CASE_ID)
+            .state(STATE)
+            .caseTypeId(GRANT_OF_REPRESENTATION.getName())
+            .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
+                "caseType", GrantType.INTESTACY))
+            .build();
 
         caseDataContent = CaseDataContent.builder()
-                .eventToken(TOKEN)
-                .event(Event.builder()
-                        .id(CREATE_DRAFT.getName())
-                        .description("Probate application")
-                        .summary("Probate application")
-                        .build())
-                .data(caseData)
-                .build();
+            .eventToken(TOKEN)
+            .event(Event.builder()
+                .id(CREATE_DRAFT.getName())
+                .description("Probate application")
+                .summary("Probate application")
+                .build())
+            .data(caseData)
+            .build();
     }
 
     @Test
     public void shouldCreateCase() {
         when(mockCoreCaseDataApi.startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
-                GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName())).thenReturn(startEventResponse);
+            GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName())).thenReturn(startEventResponse);
 
         when(mockCoreCaseDataApi.submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
         ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, CREATE_DRAFT, securityDTO);
 
@@ -132,9 +132,9 @@ public class CcdClientApiTest {
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
         assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
         verify(mockCoreCaseDataApi, times(1)).startForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
-                GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
+            GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
         verify(mockCoreCaseDataApi, times(1)).submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent));
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent));
     }
 
     @Test
@@ -142,10 +142,10 @@ public class CcdClientApiTest {
         caseDataContent.getEvent().setId(UPDATE_DRAFT.getName());
 
         when(mockCoreCaseDataApi.startEventForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
-                GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName())).thenReturn(startEventResponse);
+            GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName())).thenReturn(startEventResponse);
 
         when(mockCoreCaseDataApi.submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
         ProbateCaseDetails caseResponse = ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDTO);
 
@@ -153,16 +153,16 @@ public class CcdClientApiTest {
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
         assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
         verify(mockCoreCaseDataApi, times(1)).startEventForCitizen(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
-                GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName());
+            GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName());
         verify(mockCoreCaseDataApi, times(1)).submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent));
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent));
     }
 
     @Test
     public void shouldFindCase() {
         Map<String, String> queryMap = ImmutableMap.of(EMAIL_QUERY_PARAM, APPLICANT_EMAIL);
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(Lists.newArrayList(caseDetails));
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(Lists.newArrayList(caseDetails));
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
 
@@ -171,14 +171,28 @@ public class CcdClientApiTest {
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
         assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
         verify(mockCoreCaseDataApi, times(1)).searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap));
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap));
+    }
+
+    @Test
+    public void shouldFindCaseById() {
+        when(mockCoreCaseDataApi.getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString())))
+            .thenReturn(caseDetails);
+
+        Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseById(CASE_ID.toString(), securityDTO);
+
+        ProbateCaseDetails caseResponse = optionalCaseResponse.get();
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        verify(mockCoreCaseDataApi, times(1)).getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString()));
     }
 
     @Test
     public void shouldReturnEmptyOptionalWhenReturningNullOnSearch() {
         Map<String, String> queryMap = ImmutableMap.of(EMAIL_QUERY_PARAM, APPLICANT_EMAIL);
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(null);
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(null);
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
 
@@ -192,7 +206,7 @@ public class CcdClientApiTest {
 
         Map<String, String> queryMap = ImmutableMap.of(EMAIL_QUERY_PARAM, APPLICANT_EMAIL);
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(Lists.newArrayList(caseDetails, caseDetails));
+            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(Lists.newArrayList(caseDetails, caseDetails));
 
         ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
     }

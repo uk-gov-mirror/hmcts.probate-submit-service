@@ -12,7 +12,7 @@ public interface CoreCaseDataService {
 
     Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO);
 
-    Optional<ProbateCaseDetails> findCaseById(String caseId, CaseType caseType, SecurityDTO securityDTO);
+    Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDTO securityDTO);
 
     ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId, SecurityDTO securityDTO);
 

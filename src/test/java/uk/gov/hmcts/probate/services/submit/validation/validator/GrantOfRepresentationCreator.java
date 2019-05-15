@@ -75,7 +75,6 @@ public class GrantOfRepresentationCreator {
         grantOfRepresentationData.setIhtReferenceNumber("GOT123456");
 
         Declaration declaration = new Declaration();
-        declaration.setDeclarationCheckbox(true);
         grantOfRepresentationData.setDeclaration(declaration);
 
         grantOfRepresentationData.setExtraCopiesOfGrant(5L);

@@ -48,14 +48,4 @@ public class PersistenceClientTest {
         verify(restTemplate, times(1)).getForEntity(endsWith("/emailId"), eq(JsonNode.class));
         assertEquals(actualResponse.getJson(), mockResponse.getBody());
     }
-
-    @Test
-    public void getNextSequenceNumber() {
-        ResponseEntity<Long> mockResponse = new ResponseEntity<>(1234l, HttpStatus.CREATED);
-        doReturn(mockResponse).when(restTemplate).getForEntity(endsWith("/RegistryName"), eq(Long.class));
-
-        Long result = persistenceClient.getNextSequenceNumber("RegistryName");
-        verify(restTemplate, times(1)).getForEntity(endsWith("/RegistryName"), eq(Long.class));
-        assertEquals(result, mockResponse.getBody());
-    }
 }

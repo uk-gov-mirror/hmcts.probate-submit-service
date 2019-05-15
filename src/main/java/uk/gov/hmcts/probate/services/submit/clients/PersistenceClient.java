@@ -26,9 +26,6 @@ public class PersistenceClient {
     @Value("${services.persistence.formdata.url}")
     private String formDataPersistenceUrl;
 
-    @Value("${services.persistence.sequenceNumber.url}")
-    private String sequenceNumberPersistenceUrl;
-
     private RestTemplate restTemplate;
     private RequestFactory requestFactory;
 
@@ -42,12 +39,6 @@ public class PersistenceClient {
     public FormData loadFormDataById(String emailId) {
         HttpEntity<JsonNode> loadResponse = restTemplate.getForEntity(formDataPersistenceUrl + "/" + emailId, JsonNode.class);
         return new FormData(loadResponse.getBody());
-    }
-
-    @Retryable(backoff = @Backoff(delay = 100, maxDelay = 500))
-    public Long getNextSequenceNumber(String registryName) {
-        ResponseEntity<Long> response = restTemplate.getForEntity(sequenceNumberPersistenceUrl + "/" + registryName, Long.class);
-        return response.getBody();
     }
 
     private void logHttpClientErrorException(HttpClientErrorException e) {

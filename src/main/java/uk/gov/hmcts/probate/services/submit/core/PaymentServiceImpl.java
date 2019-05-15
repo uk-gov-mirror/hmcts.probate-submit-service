@@ -67,7 +67,7 @@ public class PaymentServiceImpl implements PaymentsService {
 
     @Override
     public ProbateCaseDetails updatePaymentByCaseId(String caseId, ProbatePaymentDetails paymentUpdateRequest) {
-        log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
+        log.info("Updating payment details for case with id: {}", caseId);
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         ProbateCaseDetails caseResponse = findCaseById(caseId, securityDTO);
         CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());

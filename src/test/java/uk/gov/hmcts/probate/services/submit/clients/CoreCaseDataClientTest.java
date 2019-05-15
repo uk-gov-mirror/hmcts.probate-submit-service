@@ -101,7 +101,6 @@ public class CoreCaseDataClientTest {
         ccdCreateCaseParams = new CcdCreateCaseParams.Builder()
                 .withAuthorisation(AUTHORIZATION_TOKEN)
                 .withRegistryData(registryData)
-                .withSubmissionReference(SEQUENCE_NUMBER)
                 .withSubmitData(submitData)
                 .withUserId(USER_ID)
                 .withSubmissionTimestamp(SUBMISSION_TIMESTAMP)

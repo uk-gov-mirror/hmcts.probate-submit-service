@@ -229,7 +229,6 @@ public class CoreCaseDataMapper {
     public ObjectNode mapData(JsonNode probateData, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectNode ccdData = mapper.createObjectNode();
         JsonNode registry = registryData.get("registry");
-        ccdData.set("applicationID", registryData.get("submissionReference"));
         LocalDate localDate = LocalDateTime.ofInstant(submissionTimestamp.toInstant(), ZoneId.systemDefault()).toLocalDate();
         ccdData.put("applicationSubmittedDate", localDate.toString());
         boolean ihtCompletedOnline = "online".equalsIgnoreCase(probateData.get("ihtForm").asText());

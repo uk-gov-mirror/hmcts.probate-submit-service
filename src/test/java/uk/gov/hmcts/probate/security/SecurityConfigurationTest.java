@@ -94,11 +94,6 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    public void shouldNotAuthenticateForResubmitEndpoint() throws Exception {
-        mvc.perform(get("/resubmit/1")).andExpect(status().isOk()).andExpect(unauthenticated());
-    }
-
-    @Test
     public void shouldAuthenticateForCasesEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/cases/test@test.com")
                 .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")

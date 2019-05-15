@@ -10,14 +10,6 @@ public class FormData {
         this.json = json;
     }
 
-    public Long getSubmissionReference() {
-        return json.at("/submissionReference").asLong();
-    }
-
-    public JsonNode getSubmissionReferenceAsJsonNode() {
-        return json.at("/submissionReference");
-    }
-
     public Long getCcdCaseId(){
         return json.at("/ccdCase/id").asLong();
     }

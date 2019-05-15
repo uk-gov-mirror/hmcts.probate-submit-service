@@ -25,11 +25,6 @@ public class FormDataTest {
     }
 
     @Test
-    public void shouldGetSubmissionReference() {
-        assertThat(formData.getSubmissionReference(), is(17L));
-    }
-
-    @Test
     public void shouldGetCcdCaseId() {
         assertThat(formData.getCcdCaseId(), is(1535574519543819L));
     }
@@ -49,8 +44,7 @@ public class FormDataTest {
                 "      \"email\": \"birmingham@email.com\",\n" +
                 "      \"address\": \"Line 1 Bham\\nLine 2 Bham\\nLine 3 Bham\\nPostCode Bham\",\n" +
                 "      \"sequenceNumber\": 20075\n" +
-                "    },\n" +
-                "    \"submissionReference\": 17\n" +
+                "    }\n" +
                 "  }");
         assertThat(formData.getRegistry(), is(equalTo(jsonNode)));
     }

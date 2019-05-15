@@ -262,10 +262,8 @@
     "applicantEmail": "formdata1@mailinator.com",
     "payloadVersion": "4.1.1",
     "paymentPending": "false",
-    "creatingPayment": "false",
-    "submissionReference": 1270
+    "creatingPayment": "false"
   },
-  "submissionReference": 1270,
   "_links": {
     "self": {
       "href": "http://probate-persistence-service-aat.service.core-compute-aat.internal/formdata/formdata1@mailinator.com"

@@ -21,7 +21,6 @@ import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SubmitControllerTest {
 
     private static final String SUBMIT_SERVICE_URL = "/submit";
-    private static final String RESUBMIT_SERVICE_URL = "/resubmit";
     private static final String UPDATE_PAYMENT_STATUS_URL = "/updatePaymentStatus";
 
     @Autowired
@@ -68,16 +66,6 @@ public class SubmitControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(registryData.toString()));
     }
-
-    @Test
-    public void shouldResubmitSuccessfully() throws Exception {
-        when(mockSubmitService.resubmit(eq(Long.parseLong("123456789")))).thenReturn("1111111111");
-
-        mockMvc.perform(get(RESUBMIT_SERVICE_URL + "/123456789"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("1111111111"));
-    }
-
 
     @Test
     public void shouldReturn400OnSubmitOfInvalidJson() throws Exception {

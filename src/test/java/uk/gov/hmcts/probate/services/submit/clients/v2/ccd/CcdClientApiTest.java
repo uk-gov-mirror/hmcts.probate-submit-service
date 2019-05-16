@@ -159,6 +159,27 @@ public class CcdClientApiTest {
     }
 
     @Test
+    public void shouldUpdateCaseAsCaseWorker() {
+        caseDataContent.getEvent().setId(UPDATE_DRAFT.getName());
+
+        when(mockCoreCaseDataApi.startEventForCaseWorker(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
+                GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName())).thenReturn(startEventResponse);
+
+        when(mockCoreCaseDataApi.submitEventForCaseWorker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+
+        ProbateCaseDetails caseResponse = ccdClientApi.updateCaseAsCaseworker(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDTO);
+
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        verify(mockCoreCaseDataApi, times(1)).startEventForCaseWorker(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
+                GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), UPDATE_DRAFT.getName());
+        verify(mockCoreCaseDataApi, times(1)).submitEventForCaseWorker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent));
+    }
+
+    @Test
     public void shouldFindCase() {
         Map<String, String> queryMap = ImmutableMap.of(EMAIL_QUERY_PARAM, APPLICANT_EMAIL);
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),

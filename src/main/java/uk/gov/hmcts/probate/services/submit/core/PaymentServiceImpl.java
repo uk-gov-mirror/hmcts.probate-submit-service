@@ -85,7 +85,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = createCaseData(caseResponse, payment);
-        return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
+        return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
     }
 
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {

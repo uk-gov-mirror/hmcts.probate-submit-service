@@ -67,6 +67,39 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         return createCaseResponse(caseDetails);
     }
+    
+    @Override
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
+                                         SecurityDTO securityDTO) {
+        CaseType caseType = CaseType.getCaseType(caseData);
+        log.info("Update case as for caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), caseId, eventId.getName());
+        log.info("Retrieve event token from CCD for Caseworker, caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), caseId, eventId.getName());
+        StartEventResponse startEventResponse = coreCaseDataApi.startEventForCaseWorker(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                caseId,
+                eventId.getName()
+        );
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        log.info("Submit event to CCD for Caseworker, caseType: {}, caseId: {}",
+                caseType.getName(), caseId);
+        CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                caseId,
+                false,
+                caseDataContent
+        );
+        return createCaseResponse(caseDetails);
+    }
 
     @Override
     public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {

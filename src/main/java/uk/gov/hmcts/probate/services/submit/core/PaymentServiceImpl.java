@@ -44,7 +44,7 @@ public class PaymentServiceImpl implements PaymentsService {
                     .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
                     .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
                     .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
-                    .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getPaymentFailedEventId)
+                    .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getUpdateCaseApplicationEventId)
                     .put(Pair.of(PA_APP_CREATED, null), CaseEvents::getPaymentFailedEventId)
                     .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), CaseEvents::getPaymentFailedToSuccessEventId)
                     .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), CaseEvents::getPaymentFailedAgainEventId)

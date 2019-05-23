@@ -38,7 +38,6 @@ public class CoreCaseDataClientTest {
     private static final Long CASE_ID = 9999999L;
     private static final String AUTHORIZATION_TOKEN = "XXXXXX";
     private static final Calendar SUBMISSION_TIMESTAMP = Calendar.getInstance();
-    private static final JsonNode SEQUENCE_NUMBER = new LongNode(123L);
     private static final String APPLY_FOR_GRANT_CCD_EVENT_ID = "applyForGrant";
     private static final String TOKEN_RESOURCE = "token";
     private static final String UPDATE_PAYMENT_STATUS_CCD_EVENT_ID = "createCase";

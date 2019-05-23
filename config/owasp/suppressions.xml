@@ -251,6 +251,20 @@
         <cve>CVE-2018-1272</cve>
     </suppress>
     <suppress>
+        <notes><![CDATA[
+   file name: jackson-databind-2.9.8.jar
+   ]]></notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cpe>cpe:/a:fasterxml:jackson</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: jackson-databind-2.9.8.jar
+   ]]></notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cve>CVE-2019-12086</cve>
+    </suppress>
+    <suppress>
         <notes><![CDATA[file name: tomcat-9.0.12.jar]]></notes>
         <cve>CVE-2019-0199</cve>
     </suppress>

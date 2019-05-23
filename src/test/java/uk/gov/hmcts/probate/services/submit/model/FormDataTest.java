@@ -41,9 +41,7 @@ public class FormDataTest {
         JsonNode jsonNode = objectMapper.readTree("{\n" +
                 "    \"registry\": {\n" +
                 "      \"name\": \"Birmingham\",\n" +
-                "      \"email\": \"birmingham@email.com\",\n" +
-                "      \"address\": \"Line 1 Bham\\nLine 2 Bham\\nLine 3 Bham\\nPostCode Bham\",\n" +
-                "      \"sequenceNumber\": 20075\n" +
+                "      \"address\": \"Line 1 Bham\\nLine 2 Bham\\nLine 3 Bham\\nPostCode Bham\"\n" +
                 "    }\n" +
                 "  }");
         assertThat(formData.getRegistry(), is(equalTo(jsonNode)));

@@ -29,6 +29,7 @@ import java.util.function.Function;
 
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.INITIATED;
+import static uk.gov.hmcts.reform.probate.model.PaymentStatus.NOT_REQUIRED;
 import static uk.gov.hmcts.reform.probate.model.PaymentStatus.SUCCESS;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.CASE_PAYMENT_FAILED;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.DRAFT;
@@ -42,6 +43,7 @@ public class PaymentServiceImpl implements PaymentsService {
     private static final Map<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>> PAYMENT_EVENT_MAP =
             ImmutableMap.<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>>builder()
                     .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
+                    .put(Pair.of(DRAFT, NOT_REQUIRED), CaseEvents::getCreateCaseWithoutPaymentId)
                     .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
                     .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
                     .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getUpdateCaseApplicationEventId)

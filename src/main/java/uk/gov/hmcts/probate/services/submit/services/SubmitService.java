@@ -35,6 +35,7 @@ public class SubmitService {
     private static final String CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID = "createCasePaymentFailedMultiple";
     private static final String CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID = "createCasePaymentSuccess";
     private static final String CASE_PAYMENT_FAILED_STATE = "CasePaymentFailed";
+    private static final String CASE_CREATED_STATE = "CaseCreated";
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
     private SequenceService sequenceService;
@@ -131,7 +132,7 @@ public class SubmitService {
         if (ccdCaseResponse.isPresent() &&
                 ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
             
-            if (!ccdCaseResponse.get().getState().equals("CaseCreated")) {
+            if (!ccdCaseResponse.get().getState().equals(CASE_CREATED_STATE)) {
                 logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
                 
                 String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());

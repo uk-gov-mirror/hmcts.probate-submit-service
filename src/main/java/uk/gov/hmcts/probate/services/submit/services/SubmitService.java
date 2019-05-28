@@ -129,10 +129,12 @@ public class SubmitService {
         PaymentResponse paymentResponse = submitData.getPaymentResponse();
         Optional<CcdCaseResponse> ccdCaseResponse = getCCDCase(submitData, userId, authorization);
         ObjectNode response = objectMapper.createObjectNode();
-        if (ccdCaseResponse.isPresent() &&
-                ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
+        
+        if (ccdCaseResponse.isPresent()) {
             
-            if (!ccdCaseResponse.get().getState().equals(CASE_CREATED_STATE)) {
+            if (!ccdCaseResponse.get().getState().equals(CASE_CREATED_STATE) 
+                    && ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
+                
                 logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
                 
                 String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
@@ -145,8 +147,8 @@ public class SubmitService {
                 response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
                 logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
                         updatePaymentStatusResponse.getState());
-                return response;
-                
+                return response;                
+
             } else {
                 response.set("caseState", new TextNode(ccdCaseResponse.get().getState()));
                 logger.info("Payment status - caseId: {}, caseState: {}", submitData.getCaseId(), ccdCaseResponse.get().getState());

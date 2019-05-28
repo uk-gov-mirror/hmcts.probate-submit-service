@@ -65,7 +65,7 @@ services:
 
   coreCaseData:
     baseUrl: http://localhost:4452
-    url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfVenkat
+    url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
     enabled: ${USE_CCD:true}
 
 auth.provider.service.client:

@@ -66,6 +66,17 @@ public class PaymentServiceImpl implements PaymentsService {
     }
 
     @Override
+    public ProbateCaseDetails createCase(String searchField, ProbateCaseDetails probateCaseDetails) {
+        CaseType caseType = CaseType.getCaseType(probateCaseDetails.getCaseData());
+        log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDTO);
+        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
+        String caseId = caseResponse.getCaseInfo().getCaseId();
+        return updateCase(caseId, securityDTO, caseType, probateCaseDetails);
+    }
+
+    @Override
     public ProbateCaseDetails updatePaymentByCaseId(String caseId, ProbatePaymentDetails paymentUpdateRequest) {
         log.info("Updating payment details for case with id: {}", caseId);
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
@@ -73,6 +84,16 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         return updateCase(caseId, paymentUpdateRequest, securityDTO, caseType, caseResponse, true);
+    }
+
+
+    private ProbateCaseDetails updateCase(String caseId, SecurityDTO securityDTO, CaseType caseType,
+                                          ProbateCaseDetails probateCaseDetails) {
+        CasePayment payment = probateCaseDetails.getCaseData().getPayments().get(0).getValue();
+        CaseState caseState = CaseState.getState(probateCaseDetails.getCaseInfo().getState());
+        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        EventId eventId = getEventId(caseState, payment).apply(caseEvents);
+        return coreCaseDataService.updateCase(caseId, probateCaseDetails.getCaseData(), eventId, securityDTO);
     }
 
     private ProbateCaseDetails updateCase(String caseId, ProbatePaymentDetails paymentUpdateRequest,

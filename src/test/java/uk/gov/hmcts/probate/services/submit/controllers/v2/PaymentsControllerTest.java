@@ -33,6 +33,7 @@ public class PaymentsControllerTest {
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String APPLICATION_CREATED = "PAAppCreated";
+    private static final String CREATE_CASES_ENDPOINT = "cases";
 
     @MockBean
     private PaymentsService paymentsService;
@@ -68,15 +69,32 @@ public class PaymentsControllerTest {
         CasePayment payment = grantOfRepresentation.getPayments().get(0).getValue();
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbatePaymentDetails paymentUpdateRequest = ProbatePaymentDetails.builder()
-                .payment(payment)
-                .caseType(CaseType.GRANT_OF_REPRESENTATION)
-                .build();
+            .payment(payment)
+            .caseType(CaseType.GRANT_OF_REPRESENTATION)
+            .build();
         when(paymentsService.addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest))).thenReturn(caseResponse);
 
         mockMvc.perform(post(PAYMENTS_URL + "/" + EMAIL_ADDRESS)
-                .content(objectMapper.writeValueAsString(paymentUpdateRequest))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+            .content(objectMapper.writeValueAsString(paymentUpdateRequest))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
         verify(paymentsService).addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest));
+    }
+
+    @Test
+    public void shouldCreateCase() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(APPLICATION_CREATED);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        when(paymentsService.createCase(eq(EMAIL_ADDRESS), eq(caseResponse))).thenReturn(caseResponse);
+
+        mockMvc.perform(post(PAYMENTS_URL + "/" + EMAIL_ADDRESS + "/" + CREATE_CASES_ENDPOINT)
+            .content(objectMapper.writeValueAsString(caseResponse))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+        verify(paymentsService).createCase(eq(EMAIL_ADDRESS), eq(caseResponse));
     }
 }

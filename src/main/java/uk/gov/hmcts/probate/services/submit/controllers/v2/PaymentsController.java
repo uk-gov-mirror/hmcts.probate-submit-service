@@ -51,7 +51,7 @@ public class PaymentsController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> createCase(@PathVariable("applicationId") String applicationId,
-                                                               @Valid @RequestBody ProbateCaseDetails probateCaseDetails) {
+                                                               @RequestBody ProbateCaseDetails probateCaseDetails) {
         log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
         return new ResponseEntity(paymentsService.createCase(applicationId.toLowerCase(), probateCaseDetails), OK);
     }

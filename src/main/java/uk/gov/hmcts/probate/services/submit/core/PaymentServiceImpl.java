@@ -85,6 +85,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = createCaseData(caseResponse, payment);
+
         if (asCaseWorker) {
             return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
         }

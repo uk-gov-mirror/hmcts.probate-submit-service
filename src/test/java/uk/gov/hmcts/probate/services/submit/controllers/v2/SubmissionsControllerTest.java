@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
+
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -52,7 +55,7 @@ public class SubmissionsControllerTest {
         caseInfo.setState(APPLICATION_CREATED);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
-        ValidatorResults validatorResults = new ValidatorResults();
+        ValidatorResults validatorResults = new ValidatorResults(Collections.emptyList());
         when(submissionsService.updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
 
         mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
@@ -71,6 +74,10 @@ public class SubmissionsControllerTest {
         caseInfo.setState(APPLICATION_CREATED);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
+
+        ValidatorResults validatorResults = new ValidatorResults(Lists.newArrayList("ERROR"));
+        when(submissionsService.updateDraftToCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(new SubmitResult(caseResponse, validatorResults));
+        
         MvcResult result  = mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
                 .content(objectMapper.writeValueAsString(caseRequest))
                 .contentType(MediaType.APPLICATION_JSON))

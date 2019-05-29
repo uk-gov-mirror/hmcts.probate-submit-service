@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PaymentsControllerTest {
 
     private static final String PAYMENTS_URL = "/payments";
+    private static final String UPDATE_PAYMENTS_URL = "/ccd-case-payments";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String APPLICATION_CREATED = "PAAppCreated";
@@ -41,6 +42,21 @@ public class PaymentsControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    public void shouldUpdatePaymentByCaseId() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/payments.json");
+        CasePayment casePayment = objectMapper.readValue(json, CasePayment.class);
+        ProbatePaymentDetails paymentUpdateRequest = ProbatePaymentDetails.builder()
+            .payment(casePayment)
+            .build();
+
+        mockMvc.perform(post(UPDATE_PAYMENTS_URL + "/" + CASE_ID)
+            .content(objectMapper.writeValueAsString(paymentUpdateRequest))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+        verify(paymentsService).updatePaymentByCaseId(eq(CASE_ID), eq(paymentUpdateRequest));
+    }
 
     @Test
     public void shouldAddPaymentToCase() throws Exception {

@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.hmcts.probate.services.submit.clients.CoreCaseDataClient;
 import uk.gov.hmcts.probate.services.submit.clients.PersistenceClient;
 import uk.gov.hmcts.probate.services.submit.model.CcdCaseResponse;
@@ -21,12 +20,12 @@ import uk.gov.hmcts.probate.services.submit.model.PersistenceResponse;
 import uk.gov.hmcts.probate.services.submit.model.SubmitData;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 
-import java.util.Calendar;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
@@ -42,7 +41,6 @@ public class SubmitServiceTest {
     private static final String CASE_STATE = "CaseCreated";
     private static final String CASE_FAILED_STATE = "CasePaymentFailed";
     private static final String PA_APP_CREATED_STATE = "PaAppCreated";
-    private static final Long ID = 1L;
     private static final String AUTHORIZATION_TOKEN = "XXXXXX";
     private static final String APPLICANT_EMAIL_ADDRESS = "test@test.com";
 
@@ -98,17 +96,14 @@ public class SubmitServiceTest {
         when(submitData.getCaseId()).thenReturn(CASE_ID);
 
         when(persistenceClient.loadFormDataById(APPLICANT_EMAIL_ADDRESS)).thenReturn(formData);
-
         when(sequenceService.nextRegistry()).thenReturn(registryData);
-
-        when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
-        when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
-
+        
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(Optional.empty());
         when(coreCaseDataClient.saveCase(any(), any())).thenReturn(ccdCaseResponse);
         when(coreCaseDataClient.createCase(any())).thenReturn(jsonNode);
         when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
 
+        when(ccdCaseResponse.getCaseId()).thenReturn(CASE_ID);
         when(ccdCaseResponse.getPaymentReference()).thenReturn("RC-1537-1988-5489-1986");
         when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
 
@@ -187,6 +182,18 @@ public class SubmitServiceTest {
         verify(sequenceService, times(1)).nextRegistry();
     }
 
+    @Test
+    public void shouldIgnorePaymentStatusUpdateIfCaseCreated() {
+        Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
+        when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
+        
+        JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
+
+        assertThat(submitResponse, is(notNullValue()));        
+        assertEquals(submitResponse.get("caseState").asText(), CASE_STATE);
+        verify(coreCaseDataClient, never()).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
+        verify(coreCaseDataClient, never()).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
+    }
 
     @Test
     public void shouldUpdatePaymentStatusSuccessfullyWhenPaymentResponseStatusSuccess() {
@@ -194,7 +201,8 @@ public class SubmitServiceTest {
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
         when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
-
+        when(ccdCaseResponse.getState()).thenReturn(CASE_FAILED_STATE);
+        
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
         assertThat(submitResponse, is(notNullValue()));
@@ -211,6 +219,7 @@ public class SubmitServiceTest {
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
         when(coreCaseDataClient.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID)).thenReturn(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
+        when(ccdCaseResponse.getState()).thenReturn(CASE_FAILED_STATE);
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
@@ -286,19 +295,17 @@ public class SubmitServiceTest {
     public void shouldNotUpdatePaymentStatusSuccessfullyWhenPaymentReferencesIsTheSameAsExisting() {
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);
-        when(ccdCaseResponse.getPaymentReference()).thenReturn("RC-1537-1988-5489-1986");
-        when(paymentResponse.getReference()).thenReturn("RC-1537-1988-5489-1986");
 
         JsonNode submitResponse = submitService.updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN);
 
-        assertThat(submitResponse, is(equalTo(objectMapper.createObjectNode())));
+        assertThat(submitResponse, is(notNullValue()));
         verify(coreCaseDataClient, never()).createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID);
         verify(coreCaseDataClient,  never()).updatePaymentStatus(submitData, USER_ID, AUTHORIZATION_TOKEN, jsonNode, paymentResponse, CREATE_CASE_CCD_EVENT_ID);
     }
 
     @Test
     public void shouldUpdatePaymentStatusSuccessfullyWhenPaymentReferencesIsTheSameAndPaymentIsZero() {
-        when(ccdCaseResponse.getState()).thenReturn(CASE_STATE);
+        when(ccdCaseResponse.getState()).thenReturn(CASE_FAILED_STATE);
         when(coreCaseDataClient.createCaseUpdatePaymentStatusEvent(USER_ID, CASE_ID, AUTHORIZATION_TOKEN, CREATE_CASE_CCD_EVENT_ID)).thenReturn(jsonNode);
         Optional<CcdCaseResponse> caseResponseOptional = Optional.of(ccdCaseResponse);
         when(coreCaseDataClient.getCase(submitData, USER_ID, AUTHORIZATION_TOKEN)).thenReturn(caseResponseOptional);

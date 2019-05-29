@@ -35,6 +35,7 @@ public class SubmitService {
     private static final String CREATE_CASE_PAYMENT_FAILED_MULTIPLE_CCD_EVENT_ID = "createCasePaymentFailedMultiple";
     private static final String CREATE_CASE_PAYMENT_SUCCESS_CCD_EVENT_ID = "createCasePaymentSuccess";
     private static final String CASE_PAYMENT_FAILED_STATE = "CasePaymentFailed";
+    private static final String CASE_CREATED_STATE = "CaseCreated";
     private PersistenceClient persistenceClient;
     private CoreCaseDataClient coreCaseDataClient;
     private SequenceService sequenceService;
@@ -128,22 +129,33 @@ public class SubmitService {
         PaymentResponse paymentResponse = submitData.getPaymentResponse();
         Optional<CcdCaseResponse> ccdCaseResponse = getCCDCase(submitData, userId, authorization);
         ObjectNode response = objectMapper.createObjectNode();
-        if (ccdCaseResponse.isPresent() &&
-                ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
-            logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
+        
+        if (ccdCaseResponse.isPresent()) {
+            
+            if (!ccdCaseResponse.get().getState().equals(CASE_CREATED_STATE) 
+                    && ((paymentResponse.getAmount() == 0) || !ccdCaseResponse.get().getPaymentReference().equals(paymentResponse.getReference()))) {
+                
+                logger.info("Updating payment status - caseId: {}", submitData.getCaseId());
+                
+                String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
+                JsonNode tokenJson = coreCaseDataClient
+                        .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization, eventId);
+                CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
+                        .updatePaymentStatus(submitData, userId, authorization, tokenJson,
+                                paymentResponse, eventId);
+    
+                response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
+                logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
+                        updatePaymentStatusResponse.getState());
+                return response;                
 
-            String eventId = getEventIdFromStatus(paymentResponse, submitData.getCaseState());
-            JsonNode tokenJson = coreCaseDataClient
-                    .createCaseUpdatePaymentStatusEvent(userId, submitData.getCaseId(), authorization, eventId);
-            CcdCaseResponse updatePaymentStatusResponse = coreCaseDataClient
-                    .updatePaymentStatus(submitData, userId, authorization, tokenJson,
-                            paymentResponse, eventId);
-
-            response.set("caseState", new TextNode(updatePaymentStatusResponse.getState()));
-            logger.info("Updated payment status - caseId: {}, caseState: {}", updatePaymentStatusResponse.getCaseId(),
-                    updatePaymentStatusResponse.getState());
-            return response;
+            } else {
+                response.set("caseState", new TextNode(ccdCaseResponse.get().getState()));
+                logger.info("Payment status - caseId: {}, caseState: {}", submitData.getCaseId(), ccdCaseResponse.get().getState());
+                return response;   
+            }
         }
+        
         return response;
     }
 

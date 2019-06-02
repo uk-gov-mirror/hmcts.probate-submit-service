@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 
@@ -44,5 +45,22 @@ public class PaymentsController {
                                                                @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
         log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
         return new ResponseEntity(paymentsService.addPaymentToCase(applicationId.toLowerCase(), probatePaymentDetails), OK);
+    }
+
+    @PostMapping(path = "/payments/{applicationId}/cases", consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> createCase(@PathVariable("applicationId") String applicationId,
+                                                               @RequestBody ProbateCaseDetails probateCaseDetails) {
+        log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
+        return new ResponseEntity(paymentsService.createCase(applicationId.toLowerCase(), probateCaseDetails), OK);
+    }
+
+    @PostMapping(path = "/ccd-case-payments/{caseId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> updatePaymentByCaseId(@PathVariable("caseId") String caseId,
+                                                                    @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
+        return new ResponseEntity(paymentsService.updatePaymentByCaseId(caseId, probatePaymentDetails), OK);
     }
 }

@@ -170,30 +170,15 @@
     app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:false}
 
   registries:
-    - name: oxford
+    - name: ctsc
       id: 0
-      email: oxford@email.com
+      email: ctsc@email.com
       address: |
         Line 1 Ox
         Line 2 Ox
         Line 3 Ox
         PostCode Ox
-    - name: birmingham
-      id: 1
-      email: birmingham@email.com
-      address: |
-        Line 1 Bham
-        Line 2 Bham
-        Line 3 Bham
-        PostCode Bham
-    - name: manchester
-      id: 2
-      email: manchester@email.com
-      address: |
-        Line 1 man
-        Line 2 man
-        Line 3 man
-        PostCode Manchester
+
 
   authorised.services: probate_backend,probate_frontend
 

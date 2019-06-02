@@ -60,9 +60,7 @@
       "dod_formattedDate":"1 January 2018"
     },
     "registry":{
-      "email":"birmingham@email.com",
-      "address":"Line 1 Bham\nLine 2 Bham\nLine 3 Bham\nPostCode Bham\n",
-      "sequenceNumber":20009
+      "address":"Line 1 Bham\nLine 2 Bham\nLine 3 Bham\nPostCode Bham\n"
     },
     "applicant":{
       "address":"dfasfasfsa",
@@ -123,7 +121,6 @@
     "applicantEmail":"Z0z2xbPhdNEO7k59Mj3zlkvADO0qEZKU",
     "payloadVersion":"3.0.0",
     "paymentPending":"false",
-    "creatingPayment":"false",
-    "submissionReference":17
+    "creatingPayment":"false"
   }
 }

@@ -1,7 +1,9 @@
 package uk.gov.hmcts.probate.services.submit.core.proccessors;
 
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import uk.gov.hmcts.probate.security.SecurityDTO;
@@ -15,6 +17,9 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
+import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
+import uk.gov.hmcts.reform.probate.model.client.ValidationError;
+import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -55,8 +60,16 @@ public abstract class AbstractSubmissionsProcessor {
     }
 
     private void assertIdentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {
-        String searchFieldValueInBody = searchFieldFactory.getSearchFieldValuePair(caseType, caseData).getRight();
-        Assert.isTrue(searchFieldValueInBody.equals(identifier), "Application id email on path must match case data");
+        Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
+        String searchFieldValueInBody = searchFieldValuePair.getRight();
+        if (!searchFieldValueInBody.equals(identifier)) {
+            throw new AssertFieldException(ValidationErrorResponse.builder()
+                .errors(Lists.newArrayList(ValidationError.builder()
+                    .field(searchFieldValuePair.getLeft())
+                    .message("Path variable identifier must match identifier in form")
+                    .build()))
+                .build());
+        }
     }
 
     private ValidatorResults validateCase(CaseData caseData) {

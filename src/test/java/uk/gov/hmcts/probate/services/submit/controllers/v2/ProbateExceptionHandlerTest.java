@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
+package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -15,9 +15,9 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CcdClientApiExceptionHandlerTest {
+public class ProbateExceptionHandlerTest {
 
-    private CcdClientApiExceptionHandler exceptionHandler = new CcdClientApiExceptionHandler();
+    private ProbateExceptionHandler exceptionHandler = new ProbateExceptionHandler();
     private ApiClientErrorResponse clientErrorResponse;
 
     @Before

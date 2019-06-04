@@ -30,4 +30,13 @@ public class CasesServiceImpl implements CasesService {
                 .findCase(searchField, caseType, securityDTO);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
+
+    @Override
+    public ProbateCaseDetails getCaseByInviationId(String invitationId, CaseType caseType) {
+        log.info("Getting case of caseType: {}", caseType.getName());
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
+                .findCaseByInviteId(invitationId, caseType, securityDTO);
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
+    }
 }

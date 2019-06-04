@@ -1,6 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
-import au.com.dius.pact.provider.junit.Provider;
+import au.  com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.target.HttpTarget;
 import au.com.dius.pact.provider.junit.target.Target;
@@ -73,12 +73,11 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     }
 
-    @State({"provider PUTS submission with success",
-            "provider PUTSgit  submission with success"})
+    @State({"provider POSTS submission with success",
+            "provider POSTS  submission with success"})
     public void toPostSubmissionCaseDetailsWithSuccess() throws IOException, JSONException {
 
         caseResponse = getProbateCaseDetails("intestacyGrantOfRepresentation_full_submission.json");
-
 
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.of(caseResponse));
@@ -88,8 +87,8 @@ public class SubmissionsControllerProviderTest extends ControllerProviderTest {
 
     }
 
-    @State({"provider PUTS submission with errors",
-            "provider PUTS submission with errors"})
+    @State({"provider POSTS submission with errors",
+            "provider POSTS submission with errors"})
     public void verifyExecutePostSubmissionWithClientErrors() {
 
         ApiClientError apiClientError = new ApiClientError();

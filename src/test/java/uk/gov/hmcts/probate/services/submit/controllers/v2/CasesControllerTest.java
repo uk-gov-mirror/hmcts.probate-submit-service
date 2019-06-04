@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import scala.concurrent.java8.FuturesConvertersImpl;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -27,7 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CasesControllerTest {
 
     private static final String CASES_URL = "/cases";
+    private static final String CASES_INVITATION_URL = "/cases/invitation";
     private static final String EMAIL_ADDRESS = "test@test.com";
+    private static final String INVITATION_ID = "invitationId";
     private static final String CASE_ID = "1343242352";
     private static final String DRAFT = "Draft";
 
@@ -55,5 +58,18 @@ public class CasesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
+    }
+
+    @Test
+    public void shouldGetCaseForIntestacyGrantOfRepresentationByInvitationId() throws Exception {
+
+        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().build();
+        when(casesService.getCaseByInviationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(probateCaseDetails);
+
+        mockMvc.perform(get(CASES_INVITATION_URL + "/" + INVITATION_ID)
+                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(casesService, times(1)).getCase(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION);
     }
 }

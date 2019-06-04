@@ -27,16 +27,6 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
         validateSubmitFailure(ERROR_CODE);
     }
 
-    @Test
-    public void resubmitSuccess() {
-        validateReSubmitSuccess();
-    }
-
-    @Test
-    public void resubmitFailure() {
-        validateReSubmitFailure(ERROR_CODE);
-    }
-
     private void validateSubmitSuccess() {
         SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.submitHeaders(SESSION_ID))
@@ -49,22 +39,6 @@ public class SubmitServiceSubmitControllerTests extends IntegrationTestBase {
         Response response = SerenityRest.given().relaxedHTTPSValidation()
                 .headers(utils.submitHeaders(SESSION_ID))
                 .when().post(submitServiceUrl + "/submit")
-                .thenReturn();
-
-        response.then().assertThat().statusCode(errorCode);
-    }
-
-    private void validateReSubmitSuccess() {
-        SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.submitHeaders(SESSION_ID))
-                .when().get(submitServiceUrl + "/resubmit/" + submissionId)
-                .then().assertThat().statusCode(200);
-    }
-
-    private void validateReSubmitFailure(int errorCode) {
-        Response response = SerenityRest.given().relaxedHTTPSValidation()
-                .headers(utils.submitHeaders(SESSION_ID))
-                .when().get(submitServiceUrl + "/resubmit/" + INVALID_ID)
                 .thenReturn();
 
         response.then().assertThat().statusCode(errorCode);

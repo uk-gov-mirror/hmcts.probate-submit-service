@@ -32,24 +32,16 @@ public class SequenceServiceTest {
     private Map<Integer, Registry> registryMap;
 
     @Mock
-    private PersistenceClient persistenceClient;
-
-    @Mock
-    private JavaMailSenderImpl mailSender;
-
-    @Mock
     private Registry mockRegistry;
 
     private SequenceService sequenceService;
 
     private ObjectMapper mapper;
 
-    private static final long SUBMISSION_REFERENCE = 1234L;
-
     @Before
     public void setUp() {
         mapper = new ObjectMapper();
-        sequenceService = new SequenceService(registryMap, persistenceClient, mailSender, mapper);
+        sequenceService = new SequenceService(registryMap, mapper);
     }
 
     @Test
@@ -58,12 +50,9 @@ public class SequenceServiceTest {
 
         Registry registry = new Registry();
         registry.setName("Oxford");
-        when(persistenceClient.getNextSequenceNumber("Oxford")).thenReturn(1234L);
-        when(sequenceService.getRegistrySequenceNumber(registry)).thenReturn(20013L);
-        registry.setEmail("oxford@email.com");
         registry.setAddress("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
-        JsonNode result = sequenceService.populateRegistrySubmitData(SUBMISSION_REFERENCE, registry);
+        JsonNode result = sequenceService.populateRegistrySubmitData(registry);
         assertEquals(result.toString(), registryData.toString());
     }
 
@@ -75,31 +64,9 @@ public class SequenceServiceTest {
         JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataSubmit.json");
         when(sequenceService.identifyNextRegistry()).thenReturn(mockRegistry);
         when(mockRegistry.getName()).thenReturn("Oxford");
-        when(sequenceService.getRegistrySequenceNumber(mockRegistry)).thenReturn(20013L);
-        when(mockRegistry.getEmail()).thenReturn("oxford@email.com");
         when(mockRegistry.getAddress()).thenReturn("Test Address Line 1\nTest Address Line 2\nTest Address Postcode");
 
-        JsonNode response = sequenceService.populateRegistrySubmitData(SUBMISSION_REFERENCE, mockRegistry);
-        assertEquals(response.toString(), registryData.toString());
-    }
-
-    @Test
-    public void populateRegistryResubmitDataNewApplication() throws IOException {
-        JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataResubmitNewApplication.json");
-        JsonNode formData = TestUtils.getJsonNodeFromFile("formData.json");
-        JsonNode response = sequenceService.populateRegistryResubmitData(SUBMISSION_REFERENCE, formData);
-        assertEquals(response.toString(), registryData.toString());
-    }
-
-    @Test
-    public void populateRegistryResubmitDataOldApplication() throws IOException {
-        Properties messageProperties = new Properties();
-        messageProperties.put("recipient", "oxford@email.com");
-        JsonNode registryData = TestUtils.getJsonNodeFromFile("registryDataResubmitOldApplication.json");
-        JsonNode formData = TestUtils.getJsonNodeFromFile("formDataOldApplication.json");
-        when(mailSender.getJavaMailProperties()).thenReturn(messageProperties);
-
-        JsonNode response = sequenceService.populateRegistryResubmitData(SUBMISSION_REFERENCE, formData);
+        JsonNode response = sequenceService.populateRegistrySubmitData(mockRegistry);
         assertEquals(response.toString(), registryData.toString());
     }
 
@@ -118,7 +85,7 @@ public class SequenceServiceTest {
         newRegistryMap.put(6, buildRegistry(man));
         newRegistryMap.put(7, buildRegistry(man));
 
-        SequenceService sequenceServiceTest = new SequenceService(newRegistryMap, persistenceClient, mailSender, mapper);
+        SequenceService sequenceServiceTest = new SequenceService(newRegistryMap, mapper);
 
         double numOxf = 0;
         double numBirm = 0;

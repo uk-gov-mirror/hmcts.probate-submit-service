@@ -69,6 +69,39 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         return createCaseResponse(caseDetails);
     }
+    
+    @Override
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
+                                         SecurityDTO securityDTO) {
+        CaseType caseType = CaseType.getCaseType(caseData);
+        log.info("Update case as for caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), caseId, eventId.getName());
+        log.info("Retrieve event token from CCD for Caseworker, caseType: {}, caseId: {}, eventId: {}",
+                caseType.getName(), caseId, eventId.getName());
+        StartEventResponse startEventResponse = coreCaseDataApi.startEventForCaseWorker(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                caseId,
+                eventId.getName()
+        );
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        log.info("Submit event to CCD for Caseworker, caseType: {}, caseId: {}",
+                caseType.getName(), caseId);
+        CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                caseId,
+                false,
+                caseDataContent
+        );
+        return createCaseResponse(caseDetails);
+    }
 
     @Override
     public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
@@ -137,6 +170,18 @@ public class CcdClientApi implements CoreCaseDataService {
             throw new IllegalStateException("Multiple cases exist with applicant email provided!");
         }
         return caseDetails.stream().findFirst().map(this::createCaseResponse);
+    }
+
+    @Override
+    public Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDTO securityDTO) {
+        CaseDetails caseDetails = coreCaseDataApi.getCase(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseId);
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        return Optional.of(createCaseResponse(caseDetails));
     }
 
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {

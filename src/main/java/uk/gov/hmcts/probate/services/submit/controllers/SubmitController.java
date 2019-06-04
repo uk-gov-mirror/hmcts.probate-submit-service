@@ -34,9 +34,4 @@ public class SubmitController {
     public ResponseEntity<JsonNode> updatePaymentStatus(@RequestBody JsonNode submitData, @RequestHeader("UserId") String userId, @RequestHeader("Authorization") String authorization) {
         return new ResponseEntity<>(submitService.updatePaymentStatus(new SubmitData(submitData), userId, authorization), HttpStatus.OK);
     }
-
-    @RequestMapping(path = "/resubmit/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> resubmit(@PathVariable("id") long sequenceId) {
-        return new ResponseEntity<>(submitService.resubmit(sequenceId), HttpStatus.OK);
-    }
 }

@@ -23,7 +23,7 @@ abstract public class ControllerProviderTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Value("${pact.broker.version}")
+    @Value("${pact.provider.version}")
     private String providerVersion;
 
     @Before

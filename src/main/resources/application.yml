@@ -137,6 +137,7 @@ ccd:
     paymentReference: paymentReferenceNumber
     willCodicilsNumber: willNumberOfCodicils
     deceasedAliasAssets: deceasedAnyOtherNames
+    caseType: caseType
   monetaryValueMap:
     ihtGrossValue: ihtGrossValue
     ihtNetValue: ihtNetValue

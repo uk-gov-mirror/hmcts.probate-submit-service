@@ -12,12 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Api(tags = {"CasesController"})
@@ -31,8 +35,8 @@ public class CasesController {
 
     @ApiOperation(value = "Get case to CCD", notes = "Get case to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -42,4 +46,12 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
+    @PostMapping(path = "/cases/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> saveCase(@PathVariable("applicationId") String applicationId,
+                                                        @RequestBody ProbateCaseDetails caseRequest) {
+        log.info("Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(), caseRequest), OK);
+    }
 }

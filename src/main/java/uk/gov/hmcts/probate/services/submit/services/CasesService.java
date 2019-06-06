@@ -6,4 +6,6 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 public interface CasesService {
 
     ProbateCaseDetails getCase(String searchField, CaseType caseType);
+
+    ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails);
 }

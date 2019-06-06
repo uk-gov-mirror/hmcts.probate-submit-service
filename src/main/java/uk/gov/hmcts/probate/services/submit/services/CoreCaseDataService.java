@@ -10,7 +10,9 @@ import java.util.Optional;
 
 public interface CoreCaseDataService {
 
-    Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO);
+    Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO);
+
+    Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) ;
 
     Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDTO securityDTO);
 

@@ -38,7 +38,7 @@ mainClassName = 'uk.gov.hmcts.probate.SubmitApplication'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-//check.dependsOn dependencyCheckAnalyze
+check.dependsOn dependencyCheckAnalyze
 
 jacoco {
   toolVersion = '0.8.0'
@@ -180,31 +180,35 @@ processResources {
 }
 
 def versions = [
-    logging: '3.0.3',
-    serviceAuthProviderClient: '1.0.4',
-    authCheckerLib: '2.1.2',
-    ccdClient: '4.4.1',
-    springCloudStarterNetflixHystrix: '2.0.2.RELEASE',
-    springfoxSwagger: '2.9.2',
-    springCloudWiremock: '1.2.4.RELEASE',
-    serentity: '2.0.17'
+        logging                         : '3.0.3',
+        serviceAuthProviderClient       : '1.0.4',
+        authCheckerLib                  : '2.1.2',
+        ccdClient                       : '4.6.4',
+        springCloudStarterNetflixHystrix: '2.0.2.RELEASE',
+        springfoxSwagger                : '2.9.2',
+        springCloudWiremock             : '1.2.4.RELEASE',
+        serentity                       : '2.0.17',
+        pact_version                    : '3.5.24'
 ]
 
 
 dependencies {
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
-  compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
-  compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
-  compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
-    force = true
-  }
-
-  compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
-  compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
-  compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    compile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+        force = true
+    }
+    implementation('io.github.openfeign:feign-core:9.7.0'){
+        force = true
+    }
+    
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
@@ -270,19 +274,26 @@ dependencies {
   testContractCompile sourceSets.main.runtimeClasspath
   testContractCompile sourceSets.test.runtimeClasspath
 
-  testPactCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
-  testPactCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
-  testPactCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
-  testPactCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
-  testPactCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
-  testPactCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-  testCompile  group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: '3.5.24'
-  testPactCompile  group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: '3.5.24'
-  testPactCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
-  testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
-  testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
-  testPactCompile sourceSets.main.runtimeClasspath
-  testPactCompile sourceSets.test.runtimeClasspath
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity
+    testPactCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
+    testPactCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    testPactCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
+    testContractCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
+    testContractCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
+    testContractCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
+    testContractCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testContractRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testContractImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+
+
+    testPactCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testPactCompile sourceSets.main.runtimeClasspath
+    testPactCompile sourceSets.test.runtimeClasspath
 }
 
 compileJava {

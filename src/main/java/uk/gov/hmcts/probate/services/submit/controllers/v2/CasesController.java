@@ -46,6 +46,20 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
+
+    @ApiOperation(value = "Get case by Invitaion Id from CCD", notes = "Get case bu invite id from CCD")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+            @ApiResponse(code = 400, message = "Case retrieval from CCD unsuccessful")
+    })
+    @GetMapping(path = "/cases/invitation/{invitationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> getCaseByInvitationId(@RequestParam("caseType") CaseType caseType,
+                                                      @PathVariable("invitationId") String invitationId) {
+        log.info("Retrieving case of caseType: {}", caseType.getName());
+        return ResponseEntity.ok(casesService.getCaseByInviationId(invitationId, caseType));
+    }
+
     @PostMapping(path = "/cases/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

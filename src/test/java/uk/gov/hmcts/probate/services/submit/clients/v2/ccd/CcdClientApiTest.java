@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
+import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -60,12 +61,17 @@ public class CcdClientApiTest {
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
 
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
+    public static final String INVITATION_ID = "12334345";
+    public static final String INVIATION_QUERY = "inviationQuery";
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
 
     @Mock
     private SearchFieldFactory searchFieldFactory;
+
+    @Mock
+    private InvitationElasticSearchQueryBuilder mockInvitationElasticSearchQueryBuilder;
 
     private CcdClientApi ccdClientApi;
 
@@ -84,7 +90,7 @@ public class CcdClientApiTest {
 
     @Before
     public void setUp() {
-        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory);
+        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
 
         when(searchFieldFactory.getSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
@@ -210,12 +216,43 @@ public class CcdClientApiTest {
     }
 
     @Test
+    public void shouldFindCaseByInviationId() {
+
+        when(mockInvitationElasticSearchQueryBuilder.buildQuery(INVITATION_ID)).thenReturn(INVIATION_QUERY);
+
+        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(GRANT_OF_REPRESENTATION.getName()), eq(INVIATION_QUERY))).thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build());
+
+        Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseByInviteId(INVITATION_ID, GRANT_OF_REPRESENTATION, securityDTO);
+
+        ProbateCaseDetails caseResponse = optionalCaseResponse.get();
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(GRANT_OF_REPRESENTATION.getName()), eq(INVIATION_QUERY));
+    }
+
+
+    @Test
     public void shouldReturnEmptyOptionalWhenReturningNullOnSearch() {
         Map<String, String> queryMap = ImmutableMap.of(EMAIL_QUERY_PARAM, APPLICANT_EMAIL);
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
             eq(GRANT_OF_REPRESENTATION.getName()), eq(queryMap))).thenReturn(null);
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+
+        assertThat(optionalCaseResponse.isPresent(), is(false));
+    }
+
+    @Test
+    public void shouldReturnEmptyOptionalWhenReturningNullOnSearchInvitation() {
+        String invitationId = INVITATION_ID;
+        String invitationQuery =
+                INVIATION_QUERY;
+        when(mockInvitationElasticSearchQueryBuilder.buildQuery(invitationId)).thenReturn(invitationQuery);
+
+        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(GRANT_OF_REPRESENTATION.getName()), eq(invitationQuery))).thenReturn(SearchResult.builder().cases(null).build());
+
+        Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseByInviteId(invitationId, GRANT_OF_REPRESENTATION, securityDTO);
 
         assertThat(optionalCaseResponse.isPresent(), is(false));
     }

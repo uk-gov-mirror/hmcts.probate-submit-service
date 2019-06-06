@@ -7,5 +7,7 @@ public interface CasesService {
 
     ProbateCaseDetails getCase(String searchField, CaseType caseType);
 
+    ProbateCaseDetails getCaseByInviationId(String invitationId, CaseType caseType);
+
     ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails);
 }

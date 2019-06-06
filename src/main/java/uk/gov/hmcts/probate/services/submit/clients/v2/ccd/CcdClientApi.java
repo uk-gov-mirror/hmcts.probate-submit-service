@@ -35,6 +35,8 @@ public class CcdClientApi implements CoreCaseDataService {
 
     private final SearchFieldFactory searchFieldFactory;
 
+    private final InvitationElasticSearchQueryBuilder invitationElasticSearchQueryBuilder;
+
     @Override
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
                                          SecurityDTO securityDTO) {
@@ -129,6 +131,27 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         return createCaseResponse(caseDetails);
     }
+
+
+    @Override
+    public Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+
+       String searchString =  invitationElasticSearchQueryBuilder.buildQuery(inviteId);
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseType.getName(),
+                searchString).getCases();
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        if (caseDetails.size() > 1) {
+            throw new IllegalStateException("Multiple cases exist with invite id provided!");
+        }
+        return caseDetails.stream().findFirst().map(this::createCaseResponse);
+    }
+
 
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {

@@ -4,8 +4,8 @@ provider "azurerm" {
 
 #s2s vault
 data "azurerm_key_vault" "s2s_vault" {
-  name = "s2s-${local.local_env}"
-  resource_group_name = "rpe-service-auth-provider-${local.local_env}"
+  name = "s2s-${local.localenv}"
+  resource_group_name = "rpe-service-auth-provider-${local.localenv}"
 }
 
 locals {

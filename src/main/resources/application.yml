@@ -138,10 +138,22 @@ ccd:
     willCodicilsNumber: willNumberOfCodicils
     deceasedAliasAssets: deceasedAnyOtherNames
     caseType: caseType
+    deceasedHasAssetsOutsideUK: deceasedHasAssetsOutsideUK
+    deceasedMartialStatus: deceasedMartialStatus
+    deceasedDivorcedInEnglandOrWales: deceasedDivorcedInEnglandOrWales
+    primaryApplicantRelationshipToDeceased: primaryApplicantRelationshipToDeceased
+    primaryApplicantAdoptionInEnglandOrWales: primaryApplicantAdoptionInEnglandOrWales
+    deceasedSpouseNotApplyingReason: deceasedSpouseNotApplyingReason
+    deceasedOtherChildren: deceasedOtherChildren
+    allDeceasedChildrenOverEighteen: allDeceasedChildrenOverEighteen
+    anyDeceasedChildrenDieBeforeDeceased: anyDeceasedChildrenDieBeforeDeceased
+    anyDeceasedGrandchildrenUnderEighteen: anyDeceasedGrandchildrenUnderEighteen
+    deceasedAnyChildren: deceasedAnyChildren
   monetaryValueMap:
     ihtGrossValue: ihtGrossValue
     ihtNetValue: ihtNetValue
     totalFee: totalFee
+    foreignAssetEstateValue: foreignAssetEstateValue
   declarationMap:
     declaration: declaration
   legalStatementMap:

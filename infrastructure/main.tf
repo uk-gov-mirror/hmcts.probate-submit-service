@@ -2,6 +2,12 @@ provider "azurerm" {
   version = "1.22.1"
 }
 
+#s2s vault
+data "azurerm_key_vault" "s2s_vault" {
+  name = "s2s-${local.local_env}"
+  resource_group_name = "rpe-service-auth-provider-${local.local_env}"
+}
+
 locals {
   aseName = "core-compute-${var.env}"
   //java_proxy_variables: "-Dhttp.proxyHost=${var.proxy_host} -Dhttp.proxyPort=${var.proxy_port} -Dhttps.proxyHost=${var.proxy_host} -Dhttps.proxyPort=${var.proxy_port}"
@@ -20,42 +26,42 @@ data "azurerm_key_vault" "probate_key_vault" {
 
 data "azurerm_key_vault_secret" "s2s_key" {
   name      = "microservicekey-probate-backend"
-  vault_uri = "https://s2s-${local.localenv}.vault.azure.net/"
+  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "probate_mail_host" {
   name = "probate-mail-host"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "probate_mail_username" {
   name = "probate-mail-username"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "probate_mail_password" {
   name = "probate-mail-password"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "probate_mail_port" {
   name = "probate-mail-port"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "probate_mail_sender" {
   name = "probate-mail-sender"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "probate_mail_recipient" {
   name = "probate-mail-recipient"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 data "azurerm_key_vault_secret" "spring_application_json_submit_service" {
   name = "spring-application-json-submit-service-azure"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.probate_key_vault.id}"
 }
 
 module "probate-submit-service" {

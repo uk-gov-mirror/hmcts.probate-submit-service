@@ -147,8 +147,9 @@ ccd:
     deceasedOtherChildren: deceasedOtherChildren
     allDeceasedChildrenOverEighteen: allDeceasedChildrenOverEighteen
     anyDeceasedChildrenDieBeforeDeceased: anyDeceasedChildrenDieBeforeDeceased
-    anyDeceasedGrandchildrenUnderEighteen: anyDeceasedGrandchildrenUnderEighteen
+    anyDeceasedGrandChildrenUnderEighteen: anyDeceasedGrandChildrenUnderEighteen
     deceasedAnyChildren: deceasedAnyChildren
+    foreignAsset: foreignAsset
   monetaryValueMap:
     ihtGrossValue: ihtGrossValue
     ihtNetValue: ihtNetValue

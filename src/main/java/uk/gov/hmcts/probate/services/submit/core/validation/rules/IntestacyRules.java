@@ -1,9 +1,9 @@
-package uk.gov.hmcts.probate.services.submit.validation.rules;
+package uk.gov.hmcts.probate.services.submit.core.validation.rules;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.probate.services.submit.validation.ValidationRule;
+import uk.gov.hmcts.probate.services.submit.core.validation.ValidationRule;
 import uk.gov.hmcts.reform.probate.model.Relationship;
 import uk.gov.hmcts.reform.probate.model.cases.MaritalStatus;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;

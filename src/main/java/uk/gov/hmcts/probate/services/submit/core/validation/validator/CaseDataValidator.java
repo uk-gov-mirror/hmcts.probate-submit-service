@@ -1,8 +1,8 @@
-package uk.gov.hmcts.probate.services.submit.validation.validator;
+package uk.gov.hmcts.probate.services.submit.core.validation.validator;
 
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.probate.services.submit.validation.ValidationResult;
-import uk.gov.hmcts.probate.services.submit.validation.ValidationRule;
+import uk.gov.hmcts.probate.services.submit.core.validation.ValidationResult;
+import uk.gov.hmcts.probate.services.submit.core.validation.ValidationRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 

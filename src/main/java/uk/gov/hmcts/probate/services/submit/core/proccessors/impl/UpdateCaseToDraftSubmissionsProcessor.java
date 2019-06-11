@@ -10,7 +10,7 @@ import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.probate.services.submit.core.proccessors.AbstractSubmissionsProcessor;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.validation;
+package uk.gov.hmcts.probate.services.submit.core.validation;
 
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,8 +14,8 @@ import uk.gov.hmcts.probate.services.submit.core.proccessors.impl.CreateCaseSubm
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.SequenceService;
-import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidator;
-import uk.gov.hmcts.probate.services.submit.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidator;
+import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;

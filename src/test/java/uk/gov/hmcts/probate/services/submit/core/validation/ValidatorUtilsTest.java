@@ -1,8 +1,8 @@
-package uk.gov.hmcts.probate.services.submit.validation;
+package uk.gov.hmcts.probate.services.submit.core.validation;
 
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import uk.gov.hmcts.probate.services.submit.validation.rules.ValidatorUtils;
+import uk.gov.hmcts.probate.services.submit.core.validation.rules.ValidatorUtils;
 
 
 public class ValidatorUtilsTest {

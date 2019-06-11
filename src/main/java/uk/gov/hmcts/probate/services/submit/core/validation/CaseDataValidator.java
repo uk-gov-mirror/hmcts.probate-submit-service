@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.validation;
+package uk.gov.hmcts.probate.services.submit.core.validation;
 
 import lombok.RequiredArgsConstructor;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;

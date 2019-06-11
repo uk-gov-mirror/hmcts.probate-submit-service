@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.validation;
+package uk.gov.hmcts.probate.services.submit.core.validation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

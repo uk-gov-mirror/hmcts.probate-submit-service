@@ -1,8 +1,8 @@
-package uk.gov.hmcts.probate.services.submit.validation;
+package uk.gov.hmcts.probate.services.submit.core.validation;
 
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.hmcts.probate.services.submit.validation.rules.PaRules;
+import uk.gov.hmcts.probate.services.submit.core.validation.rules.PaRules;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 

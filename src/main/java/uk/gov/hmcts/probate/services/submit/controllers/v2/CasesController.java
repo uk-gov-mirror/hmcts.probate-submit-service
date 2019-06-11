@@ -57,7 +57,7 @@ public class CasesController {
     public ResponseEntity<ProbateCaseDetails> getCaseByInvitationId(@RequestParam("caseType") CaseType caseType,
                                                       @PathVariable("invitationId") String invitationId) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
-        return ResponseEntity.ok(casesService.getCaseByInviationId(invitationId, caseType));
+        return ResponseEntity.ok(casesService.getCaseByInvitationId(invitationId, caseType));
     }
 
     @PostMapping(path = "/cases/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,

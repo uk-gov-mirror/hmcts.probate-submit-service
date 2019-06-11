@@ -9,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import scala.concurrent.java8.FuturesConvertersImpl;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -64,12 +63,12 @@ public class CasesControllerTest {
     public void shouldGetCaseForIntestacyGrantOfRepresentationByInvitationId() throws Exception {
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().build();
-        when(casesService.getCaseByInviationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(probateCaseDetails);
+        when(casesService.getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(probateCaseDetails);
 
         mockMvc.perform(get(CASES_INVITATION_URL + "/" + INVITATION_ID)
                 .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(casesService, times(1)).getCase(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION);
+        verify(casesService, times(1)).getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION);
     }
 }

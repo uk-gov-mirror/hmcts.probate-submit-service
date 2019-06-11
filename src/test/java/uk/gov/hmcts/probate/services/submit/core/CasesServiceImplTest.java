@@ -57,7 +57,7 @@ public class CasesServiceImplTest {
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCaseByInviteId(INVITATION_ID, CASE_TYPE, securityDTO)).thenReturn(caseResponseOptional);
 
-        ProbateCaseDetails caseResponse = casesService.getCaseByInviationId(INVITATION_ID, CASE_TYPE);
+        ProbateCaseDetails caseResponse = casesService.getCaseByInvitationId(INVITATION_ID, CASE_TYPE);
 
         assertThat(caseResponse, equalTo(caseResponseOptional.get()));
         verify(securityUtils, times(1)).getSecurityDTO();

@@ -82,7 +82,7 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
-    public ProbateCaseDetails getCaseByInviationId(String invitationId, CaseType caseType) {
+    public ProbateCaseDetails getCaseByInvitationId(String invitationId, CaseType caseType) {
         log.info("Getting case of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService

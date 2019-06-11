@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,7 +34,7 @@ public class CcdClientApi implements CoreCaseDataService {
 
     private final SearchFieldFactory searchFieldFactory;
 
-    private final InvitationElasticSearchQueryBuilder invitationElasticSearchQueryBuilder;
+    private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
 
     @Override
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
@@ -137,7 +136,7 @@ public class CcdClientApi implements CoreCaseDataService {
     public Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
 
-       String searchString =  invitationElasticSearchQueryBuilder.buildQuery(inviteId);
+       String searchString =  elasticSearchQueryBuilder.buildQuery(inviteId, searchFieldFactory.getSearchInviteFieldName());
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
@@ -154,15 +153,14 @@ public class CcdClientApi implements CoreCaseDataService {
 
 
     @Override
-    public Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
+    public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
-        List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
+        String searchString =  elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getSearchFieldName(caseType));
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
                 caseType.getName(),
-                ImmutableMap.of(CASE_QUERY_PARAM + searchFieldFactory.getSearchFieldName(caseType), searchField));
+                searchString).getCases();
         if (caseDetails == null) {
             return Optional.empty();
         }

@@ -139,7 +139,7 @@ ccd:
     deceasedAliasAssets: deceasedAnyOtherNames
     caseType: caseType
     deceasedHasAssetsOutsideUK: deceasedHasAssetsOutsideUK
-    deceasedMartialStatus: deceasedMartialStatus
+    deceasedMartialStatus: deceasedMaritalStatus
     deceasedDivorcedInEnglandOrWales: deceasedDivorcedInEnglandOrWales
     primaryApplicantRelationshipToDeceased: primaryApplicantRelationshipToDeceased
     primaryApplicantAdoptionInEnglandOrWales: primaryApplicantAdoptionInEnglandOrWales

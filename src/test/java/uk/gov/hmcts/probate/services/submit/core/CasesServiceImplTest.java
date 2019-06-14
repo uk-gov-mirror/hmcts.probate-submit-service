@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class CasesServiceImplTest {
 
     private static final String EMAIL_ADDRESS = "test@test.com";
-
+    private static final String CASE_ID = "1343242352";
     private static final CaseType CASE_TYPE = CaseType.GRANT_OF_REPRESENTATION;
 
     @Mock
@@ -47,5 +47,19 @@ public class CasesServiceImplTest {
         assertThat(caseResponse, equalTo(caseResponseOptional.get()));
         verify(securityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, CASE_TYPE, securityDTO);
+    }
+    
+    @Test
+    public void shouldGetCaseById() {
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.findCaseById(CASE_ID, securityDTO)).thenReturn(caseResponseOptional);
+
+        ProbateCaseDetails caseResponse = casesService.getCaseById(CASE_ID);
+
+        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDTO);
     }
 }

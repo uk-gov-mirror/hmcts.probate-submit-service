@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CasesControllerTest {
 
     private static final String CASES_URL = "/cases";
+    private static final String CASES_CCD_URL = "/cases/ccd";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String DRAFT = "Draft";
@@ -55,5 +56,22 @@ public class CasesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
+    }
+    
+    @Test
+    public void shouldGetCaseByIdForIntestacyGrantOfRepresentation() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(DRAFT);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        when(casesService.getCaseById(CASE_ID)).thenReturn(caseResponse);
+
+        mockMvc.perform(get(CASES_CCD_URL + "/" + CASE_ID)
+                .param("caseId", CASE_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(casesService, times(1)).getCaseById(CASE_ID);
     }
 }

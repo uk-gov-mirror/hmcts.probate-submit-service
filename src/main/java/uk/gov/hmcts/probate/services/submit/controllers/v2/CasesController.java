@@ -53,9 +53,9 @@ public class CasesController {
             @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
             @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
-    @GetMapping(path = "/cases/ccd/{caseId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> getCase(@PathVariable("caseId") String caseId) {
+    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name="caseId") String caseId) {
         log.info("Retrieving case using application id: {}", caseId.toLowerCase());
         return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
     }

@@ -33,4 +33,8 @@ public class SearchFieldFactory {
     public String getSearchFieldName(CaseType caseType) {
         return Optional.ofNullable(searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
     }
+
+    public String getSearchInviteFieldName() {
+        return "executorsApplying.value.applyingExecutorInvitiationId";
+    }
 }

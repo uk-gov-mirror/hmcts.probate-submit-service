@@ -12,7 +12,7 @@ import uk.gov.hmcts.probate.services.submit.core.proccessors.AbstractSubmissions
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.SequenceService;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
@@ -31,8 +31,8 @@ public class CreateCaseSubmissionsProcessor extends AbstractSubmissionsProcessor
 
     @Autowired
     public CreateCaseSubmissionsProcessor(CoreCaseDataService coreCaseDataService, EventFactory eventFactory, SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory,
-                                          CaseDataValidatorFactory caseDataValidatorFactory, SequenceService sequenceService) {
-        super(securityUtils, searchFieldFactory, caseDataValidatorFactory, coreCaseDataService);
+                                          SequenceService sequenceService, ValidationService validationService) {
+        super(securityUtils, searchFieldFactory, coreCaseDataService, validationService);
         this.coreCaseDataService = coreCaseDataService;
         this.eventFactory = eventFactory;
         this.sequenceService = sequenceService;

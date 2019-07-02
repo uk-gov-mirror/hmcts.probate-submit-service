@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,15 +13,14 @@ import uk.gov.hmcts.probate.services.submit.core.proccessors.impl.CreateCaseSubm
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.SequenceService;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidator;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
-import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 
 import java.util.Optional;
@@ -59,16 +57,13 @@ public class CreateCaseSubmissionsProcessorTest {
     private SearchFieldFactory searchFieldFactory;
 
     @Mock
-    private CaseDataValidatorFactory caseDataValidatorFactory;
-
-    @Mock
     private SequenceService sequenceService;
 
     @Mock
     private Registry registry;
 
     @Mock
-    private CaseDataValidator caseDataValidator;
+    private ValidationService validationService;
 
     private CreateCaseSubmissionsProcessor createCaseSubmissionsProcessor;
 
@@ -85,15 +80,15 @@ public class CreateCaseSubmissionsProcessorTest {
     @Before
     public void setUp() {
         createCaseSubmissionsProcessor = new CreateCaseSubmissionsProcessor(
-                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory, caseDataValidatorFactory,
-                sequenceService);
+                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory,
+                sequenceService, validationService);
         securityDTO = SecurityDTO.builder().build();
         caseData = new CaveatData();
         caseData.setCaveatorEmailAddress(APPLICANT_EMAIL);
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(STATE);
+        caseInfo.setState(CaseState.DRAFT);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
 
         when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData))
@@ -108,10 +103,6 @@ public class CreateCaseSubmissionsProcessorTest {
                 .build());
         when(registry.getName()).thenReturn(RegistryLocation.MANCHESTER.getName());
         when(sequenceService.identifyNextRegistry()).thenReturn(registry);
-        when(caseDataValidatorFactory.getValidator(caseData)).thenReturn(caseDataValidator);
-        when(caseDataValidator.validate(caseData)).thenReturn(ValidatorResults.builder()
-                .validationMessages(Lists.newArrayList())
-                .build());
     }
 
     @Test
@@ -124,6 +115,7 @@ public class CreateCaseSubmissionsProcessorTest {
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, CAVEAT, securityDTO);
         verify(coreCaseDataService, times(1)).createCase(eq(caseData),
                 eq(GOP_CREATE_APPLICATION), eq(securityDTO));
+        verify(validationService, times(1)).validate(caseRequest);
     }
 
     @Test(expected = CaseAlreadyExistsException.class)

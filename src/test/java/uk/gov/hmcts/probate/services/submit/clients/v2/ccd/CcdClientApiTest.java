@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -44,7 +45,7 @@ public class CcdClientApiTest {
 
     private static final Long CASE_ID = 123456789L;
 
-    private static final String STATE = "Draft";
+    private static final CaseState STATE = CaseState.DRAFT;
 
     private static final String AUTHORIZATION = "AUTHXXXXXXXXXXXXX";
 
@@ -107,7 +108,7 @@ public class CcdClientApiTest {
 
         caseDetails = CaseDetails.builder()
             .id(CASE_ID)
-            .state(STATE)
+            .state(STATE.getName())
             .caseTypeId(GRANT_OF_REPRESENTATION.getName())
             .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
                 "caseType", GrantType.INTESTACY))

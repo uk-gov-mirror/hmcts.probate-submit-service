@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
@@ -187,7 +188,7 @@ public class CcdClientApi implements CoreCaseDataService {
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());
-        caseInfo.setState(caseDetails.getState());
+        caseInfo.setState(CaseState.getState(caseDetails.getState()));
 
         return ProbateCaseDetails.builder()
                 .caseData(caseDetailsToCaseDataMapper.map(caseDetails))

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,10 +22,6 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
-import uk.gov.hmcts.reform.probate.model.validation.groups.SubmissionGroup;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Api(tags = {"SubmissionsController"})
@@ -41,43 +36,34 @@ public class SubmissionsController {
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Draft save to CCD successful"),
-            @ApiResponse(code = 400, message = "Draft save to CCD  failed")
+        @ApiResponse(code = 200, message = "Draft save to CCD successful"),
+        @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
     @PostMapping(path = "/submissions/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<SubmitResult> createCase(@PathVariable(APPLICATION_ID) String applicationId,
-                                                   @Validated(SubmissionGroup.class) @RequestBody ProbateCaseDetails caseRequest) {
+                                                   @RequestBody ProbateCaseDetails caseRequest) {
         CaseData caseData = caseRequest.getCaseData();
         log.info("Submitting for case type: {}", caseData.getClass().getSimpleName());
         SubmitResult submitResult = submissionsService.createCase(applicationId.toLowerCase(), caseRequest);
-        return getCorrectResponse(submitResult);
+        return ResponseEntity.ok(submitResult);
     }
 
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Draft save to CCD successful"),
-            @ApiResponse(code = 400, message = "Draft save to CCD  failed")
+        @ApiResponse(code = 200, message = "Draft save to CCD successful"),
+        @ApiResponse(code = 400, message = "Draft save to CCD  failed")
     })
     @PutMapping(path = "/submissions/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICATION_ID) String applicationId,
                                                           @RequestParam(CASE_TYPE) CaseType caseType) {
         log.info("Submitting for case type: {}", caseType.getName());
         SubmitResult submitResult = submissionsService.updateDraftToCase(applicationId.toLowerCase(), caseType);
-        return getCorrectResponse(submitResult);
+        return ResponseEntity.ok(submitResult);
     }
 
-    private ResponseEntity<SubmitResult> getCorrectResponse(SubmitResult submitResult) {
-        ResponseEntity responseEntity = null;
-        if (submitResult.getValidatorResults().isPresent() && !submitResult.isValid()) {
-            responseEntity = new ResponseEntity(submitResult, BAD_REQUEST);
-        } else {
-            responseEntity = new ResponseEntity(submitResult, OK);
-        }
-        return responseEntity;
-    }
 }

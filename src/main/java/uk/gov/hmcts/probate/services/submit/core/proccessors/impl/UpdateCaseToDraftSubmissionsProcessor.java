@@ -10,7 +10,7 @@ import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.probate.services.submit.core.proccessors.AbstractSubmissionsProcessor;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
@@ -32,9 +32,8 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
     @Autowired
     public UpdateCaseToDraftSubmissionsProcessor(CoreCaseDataService coreCaseDataService, EventFactory eventFactory,
                                                  SecurityUtils securityUtils, SearchFieldFactory searchFieldFactory,
-                                                 CaseDataValidatorFactory caseDataValidatorFactory,
-                                                 Map<CaseType, CaseState> createdStateMap) {
-        super(securityUtils, searchFieldFactory, caseDataValidatorFactory, coreCaseDataService);
+                                                 Map<CaseType, CaseState> createdStateMap, ValidationService validationService) {
+        super(securityUtils, searchFieldFactory, coreCaseDataService, validationService);
         this.coreCaseDataService = coreCaseDataService;
         this.eventFactory = eventFactory;
         this.createdStateMap = createdStateMap;
@@ -46,7 +45,7 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
         CaseType caseType = CaseType.getCaseType(caseData);
         ProbateCaseDetails caseResponse = findCase(identifier, caseType, securityDTO);
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
-        CaseState state = CaseState.getState(caseResponse.getCaseInfo().getState());
+        CaseState state = caseResponse.getCaseInfo().getState();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         if (isCreateState(state, caseType)) {
             return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData, caseEvents.getUpdateCaseApplicationEventId(), securityDTO);
@@ -62,7 +61,7 @@ public class UpdateCaseToDraftSubmissionsProcessor extends AbstractSubmissionsPr
         }
     }
 
-    private boolean isCreateState(CaseState caseState, CaseType caseType){
+    private boolean isCreateState(CaseState caseState, CaseType caseType) {
         CaseState createdState = Optional.ofNullable(createdStateMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
         return createdState.equals(caseState);
     }

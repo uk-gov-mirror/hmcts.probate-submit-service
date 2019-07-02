@@ -13,6 +13,7 @@ import uk.gov.hmcts.probate.services.submit.services.DraftService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,7 +47,7 @@ public class DraftsControllerTest {
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(DRAFT);
+        caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
         when(draftService.saveDraft(eq(EMAIL_ADDRESS), eq(caseRequest))).thenReturn(caseResponse);

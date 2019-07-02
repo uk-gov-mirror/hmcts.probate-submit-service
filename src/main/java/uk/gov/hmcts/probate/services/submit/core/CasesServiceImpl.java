@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
@@ -39,6 +40,8 @@ public class CasesServiceImpl implements CasesService {
 
     private final SearchFieldFactory searchFieldFactory;
 
+    private final ValidationService validationService;
+
     private final Map<CaseState, Function<CaseEvents, EventId>> eventMap = ImmutableMap.<CaseState, Function<CaseEvents, EventId>>builder()
         .put(DRAFT, CaseEvents::getUpdateDraftEventId)
         .put(PA_APP_CREATED, CaseEvents::getUpdateCaseApplicationEventId)
@@ -50,7 +53,7 @@ public class CasesServiceImpl implements CasesService {
         log.info("Getting case of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
-                .findCase(searchField, caseType, securityDTO);
+            .findCase(searchField, caseType, securityDTO);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 
@@ -68,11 +71,11 @@ public class CasesServiceImpl implements CasesService {
     }
 
     private ProbateCaseDetails saveCase(SecurityDTO securityDTO, CaseType caseType, CaseData caseData,
-                                         Optional<ProbateCaseDetails> caseResponseOptional) {
+                                        Optional<ProbateCaseDetails> caseResponseOptional) {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
-            CaseState state = CaseState.getState(caseResponse.getCaseInfo().getState());
+            CaseState state = caseResponse.getCaseInfo().getState();
             log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
             EventId eventId = eventMap.get(state).apply(caseEvents);
             return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDTO);
@@ -86,7 +89,16 @@ public class CasesServiceImpl implements CasesService {
         log.info("Getting case of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
-                .findCaseByInviteId(invitationId, caseType, securityDTO);
+            .findCaseByInviteId(invitationId, caseType, securityDTO);
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
+    }
+
+
+    @Override
+    public ProbateCaseDetails validate(String searchField, CaseType caseType) {
+        log.info("Validating case of caseType: {}", caseType.getName());
+        ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
+        validationService.validate(probateCaseDetails);
+        return probateCaseDetails;
     }
 }

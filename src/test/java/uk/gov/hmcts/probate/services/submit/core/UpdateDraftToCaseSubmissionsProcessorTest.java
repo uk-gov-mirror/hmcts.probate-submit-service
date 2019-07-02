@@ -14,8 +14,8 @@ import uk.gov.hmcts.probate.services.submit.core.proccessors.impl.UpdateCaseToDr
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidator;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -67,10 +68,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
     private SearchFieldFactory searchFieldFactory;
 
     @Mock
-    private CaseDataValidatorFactory caseDataValidatorFactory;
-
-    @Mock
-    private CaseDataValidator caseDataValidator;
+    private ValidationService validationService;
 
     private UpdateCaseToDraftSubmissionsProcessor updateCaseToDraftSubmissionsProcessor;
 
@@ -90,7 +88,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
     public void setUp() {
         createdStateMap = ImmutableMap.of(GRANT_OF_REPRESENTATION, CaseState.PA_APP_CREATED);
         updateCaseToDraftSubmissionsProcessor = new UpdateCaseToDraftSubmissionsProcessor(
-                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory, caseDataValidatorFactory, createdStateMap);
+                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory, createdStateMap, validationService);
         securityDTO = SecurityDTO.builder().build();
         caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(APPLICANT_EMAIL);
@@ -98,7 +96,7 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
         caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(STATE);
+        caseInfo.setState(CaseState.DRAFT);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
 
         when(searchFieldFactory.getSearchFieldValuePair(CaseType.GRANT_OF_REPRESENTATION, caseData))
@@ -115,10 +113,6 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
                 .updateCaseApplicationEventId(GOP_UPDATE_APPLICATION)
                 .build());
 
-        when(caseDataValidatorFactory.getValidator(caseData)).thenReturn(caseDataValidator);
-        when(caseDataValidator.validate(caseData)).thenReturn(ValidatorResults.builder()
-                .validationMessages(Lists.newArrayList())
-                .build());
     }
 
     @Test(expected = CaseNotFoundException.class)
@@ -148,12 +142,13 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(coreCaseDataService, times(1)).updateCase(eq(CASE_ID), eq(caseData),
                 eq(GOP_CREATE_APPLICATION), eq(securityDTO));
+        verify(validationService, times(1)).validate(caseRequest);
     }
 
     @Test
     public void shouldSubmitWhenExistingCaseIsAppCreated() {
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        caseInfo.setState(CaseState.PA_APP_CREATED.getName());
+        caseInfo.setState(CaseState.PA_APP_CREATED);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
                 .thenReturn(Optional.of(caseResponse));
         when(coreCaseDataService.updateCase(eq(CASE_ID), eq(caseData),
@@ -168,13 +163,14 @@ public class UpdateDraftToCaseSubmissionsProcessorTest {
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(coreCaseDataService, times(1)).updateCase(eq(CASE_ID), eq(caseData),
                 eq(GOP_UPDATE_APPLICATION), eq(securityDTO));
+        verify(validationService, times(1)).validate(caseRequest);
     }
 
     @Test(expected = CaseStatePreconditionException.class)
     public void shouldThrowExceptionWhenStateIsNotDraftWhenSubmitting() {
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(CaseState.CASE_CREATED.getName());
+        caseInfo.setState(CaseState.CASE_CREATED);
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
 
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);

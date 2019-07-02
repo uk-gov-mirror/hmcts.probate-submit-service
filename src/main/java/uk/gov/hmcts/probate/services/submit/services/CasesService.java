@@ -10,4 +10,6 @@ public interface CasesService {
     ProbateCaseDetails getCaseByInvitationId(String invitationId, CaseType caseType);
 
     ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails);
+
+    ProbateCaseDetails validate(String searchField, CaseType caseType);
 }

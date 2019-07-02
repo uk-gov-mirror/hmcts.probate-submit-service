@@ -12,6 +12,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -41,7 +42,7 @@ public class DraftServiceImplTest {
 
     private static final String CASE_ID = "12323213323";
 
-    private static final String STATE = "STATE";
+    private static final CaseState STATE = CaseState.DRAFT;
 
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
 

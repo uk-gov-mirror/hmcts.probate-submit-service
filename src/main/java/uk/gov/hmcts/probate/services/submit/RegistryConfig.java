@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.services.submit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -14,9 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 @Configuration
-@ConfigurationProperties
 @PropertySource(value = "git.properties", ignoreResourceNotFound = true)
-public class ApplicationConfig {
+public class RegistryConfig {
+
     private List<Registry> registries = new ArrayList<>();
 
     @Autowired

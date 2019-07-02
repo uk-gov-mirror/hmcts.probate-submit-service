@@ -8,6 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
@@ -33,6 +34,9 @@ public class CasesServiceImplTest {
     @Mock
     private SecurityUtils securityUtils;
 
+    @Mock
+    private ValidationService validationService;
+
     @InjectMocks
     private CasesServiceImpl casesService;
 
@@ -51,7 +55,7 @@ public class CasesServiceImplTest {
     }
 
     @Test
-    public void shouldGetCaseByInviationId() {
+    public void shouldGetCaseByInvitationId() {
         SecurityDTO securityDTO = SecurityDTO.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
@@ -62,5 +66,17 @@ public class CasesServiceImplTest {
         assertThat(caseResponse, equalTo(caseResponseOptional.get()));
         verify(securityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).findCaseByInviteId(INVITATION_ID, CASE_TYPE, securityDTO);
+    }
+
+    @Test
+    public void shouldValidate() {
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.findCase(EMAIL_ADDRESS, CASE_TYPE, securityDTO)).thenReturn(caseResponseOptional);
+
+        casesService.validate(EMAIL_ADDRESS, CASE_TYPE);
+
+        verify(validationService, times(1)).validate(caseResponseOptional.get());
     }
 }

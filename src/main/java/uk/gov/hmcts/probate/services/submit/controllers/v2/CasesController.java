@@ -13,11 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
@@ -31,7 +33,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class CasesController {
 
     private final CasesService casesService;
-
 
     @ApiOperation(value = "Get case to CCD", notes = "Get case to CCD")
     @ApiResponses(value = {
@@ -47,15 +48,15 @@ public class CasesController {
     }
 
 
-    @ApiOperation(value = "Get case by Invitaion Id from CCD", notes = "Get case bu invite id from CCD")
+    @ApiOperation(value = "Get case by Invitation Id from CCD", notes = "Get case bu invite id from CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-            @ApiResponse(code = 400, message = "Case retrieval from CCD unsuccessful")
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD unsuccessful")
     })
     @GetMapping(path = "/cases/invitation/{invitationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCaseByInvitationId(@RequestParam("caseType") CaseType caseType,
-                                                      @PathVariable("invitationId") String invitationId) {
+                                                                    @PathVariable("invitationId") String invitationId) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
         return ResponseEntity.ok(casesService.getCaseByInvitationId(invitationId, caseType));
     }
@@ -64,8 +65,16 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCase(@PathVariable("applicationId") String applicationId,
-                                                        @RequestBody ProbateCaseDetails caseRequest) {
+                                                       @RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(), caseRequest), OK);
+    }
+
+    @PutMapping(path = "/cases/{applicationId}/validations", consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<CaseData> validate(@PathVariable("applicationId") String applicationId,
+                                             @RequestParam("caseType") CaseType caseType) {
+        return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
     }
 }

@@ -11,6 +11,7 @@ import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundExcep
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -60,6 +61,10 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private final EventFactory eventFactory;
 
+    private final CaseSubmissionUpdater caseSubmissionUpdater;
+
+    private final ValidationService validationService;
+
     @Override
     public ProbateCaseDetails addPaymentToCase(String searchField, ProbatePaymentDetails paymentUpdateRequest) {
         log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
@@ -77,6 +82,9 @@ public class PaymentServiceImpl implements PaymentsService {
         log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDTO);
+
+        validationService.validateForSubmission(probateCaseDetails);
+
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
         return updateCase(caseId, securityDTO, caseType, probateCaseDetails);
@@ -96,7 +104,7 @@ public class PaymentServiceImpl implements PaymentsService {
     private ProbateCaseDetails updateCase(String caseId, SecurityDTO securityDTO, CaseType caseType,
                                           ProbateCaseDetails probateCaseDetails) {
         CasePayment payment = probateCaseDetails.getCaseData().getPayments().get(0).getValue();
-        CaseState caseState = CaseState.getState(probateCaseDetails.getCaseInfo().getState());
+        CaseState caseState =  probateCaseDetails.getCaseInfo().getState();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         return coreCaseDataService.updateCase(caseId, probateCaseDetails.getCaseData(), eventId, securityDTO);
@@ -104,7 +112,7 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private ProbateCaseDetails updateCase(String caseId, ProbatePaymentDetails paymentUpdateRequest,
                                           SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse, Boolean asCaseWorker) {
-        CaseState caseState = CaseState.getState(caseResponse.getCaseInfo().getState());
+        CaseState caseState = caseResponse.getCaseInfo().getState();
         if (CaseState.CASE_CREATED.equals(caseState)) {
             return caseResponse;
         }
@@ -112,7 +120,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = createCaseData(caseResponse, payment);
-
+        caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
         if (asCaseWorker) {
             return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
         }

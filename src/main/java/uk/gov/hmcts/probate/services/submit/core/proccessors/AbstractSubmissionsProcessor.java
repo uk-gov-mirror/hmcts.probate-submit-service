@@ -10,7 +10,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.core.validation.CaseDataValidatorFactory;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -30,8 +30,8 @@ public abstract class AbstractSubmissionsProcessor {
 
     protected final SecurityUtils securityUtils;
     private final SearchFieldFactory searchFieldFactory;
-    private final CaseDataValidatorFactory caseDataValidatorFactory;
     private final CoreCaseDataService coreCaseDataService;
+    private final ValidationService validationService;
 
     public SubmitResult process(String identifier, Supplier<ProbateCaseDetails> caseRequestSupplier) {
         ProbateCaseDetails caseRequest = caseRequestSupplier.get();
@@ -39,15 +39,10 @@ public abstract class AbstractSubmissionsProcessor {
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         assertIdentifierMatchesCase(identifier, caseData, caseType);
-        ValidatorResults validatorResults = validateCase(caseData);
+        validationService.validate(caseRequest);
         return SubmitResult.builder()
-                .probateCaseDetails(isValid(validatorResults) ?  processCase(identifier, caseData) : caseRequest)
-                .validatorResults(validatorResults)
+                .probateCaseDetails(processCase(identifier, caseData))
                 .build();
-    }
-
-    private Boolean isValid(ValidatorResults validatorResults) {
-        return validatorResults.getValidationMessages().isEmpty();
     }
 
     protected abstract ProbateCaseDetails processCase(String identifier, CaseData caseData);
@@ -69,9 +64,5 @@ public abstract class AbstractSubmissionsProcessor {
                     .build()))
                 .build());
         }
-    }
-
-    private ValidatorResults validateCase(CaseData caseData) {
-        return caseDataValidatorFactory.getValidator(caseData).validate(caseData);
     }
 }

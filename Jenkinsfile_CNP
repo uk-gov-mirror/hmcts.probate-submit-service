@@ -41,11 +41,11 @@ withPipeline("java", product, component) {
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
   installCharts()
-//    
+  /*    
     before('buildinfra:prod') {
         error 'Deliberately breaking pipeline to prevent prod deployment'
     }
-    
+  */ 
   
     after('test') {
 //        try {

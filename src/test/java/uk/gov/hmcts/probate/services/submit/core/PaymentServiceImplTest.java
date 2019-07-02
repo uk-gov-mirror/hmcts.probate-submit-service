@@ -78,6 +78,8 @@ public class PaymentServiceImplTest {
 
     private ProbatePaymentDetails paymentUpdateRequest;
 
+    private ProbateCaseDetails probateCaseDetailsRequest;
+
     @Before
     public void setUp() {
         payment = new CasePayment();
@@ -93,15 +95,13 @@ public class PaymentServiceImplTest {
             .build();
         caseData = new GrantOfRepresentationData();
         caseData.setPayments(Lists.newArrayList(CollectionMember.<CasePayment>builder()
-            .value(CasePayment.builder()
-                .status(PaymentStatus.SUCCESS)
-                .build())
-            .build()));
+                .value(payment)
+                .build()));
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);
+        probateCaseDetailsRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
         caseResponse = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
-
         when(eventFactory.getCaseEvents(CaseType.GRANT_OF_REPRESENTATION)).thenReturn(CaseEvents.builder()
             .createCaseApplicationEventId(GOP_CREATE_APPLICATION)
             .createCaseEventId(GOP_CREATE_CASE)
@@ -210,9 +210,8 @@ public class PaymentServiceImplTest {
         paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
     }
 
-
     @Test
-    public void shouldUpdatePaymentByCaseIdAndIsSuccess() {
+    public void shouldUpdateCaseByCaseIdAndIsSuccess() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDTO))
             .thenReturn(Optional.of(caseResponse));
@@ -220,7 +219,7 @@ public class PaymentServiceImplTest {
             eq(GOP_CREATE_CASE), eq(securityDTO)))
             .thenReturn(caseResponse);
 
-        ProbateCaseDetails actualCaseResponse = paymentService.updatePaymentByCaseId(CASE_ID, paymentUpdateRequest);
+        ProbateCaseDetails actualCaseResponse = paymentService.updateCaseByCaseId(CASE_ID, probateCaseDetailsRequest);
 
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();
@@ -236,7 +235,7 @@ public class PaymentServiceImplTest {
         when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDTO))
             .thenReturn(Optional.of(caseResponse));
 
-        ProbateCaseDetails actualCaseResponse = paymentService.updatePaymentByCaseId(CASE_ID, paymentUpdateRequest);
+        ProbateCaseDetails actualCaseResponse = paymentService.updateCaseByCaseId(CASE_ID, probateCaseDetailsRequest);
 
         assertThat(actualCaseResponse, equalTo(actualCaseResponse));
         verify(mockSecurityUtils).getSecurityDTO();

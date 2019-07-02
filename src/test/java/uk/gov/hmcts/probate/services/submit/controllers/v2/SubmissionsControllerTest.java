@@ -84,7 +84,6 @@ public class SubmissionsControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
-        System.out.println(content);
     }
 
 }

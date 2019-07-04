@@ -12,12 +12,12 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
-import uk.gov.hmcts.reform.probate.model.validation.groups.IntestacyCrossFieldCheck;
-import uk.gov.hmcts.reform.probate.model.validation.groups.IntestacyFieldCheck;
-import uk.gov.hmcts.reform.probate.model.validation.groups.IntestacyNullCheck;
-import uk.gov.hmcts.reform.probate.model.validation.groups.PaCrossFieldCheck;
-import uk.gov.hmcts.reform.probate.model.validation.groups.PaFieldCheck;
-import uk.gov.hmcts.reform.probate.model.validation.groups.PaNullCheck;
+import uk.gov.hmcts.reform.probate.model.validation.groups.crossfieldcheck.IntestacyCrossFieldCheck;
+import uk.gov.hmcts.reform.probate.model.validation.groups.crossfieldcheck.PaCrossFieldCheck;
+import uk.gov.hmcts.reform.probate.model.validation.groups.fieldcheck.IntestacyFieldCheck;
+import uk.gov.hmcts.reform.probate.model.validation.groups.fieldcheck.PaFieldCheck;
+import uk.gov.hmcts.reform.probate.model.validation.groups.nullcheck.IntestacyNullCheck;
+import uk.gov.hmcts.reform.probate.model.validation.groups.nullcheck.PaNullCheck;
 import uk.gov.hmcts.reform.probate.model.validation.groups.submission.IntestacySubmission;
 import uk.gov.hmcts.reform.probate.model.validation.groups.submission.PaSubmission;
 

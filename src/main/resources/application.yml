@@ -77,7 +77,7 @@
     tokenTimeToLiveInSeconds: '900'
 
   idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
-  
+
   ccd:
     probate:
       fullName: fullName
@@ -139,10 +139,24 @@
       paymentReference: paymentReferenceNumber
       willCodicilsNumber: willNumberOfCodicils
       deceasedAliasAssets: deceasedAnyOtherNames
+      caseType: caseType
+      deceasedHasAssetsOutsideUK: deceasedHasAssetsOutsideUK
+      deceasedMartialStatus: deceasedMaritalStatus
+      deceasedDivorcedInEnglandOrWales: deceasedDivorcedInEnglandOrWales
+      primaryApplicantRelationshipToDeceased: primaryApplicantRelationshipToDeceased
+      primaryApplicantAdoptionInEnglandOrWales: primaryApplicantAdoptionInEnglandOrWales
+      deceasedSpouseNotApplyingReason: deceasedSpouseNotApplyingReason
+      deceasedOtherChildren: deceasedOtherChildren
+      allDeceasedChildrenOverEighteen: allDeceasedChildrenOverEighteen
+      anyDeceasedChildrenDieBeforeDeceased: anyDeceasedChildrenDieBeforeDeceased
+      anyDeceasedGrandChildrenUnderEighteen: anyDeceasedGrandChildrenUnderEighteen
+      deceasedAnyChildren: deceasedAnyChildren
+      foreignAsset: foreignAsset
     monetaryValueMap:
       ihtGrossValue: ihtGrossValue
       ihtNetValue: ihtNetValue
       totalFee: totalFee
+      foreignAssetEstateValue: foreignAssetEstateValue
     declarationMap:
       declaration: declaration
     legalStatementMap:

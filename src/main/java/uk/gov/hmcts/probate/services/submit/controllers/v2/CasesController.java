@@ -34,10 +34,10 @@ public class CasesController {
 
     private final CasesService casesService;
 
-    @ApiOperation(value = "Get case to CCD", notes = "Get case to CCD")
+    @ApiOperation(value = "Get case to CCD using session identifier", notes = "Get case to CCD")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -76,5 +76,16 @@ public class CasesController {
     public ResponseEntity<CaseData> validate(@PathVariable("applicationId") String applicationId,
                                              @RequestParam("caseType") CaseType caseType) {
         return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
+    }
+    @ApiOperation(value = "Get case to CCD using case Id", notes = "Get case to CCD")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+    })
+    @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name="caseId") String caseId) {
+        log.info("Retrieving case using application id: {}", caseId.toLowerCase());
+        return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
     }
 }

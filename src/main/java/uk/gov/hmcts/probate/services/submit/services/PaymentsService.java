@@ -9,5 +9,5 @@ public interface PaymentsService {
 
     ProbateCaseDetails createCase(String searchField, ProbateCaseDetails probateCaseDetails);
 
-    ProbateCaseDetails updatePaymentByCaseId(String caseId, ProbatePaymentDetails paymentUpdateRequest);
+    ProbateCaseDetails updateCaseByCaseId(String caseId, ProbateCaseDetails probateUpdateRequest);
 }

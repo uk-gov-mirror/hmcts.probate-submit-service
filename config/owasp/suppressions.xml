@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
     <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.12.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
+        <cve>CVE-2019-0221</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.12.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
+        <cve>CVE-2019-0221</cve>
+    </suppress>
+    <suppress>
         <notes><![CDATA[file name: tomcat-9.0.12.jar]]></notes>
         <cve>CVE-2019-0199</cve>
     </suppress>
@@ -74,6 +88,20 @@
     ]]></notes>
         <gav regex="true">^org\.springframework:spring-webmvc:.*$</gav>
         <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.12.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
+        <cve>CVE-2019-0221</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.12.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
+        <cve>CVE-2019-0221</cve>
     </suppress>
 
     <suppress>
@@ -174,10 +202,19 @@
 
     <suppress>
         <notes><![CDATA[
+    file name: spring-security-core-5.1.1.RELEASE.jar
+    ]]></notes>
+        <gav regex="true">^org\.springframework:spring-security:.*$</gav>
+        <cve>CVE-2019-3795</cve>
+    </suppress>
+
+    <suppress>
+        <notes><![CDATA[
    file name: spring-security-core-5.1.1.RELEASE.jar
    ]]></notes>
         <gav regex="true">^org\.springframework\.security:spring-security-core:.*$</gav>
         <cpe>cpe:/a:pivotal_software:spring_security</cpe>
+        <cve>CVE-2019-3795</cve>
     </suppress>
 
     <suppress>
@@ -212,6 +249,7 @@
     ]]></notes>
         <gav regex="true">^com\.google\.guava:guava:.*$</gav>
         <cpe>cpe:/a:google:guava</cpe>
+        <cve>CVE-2018-10237</cve>
     </suppress>
 
     <suppress>

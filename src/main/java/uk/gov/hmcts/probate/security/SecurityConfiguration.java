@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/drafts/**")
                 .antMatchers("/submissions/**")
                 .antMatchers("/payments/**")
-                .antMatchers("/ccd-case-payments/**")
+                .antMatchers("/ccd-case-update/**")
                 .and()
                 .addFilter(filter)
                 .csrf().disable()

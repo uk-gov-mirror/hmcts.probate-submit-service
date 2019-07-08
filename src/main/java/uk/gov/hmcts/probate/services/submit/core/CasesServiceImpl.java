@@ -58,6 +58,15 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
+    public ProbateCaseDetails getCaseById(String caseId) {
+        log.info("Getting case by caseId: {}", caseId);
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
+                .findCaseById(caseId, securityDTO);
+        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
+    }
+
+    @Override
     public ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails) {
         log.info("saveDraft - Saving draft for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
         CaseData caseData = probateCaseDetails.getCaseData();

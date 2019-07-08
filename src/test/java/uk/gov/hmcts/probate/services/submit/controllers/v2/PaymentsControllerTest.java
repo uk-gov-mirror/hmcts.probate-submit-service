@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PaymentsControllerTest {
 
     private static final String PAYMENTS_URL = "/payments";
-    private static final String UPDATE_PAYMENTS_URL = "/ccd-case-payments";
+    private static final String UPDATE_CASE_URL = "/ccd-case-update";
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String CASE_ID = "1343242352";
     private static final String APPLICATION_CREATED = "PAAppCreated";
@@ -47,17 +47,14 @@ public class PaymentsControllerTest {
 
     @Test
     public void shouldUpdatePaymentByCaseId() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/payments.json");
-        CasePayment casePayment = objectMapper.readValue(json, CasePayment.class);
-        ProbatePaymentDetails paymentUpdateRequest = ProbatePaymentDetails.builder()
-            .payment(casePayment)
-            .build();
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation_caseDetails.json");
+        ProbateCaseDetails caseDetailsRequest = objectMapper.readValue(json, ProbateCaseDetails.class);
 
-        mockMvc.perform(post(UPDATE_PAYMENTS_URL + "/" + CASE_ID)
-            .content(objectMapper.writeValueAsString(paymentUpdateRequest))
+        mockMvc.perform(post(UPDATE_CASE_URL + "/" + CASE_ID)
+            .content(objectMapper.writeValueAsString(caseDetailsRequest))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
-        verify(paymentsService).updatePaymentByCaseId(eq(CASE_ID), eq(paymentUpdateRequest));
+        verify(paymentsService).updateCaseByCaseId(eq(CASE_ID), eq(caseDetailsRequest));
     }
 
     @Test

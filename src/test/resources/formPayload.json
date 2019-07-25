@@ -180,7 +180,11 @@
         "emailSent": true
       }
     ],
-    "softStop": "True"
+    "softStop": "True",
+    "statementOfTruthDocument": {
+      "url": "http://dm-store-aat.service.core-compute-aat.internal/statementoftruth/123456789",
+      "filename": "Sample-Statement-of-Truth.pdf"
+    }
   },
   "registry": {
     "address": "test address"

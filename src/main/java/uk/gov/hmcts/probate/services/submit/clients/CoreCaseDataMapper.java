@@ -582,19 +582,31 @@ public class CoreCaseDataMapper {
 
     public Optional<JsonNode> mapStatementOfTruth(JsonNode statementOfTruth) {
         ObjectNode ccdFormat = mapper.createObjectNode();
-        ccdFormat.set(DocumentType, new TextNode("statementOfTruthDocument".trim()));
+
+//        ccdFormat.set(DocumentType, new TextNode("statementOfTruthDocument".trim()));
+        ccdFormat.set("DocumentType", new TextNode("statementOfTruthDocument".trim()));
+
         String documentUploadURL = statementOfTruth.get(url).asText();
         String documentUploadName = statementOfTruth.get(filename).asText();
         ObjectNode docLinkValue = mapper.createObjectNode();
-        docLinkValue.set(documentUrl, new TextNode(documentUploadURL.trim()));
-        docLinkValue.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
-        docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
-        ccdFormat.set(DocumentLink, docLinkValue);
-        ccdFormat.set(DocumentFileName, new TextNode(documentUploadName.trim()));
+//        docLinkValue.set(documentUrl, new TextNode(documentUploadURL.trim()));
+        docLinkValue.set("document_url", new TextNode(documentUploadURL.trim()));
+//        docLinkValue.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
+        docLinkValue.set("document_binary_url", new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
+//        docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
+        docLinkValue.set("document_filename", new TextNode(documentUploadName.trim()));
+//        ccdFormat.set(DocumentLink, docLinkValue);
+        ccdFormat.set("DocumentLink", docLinkValue);
+
+//        ccdFormat.set(DocumentFileName, null);
+        ccdFormat.set("DocumentFileName", null);
+
         String statementOfTruthGeneratedBy = statementOfTruth.get(documentGenerated).asText();
-        ccdFormat.set(DocumentGeneratedBy, new TextNode(statementOfTruthGeneratedBy));
+//        ccdFormat.set(DocumentGeneratedBy, new TextNode(statementOfTruthGeneratedBy));
+        ccdFormat.set("DocumentGeneratedBy", new TextNode(statementOfTruthGeneratedBy));
         LocalDate localDate = LocalDateTime.now().toLocalDate();
-        ccdFormat.set(DocumentDateAdded, new TextNode(localDate.toString()));
+//        ccdFormat.set(DocumentDateAdded, new TextNode(localDate.toString()));
+        ccdFormat.set("DocumentDateAdded", new TextNode(localDate.toString()));
         return  Optional.of(ccdFormat);
     }
 

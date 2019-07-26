@@ -410,6 +410,13 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.19.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
+        <cve>CVE-2019-10072</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
    file name: applicationinsights-core-2.1.2.jar (shaded: com.google.guava:guava:20.0)
    ]]></notes>
         <gav regex="true">^com\.google\.guava:guava:.*$</gav>

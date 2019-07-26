@@ -350,4 +350,8 @@
         <notes><![CDATA[ CVE-2019-10072  ]]></notes>
         <cve>CVE-2019-10072</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[ CVE-2019-12086  ]]></notes>
+        <cve>CVE-2019-12086</cve>
+    </suppress>
 </suppressions>

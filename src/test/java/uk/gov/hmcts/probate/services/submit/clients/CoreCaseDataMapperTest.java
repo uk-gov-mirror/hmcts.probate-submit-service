@@ -148,7 +148,6 @@ public class CoreCaseDataMapperTest {
         expected.put("executorsApplying", TestUtils.getJsonNodeFromFile("ccdApplyingExecutors.json"));
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getExecutorMap(), coreCaseDataMapper::executorsMapper);
         assertEquals(expected, mappedData);
-
     }
 
     @Test
@@ -295,6 +294,13 @@ public class CoreCaseDataMapperTest {
         Map<String, JsonNode> expected = TestUtils.getJsonMapFromFile("ccdAddresses.json");
         Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getAddressMap(), coreCaseDataMapper::addressMapper);
         assertEquals(expected, mappedData);
+    }
+
+    @Test
+    public void mapStatementOfTruthTest() throws IOException {
+        JsonNode expected = TestUtils.getJsonNodeFromFile("ccdStatementOfTruth.json");
+        Map<String, JsonNode> mappedData = coreCaseDataMapper.map(submitdata, coreCaseDataMapper.getStatementOfTruthMap(), coreCaseDataMapper::statementOfTruthMapper);
+        assertEquals(expected, mappedData.get("statementOfTruthDocument"));
     }
 
     @Test

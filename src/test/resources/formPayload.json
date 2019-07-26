@@ -182,8 +182,8 @@
     ],
     "softStop": "True",
     "statementOfTruthDocument": {
-      "url": "http://dm-store-aat.service.core-compute-aat.internal/statementoftruth/123456789",
-      "filename": "Sample-Statement-of-Truth.pdf"
+      "url": "url_link1",
+      "filename": "statement_of_truth_1"
     }
   },
   "registry": {

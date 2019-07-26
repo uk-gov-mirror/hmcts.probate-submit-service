@@ -90,7 +90,6 @@ ccd:
     otherReason: otherReason
     filename: filename
     url: url
-    documentGenerated: documentGenerated
   ccd:
     notApplyingExecutorName: notApplyingExecutorName
     notApplyingExecutorReason: notApplyingExecutorReason
@@ -108,9 +107,6 @@ ccd:
     documentBinaryUrl: document_binary_url
     documentFilename: document_filename
     Comment: Comment
-    DocumentGeneratedBy: DocumentGeneratedBy
-    DocumentDateAdded: DocumentDateAdded
-    DocumentFileName: DocumentFileName
   reasonMap:
     optionDiedBefore: DiedBefore
     optionDiedAfter: DiedAfter

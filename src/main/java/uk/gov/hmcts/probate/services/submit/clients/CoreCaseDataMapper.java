@@ -81,8 +81,6 @@ public class CoreCaseDataMapper {
     private String filename;
     @Value("${ccd.probate.url}")
     private String url;
-    @Value("${ccd.probate.documentGenerated}")
-    private String documentGenerated;
     @Value("${ccd.ccd.notApplyingExecutorName}")
     private String notApplyingExecutorName;
     @Value("${ccd.ccd.notApplyingExecutorReason}")
@@ -114,12 +112,6 @@ public class CoreCaseDataMapper {
     private String documentBinaryUrl;
     @Value("${ccd.ccd.documentFilename}")
     private String documentFilename;
-    @Value("${ccd.ccd.DocumentGeneratedBy}")
-    private String DocumentGeneratedBy;
-    @Value("${ccd.ccd.DocumentDateAdded}")
-    private String DocumentDateAdded;
-    @Value("${ccd.ccd.DocumentFileName}")
-    private String DocumentFileName;
 
     @NotNull
     private Map<String, String> reasonMap;
@@ -583,30 +575,13 @@ public class CoreCaseDataMapper {
     public Optional<JsonNode> mapStatementOfTruth(JsonNode statementOfTruth) {
         ObjectNode ccdFormat = mapper.createObjectNode();
 
-//        ccdFormat.set(DocumentType, new TextNode("statementOfTruthDocument".trim()));
-        ccdFormat.set("DocumentType", new TextNode("statementOfTruthDocument".trim()));
-
         String documentUploadURL = statementOfTruth.get(url).asText();
         String documentUploadName = statementOfTruth.get(filename).asText();
-        ObjectNode docLinkValue = mapper.createObjectNode();
-//        docLinkValue.set(documentUrl, new TextNode(documentUploadURL.trim()));
-        docLinkValue.set("document_url", new TextNode(documentUploadURL.trim()));
-//        docLinkValue.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
-        docLinkValue.set("document_binary_url", new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
-//        docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
-        docLinkValue.set("document_filename", new TextNode(documentUploadName.trim()));
-//        ccdFormat.set(DocumentLink, docLinkValue);
-        ccdFormat.set("DocumentLink", docLinkValue);
 
-//        ccdFormat.set(DocumentFileName, null);
-        ccdFormat.set("DocumentFileName", null);
+        ccdFormat.set(documentUrl, new TextNode(documentUploadURL.trim()));
+        ccdFormat.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
+        ccdFormat.set(documentFilename, new TextNode(documentUploadName.trim()));
 
-        String statementOfTruthGeneratedBy = statementOfTruth.get(documentGenerated).asText();
-//        ccdFormat.set(DocumentGeneratedBy, new TextNode(statementOfTruthGeneratedBy));
-        ccdFormat.set("DocumentGeneratedBy", new TextNode(statementOfTruthGeneratedBy));
-        LocalDate localDate = LocalDateTime.now().toLocalDate();
-//        ccdFormat.set(DocumentDateAdded, new TextNode(localDate.toString()));
-        ccdFormat.set("DocumentDateAdded", new TextNode(localDate.toString()));
         return  Optional.of(ccdFormat);
     }
 

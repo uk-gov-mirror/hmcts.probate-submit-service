@@ -110,6 +110,7 @@ ccd:
     Comment: Comment
     DocumentGeneratedBy: DocumentGeneratedBy
     DocumentDateAdded: DocumentDateAdded
+    DocumentFileName: DocumentFileName
   reasonMap:
     optionDiedBefore: DiedBefore
     optionDiedAfter: DiedAfter

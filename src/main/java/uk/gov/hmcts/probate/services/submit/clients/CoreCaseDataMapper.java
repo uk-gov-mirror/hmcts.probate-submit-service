@@ -590,7 +590,7 @@ public class CoreCaseDataMapper {
         docLinkValue.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
         docLinkValue.set(documentFilename, new TextNode(documentUploadName.trim()));
         ccdFormat.set(DocumentLink, docLinkValue);
-        ccdFormat.set(DocumentFileName, new TextNode(documentUploadURL.trim()));
+        ccdFormat.set(DocumentFileName, new TextNode(documentUploadName.trim()));
         String statementOfTruthGeneratedBy = statementOfTruth.get(documentGenerated).asText();
         ccdFormat.set(DocumentGeneratedBy, new TextNode(statementOfTruthGeneratedBy));
         LocalDate localDate = LocalDateTime.now().toLocalDate();

@@ -30,7 +30,3 @@ ccd:
   dataStoreApi:
     s2sKey: ${DATA_STORE_S2S_KEY}
     image: "hmctspublic.azurecr.io/ccd/data-store-api:latest"
-  caseManagementWeb:
-    enabled: true
-    environment:
-      NODE_TLS_REJECT_UNAUTHORIZED: 0

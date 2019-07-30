@@ -24,3 +24,11 @@ ccd:
 
   definitionStoreApi:
     s2sKey: ${DEFINITION_STORE_S2S_KEY}
+
+  apiGateway:
+    s2sKey: ${API_GATEWAY_S2S_KEY}
+    idamClientSecret: ${API_GATEWAY_IDAM_SECRET}
+
+  dataStoreApi:
+    s2sKey: ${DATA_STORE_S2S_KEY}
+    image: "hmcts.azurecr.io/hmcts/ccd-data-store-api:tim-debug"

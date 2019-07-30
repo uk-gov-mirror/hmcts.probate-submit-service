@@ -31,4 +31,4 @@ ccd:
 
   dataStoreApi:
     s2sKey: ${DATA_STORE_S2S_KEY}
-    image: "hmcts.azurecr.io/hmcts/ccd-data-store-api:tim-debug"
+    image: "hmctspublic.azurecr.io/ccd/data-store-api:latest"

@@ -36,7 +36,8 @@ ccd:
     s2sAuthorisedServices: ccd_admin,ccd_data,ccd_gw
   apiGateway:
     s2sKey: ${API_GATEWAY_S2S_KEY}
-    idamClientSecret: ${API_GATEWAY_IDAM_SECRET}
+    idamClientSecret:
+      value: ${API_GATEWAY_IDAM_SECRET}
   dataStoreApi:
     s2sKey: ${DATA_STORE_S2S_KEY}
     image: "hmctspublic.azurecr.io/ccd/data-store-api:latest"

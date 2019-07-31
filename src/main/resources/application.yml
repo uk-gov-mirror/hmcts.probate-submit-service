@@ -169,6 +169,8 @@ ccd:
     deceasedAddress: deceasedAddress
   documentUploadMap:
     documentUploads: boDocumentsUploaded
+  statementOfTruthMap:
+    statementOfTruthDocument: statementOfTruthDocument
 
 
 logging:

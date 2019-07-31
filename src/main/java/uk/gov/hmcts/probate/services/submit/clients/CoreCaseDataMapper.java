@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.spring.web.json.Json;
 import uk.gov.hmcts.probate.services.submit.model.PaymentResponse;
 
 import java.math.BigDecimal;
@@ -132,6 +133,8 @@ public class CoreCaseDataMapper {
     private Map<String, String> addressMap;
     @NotNull
     private Map<String, String> documentUploadMap;
+    @NotNull
+    private Map<String, String> statementOfTruthMap;
 
     public Map<String, String> getReasonMap() {
         return reasonMap;
@@ -213,6 +216,12 @@ public class CoreCaseDataMapper {
         this.documentUploadMap = documentUploadMap;
     }
 
+    public Map<String, String> getStatementOfTruthMap() { return statementOfTruthMap; }
+
+    public void setStatementOfTruthMap(Map<String, String> statementOfTruthMap) {
+        this.statementOfTruthMap = statementOfTruthMap;
+    }
+
     public JsonNode createCcdData(JsonNode probateData, String ccdEventId, JsonNode ccdToken, Calendar submissionTimestamp, JsonNode registryData) {
         ObjectNode event = mapper.createObjectNode();
         event.put("id", ccdEventId);
@@ -249,6 +258,7 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
         ccdData.setAll(map(probateData, documentUploadMap, this::documentUploadMapper));
+        ccdData.setAll(map(probateData, statementOfTruthMap, this::statementOfTruthMapper));
         return ccdData;
     }
 
@@ -557,6 +567,24 @@ public class CoreCaseDataMapper {
         return ret;
     }
 
+    public Optional<JsonNode> statementOfTruthMapper(JsonNode probateData, String fieldname) {
+        JsonNode statementOfTruth = probateData.get(fieldname);
+        return mapStatementOfTruth(statementOfTruth);
+    }
+
+    public Optional<JsonNode> mapStatementOfTruth(JsonNode statementOfTruth) {
+        ObjectNode ccdFormat = mapper.createObjectNode();
+
+        String documentUploadURL = statementOfTruth.get(url).asText();
+        String documentUploadName = statementOfTruth.get(filename).asText();
+
+        ccdFormat.set(documentUrl, new TextNode(documentUploadURL.trim()));
+        ccdFormat.set(documentBinaryUrl, new TextNode(getBinaryDocumentUploadURL(documentUploadURL.trim())));
+        ccdFormat.set(documentFilename, new TextNode(documentUploadName.trim()));
+
+        return  Optional.of(ccdFormat);
+    }
+
     private Optional<JsonNode> mapDocument(JsonNode document) {
         ObjectNode ccdFormat = mapper.createObjectNode();
         ObjectNode value = mapper.createObjectNode();
@@ -564,7 +592,6 @@ public class CoreCaseDataMapper {
         String documentUploadType = "deathCertificate";
         value.set(DocumentType, new TextNode(documentUploadType.trim()));
         String documentUploadURL = document.get(url).asText();
-
         String documentUploadName = document.get(filename).asText();
 
         ObjectNode docLinkValue = mapper.createObjectNode();

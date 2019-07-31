@@ -42,6 +42,7 @@ ccd:
       value: ${ADMIN_WEB_IDAM_SECRET}
     environment:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
+
   importer:
     userRoles:
       - caseworker-probate

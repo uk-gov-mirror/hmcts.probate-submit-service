@@ -34,6 +34,9 @@ ccd:
 # adding this breaks it??
   caseManagementWeb:
     enabled: true
+    s2sKey: ${ADMIN_S2S_KEY}
+    idamClientSecret:
+      value: ${ADMIN_WEB_IDAM_SECRET}
     environment:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
   adminWeb:

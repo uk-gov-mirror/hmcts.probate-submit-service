@@ -31,8 +31,8 @@ ccd:
     s2sKey: ${DATA_STORE_S2S_KEY}
     image: "hmctspublic.azurecr.io/ccd/data-store-api:latest"
 # adding this breaks it??
-  caseManagementWeb:
-    enabled: true
+#  caseManagementWeb:
+#    enabled: true
 #    environment:
 #      NODE_TLS_REJECT_UNAUTHORIZED: 0
   adminWeb:
@@ -42,3 +42,10 @@ ccd:
       value: ${ADMIN_WEB_IDAM_SECRET}
     environment:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
+  importer:
+    userRoles:
+      - caseworker-probate
+      - caseworker-probate-issuer
+      - caseworker-probate-solicitor
+      - citizen
+      - caseworker-probate-examiner

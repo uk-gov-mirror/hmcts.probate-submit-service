@@ -41,10 +41,10 @@ ccd:
     s2sKey: ${DATA_STORE_S2S_KEY}
     image: "hmctspublic.azurecr.io/ccd/data-store-api:latest"
 # adding this breaks it??
-#  caseManagementWeb:
-#    enabled: true
-#    environment:
-#      NODE_TLS_REJECT_UNAUTHORIZED: 0
+  caseManagementWeb:
+    enabled: true
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
   adminWeb:
     enabled: true
     s2sKey: ${ADMIN_S2S_KEY}

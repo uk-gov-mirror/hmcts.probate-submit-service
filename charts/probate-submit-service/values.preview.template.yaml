@@ -1,5 +1,6 @@
 tags:
-  ccd-idam-pr: true
+  ccd: false
+  ccd-idam-pr: false
 
 java:
   environment:

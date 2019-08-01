@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.core.proccessors;
+package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -7,15 +7,17 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
+import uk.gov.hmcts.probate.services.submit.Registry;
+import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.SequenceService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
-import uk.gov.hmcts.reform.probate.model.cases.ValidatorResults;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 import uk.gov.hmcts.reform.probate.model.client.ValidationError;
 import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
@@ -26,11 +28,13 @@ import java.util.function.Supplier;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public abstract class AbstractSubmissionsProcessor {
+public class CreateCaseSubmissionsProcessor {
 
-    protected final SecurityUtils securityUtils;
-    private final SearchFieldFactory searchFieldFactory;
     private final CoreCaseDataService coreCaseDataService;
+    private final EventFactory eventFactory;
+    private final SequenceService sequenceService;
+    private final SecurityUtils securityUtils;
+    private final SearchFieldFactory searchFieldFactory;
     private final ValidationService validationService;
 
     public SubmitResult process(String identifier, Supplier<ProbateCaseDetails> caseRequestSupplier) {
@@ -41,16 +45,27 @@ public abstract class AbstractSubmissionsProcessor {
         assertIdentifierMatchesCase(identifier, caseData, caseType);
         validationService.validate(caseRequest);
         return SubmitResult.builder()
-                .probateCaseDetails(processCase(identifier, caseData))
-                .build();
+            .probateCaseDetails(processCase(identifier, caseData))
+            .build();
     }
 
-    protected abstract ProbateCaseDetails processCase(String identifier, CaseData caseData);
+    private ProbateCaseDetails processCase(String identifier, CaseData caseData) {
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        CaseType caseType = CaseType.getCaseType(caseData);
+        checkDoesCaseExist(identifier, CaseType.getCaseType(caseData), securityDTO);
+        log.info("Case not found with case Id: {}", identifier);
+        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        Registry registry = sequenceService.identifyNextRegistry();
+        caseData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(registry.getName()));
+        return coreCaseDataService.createCase(caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
+    }
 
-    protected ProbateCaseDetails findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
+    private void checkDoesCaseExist(String searchField, CaseType caseType, SecurityDTO securityDTO) {
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService.
-                findCase(searchField, caseType, securityDTO);
-        return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
+            findCase(searchField, caseType, securityDTO);
+        if (caseResponseOptional.isPresent()) {
+            throw new CaseAlreadyExistsException(searchField);
+        }
     }
 
     private void assertIdentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {

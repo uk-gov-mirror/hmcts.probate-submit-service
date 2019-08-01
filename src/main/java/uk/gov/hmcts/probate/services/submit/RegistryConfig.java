@@ -27,6 +27,6 @@ public class RegistryConfig {
     public Map<Integer, Registry> registryMap() {
         return registries
                 .stream()
-                .collect(Collectors.toMap(s -> s.getId(), s -> s));
+                .collect(Collectors.toMap(Registry::getId, s -> s));
     }
 }

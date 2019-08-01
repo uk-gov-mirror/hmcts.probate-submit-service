@@ -20,6 +20,9 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
+import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
+import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
+import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -28,17 +31,21 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = {CasesController.class}, secure = false)
-public class CasesControllerTest {
+public class
+CasesControllerTest {
 
     private static final String CASES_URL = "/cases";
     private static final String CASES_INVITATION_URL = "/cases/invitation";
@@ -141,5 +148,33 @@ public class CasesControllerTest {
             .andExpect(status().isBadRequest());
 
         verify(casesService, times(1)).validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
+    }
+
+    @Test
+    public void shouldSaveCase() throws Exception {
+        CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
+        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
+
+        mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+        verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
+    }
+
+    @Test
+    public void shouldGiveStatusOf500WhenAssertFieldExceptionThrown() throws Exception {
+        CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
+        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
+        when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class)))
+            .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
+
+        mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
+            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError());
+
+        verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }
 }

@@ -12,14 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
-import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 
@@ -31,7 +28,6 @@ import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 public class SubmissionsController {
 
     public static final String APPLICATION_ID = "applicationId";
-    public static final String CASE_TYPE = "caseType";
     private final SubmissionsService submissionsService;
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
@@ -49,21 +45,4 @@ public class SubmissionsController {
         SubmitResult submitResult = submissionsService.createCase(applicationId.toLowerCase(), caseRequest);
         return ResponseEntity.ok(submitResult);
     }
-
-
-    @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Draft save to CCD successful"),
-        @ApiResponse(code = 400, message = "Draft save to CCD  failed")
-    })
-    @PutMapping(path = "/submissions/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<SubmitResult> updateDraftToCase(@PathVariable(APPLICATION_ID) String applicationId,
-                                                          @RequestParam(CASE_TYPE) CaseType caseType) {
-        log.info("Submitting for case type: {}", caseType.getName());
-        SubmitResult submitResult = submissionsService.updateDraftToCase(applicationId.toLowerCase(), caseType);
-        return ResponseEntity.ok(submitResult);
-    }
-
 }

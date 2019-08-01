@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.probate.model.PaymentStatus;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
+import uk.gov.hmcts.reform.probate.model.cases.standingsearch.StandingSearchData;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -43,6 +44,15 @@ public class CaseSubmissionUpdaterTest {
         caseSubmissionUpdater.updateCaseForSubmission(grantOfRepresentationData, PaymentStatus.FAILED);
 
         verify(registryService, never()).updateRegistry(grantOfRepresentationData);
+    }
+
+    @Test
+    public void shouldNotUpdateGrantOfRepresentationWhenNoCaseTypeConfig() {
+        StandingSearchData standingSearchData = StandingSearchData.builder().build();
+
+        caseSubmissionUpdater.updateCaseForSubmission(standingSearchData, PaymentStatus.SUCCESS);
+
+        verify(registryService, never()).updateRegistry(standingSearchData);
     }
 
     @Test

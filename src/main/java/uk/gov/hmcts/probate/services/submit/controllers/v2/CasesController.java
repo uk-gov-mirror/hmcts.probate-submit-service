@@ -66,7 +66,7 @@ public class CasesController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCase(@PathVariable("applicationId") String applicationId,
                                                        @RequestBody ProbateCaseDetails caseRequest) {
-        log.info("Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(), caseRequest), OK);
     }
 

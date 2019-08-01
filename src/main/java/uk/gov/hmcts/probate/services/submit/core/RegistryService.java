@@ -14,14 +14,14 @@ public class RegistryService {
 
     private final Map<Integer, Registry> registryMap;
 
-    private static int registryCounter = 1;
+    private int registryCounter = 1;
 
     public void updateRegistry(CaseData caseData) {
         Registry nextRegistry = getNextRegistry();
         caseData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
     }
 
-    private Registry getNextRegistry() {
+    private synchronized Registry getNextRegistry() {
         Registry nextRegistry = registryMap.get(registryCounter % registryMap.size());
         registryCounter++;
         return nextRegistry;

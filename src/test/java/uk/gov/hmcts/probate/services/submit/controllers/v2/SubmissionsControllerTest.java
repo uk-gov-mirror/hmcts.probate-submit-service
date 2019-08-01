@@ -54,25 +54,7 @@ public class SubmissionsControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Test
-    public void shouldUpdateDraftToCase() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
-        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
-        CaseInfo caseInfo = new CaseInfo();
-        caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(CaseState.PA_APP_CREATED);
-        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(grantOfRepresentation).build();
-        when(submissionsService.updateDraftToCase(eq(EMAIL_ADDRESS), eq(CaseType.GRANT_OF_REPRESENTATION))).thenReturn(new SubmitResult(caseResponse, new ValidatorResults(Lists.newArrayList())));
-
-        mockMvc.perform(put(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS + "?caseType=GRANT_OF_REPRESENTATION")
-            .content(objectMapper.writeValueAsString(caseRequest))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
-        verify(submissionsService).updateDraftToCase(eq(EMAIL_ADDRESS), eq(CaseType.GRANT_OF_REPRESENTATION));
-    }
-
+    
     @Test
     public void shouldCreateCase() throws Exception {
         String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");

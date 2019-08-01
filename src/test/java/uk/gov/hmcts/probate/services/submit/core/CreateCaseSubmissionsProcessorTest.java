@@ -4,12 +4,12 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.Registry;
-import uk.gov.hmcts.probate.services.submit.core.proccessors.impl.CreateCaseSubmissionsProcessor;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.SequenceService;
@@ -20,8 +20,8 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
-import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
+import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 
 import java.util.Optional;
 
@@ -65,6 +65,7 @@ public class CreateCaseSubmissionsProcessorTest {
     @Mock
     private ValidationService validationService;
 
+    @InjectMocks
     private CreateCaseSubmissionsProcessor createCaseSubmissionsProcessor;
 
     private ProbateCaseDetails caseRequest;
@@ -79,9 +80,6 @@ public class CreateCaseSubmissionsProcessorTest {
 
     @Before
     public void setUp() {
-        createCaseSubmissionsProcessor = new CreateCaseSubmissionsProcessor(
-                coreCaseDataService, eventFactory, securityUtils, searchFieldFactory,
-                sequenceService, validationService);
         securityDTO = SecurityDTO.builder().build();
         caseData = new CaveatData();
         caseData.setCaveatorEmailAddress(APPLICANT_EMAIL);
@@ -106,12 +104,12 @@ public class CreateCaseSubmissionsProcessorTest {
     }
 
     @Test
-    public void shouldSubmitCaseWhenNoExistingCase() {
+    public void shouldProcessCase() {
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCase(APPLICANT_EMAIL, CAVEAT, securityDTO))
                 .thenReturn(Optional.empty());
 
-        SubmitResult result = createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
+        createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
         verify(coreCaseDataService, times(1)).findCase(APPLICANT_EMAIL, CAVEAT, securityDTO);
         verify(coreCaseDataService, times(1)).createCase(eq(caseData),
                 eq(GOP_CREATE_APPLICATION), eq(securityDTO));
@@ -127,4 +125,12 @@ public class CreateCaseSubmissionsProcessorTest {
         createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
     }
 
+
+    @Test(expected = AssertFieldException.class)
+    public void shouldThrowAssertFieldExceptionWhenIdentifierDoesNotMatchBody() {
+        when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData))
+            .thenReturn(ImmutablePair.of("caveatorEmailAddress", "sdfsdfsd"));
+
+        createCaseSubmissionsProcessor.process(APPLICANT_EMAIL, () -> caseRequest);
+    }
 }

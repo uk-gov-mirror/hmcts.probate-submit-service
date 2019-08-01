@@ -227,7 +227,18 @@ public class CcdClientApiTest {
     }
 
     @Test
-    public void shouldFindCaseByInviationId() {
+    public void shouldReturnEmptyOptionalWhenCaseNotFoundById() {
+        when(mockCoreCaseDataApi.getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString())))
+            .thenReturn(null);
+
+        Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseById(CASE_ID.toString(), securityDTO);
+
+        assertThat(optionalCaseResponse.isPresent(), is(false));
+        verify(mockCoreCaseDataApi, times(1)).getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString()));
+    }
+
+    @Test
+    public void shouldFindCaseByInvitationId() {
 
 
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(INVITATION_ID, inviteField)).thenReturn(INVIATION_QUERY);

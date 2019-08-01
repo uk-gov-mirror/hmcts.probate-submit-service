@@ -140,6 +140,23 @@ public class PaymentServiceImplTest {
     }
 
     @Test
+    public void shouldNotAddPaymentToCaseWhenCaseStateIsCaseCreated() {
+        caseResponse.getCaseInfo().setState(CaseState.CASE_CREATED);
+        when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
+            .thenReturn(Optional.of(caseResponse));
+
+        ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
+
+        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        verify(mockSecurityUtils).getSecurityDTO();
+        verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(mockCoreCaseDataService, never()).updateCase(eq(CASE_ID), eq(caseData),
+            eq(GOP_CREATE_CASE), eq(securityDTO));
+        verify(caseSubmissionUpdater, never()).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
+    }
+
+    @Test
     public void shouldAddPaymentToCaseWhenPaymentStatusIsFailed() {
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))

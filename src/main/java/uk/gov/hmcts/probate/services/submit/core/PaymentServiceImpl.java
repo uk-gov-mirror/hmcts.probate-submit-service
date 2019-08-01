@@ -42,18 +42,18 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseState.PA_APP_CREATED;
 public class PaymentServiceImpl implements PaymentsService {
 
     private static final Map<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>> PAYMENT_EVENT_MAP =
-            ImmutableMap.<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>>builder()
-                    .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
-                    .put(Pair.of(DRAFT, NOT_REQUIRED), CaseEvents::getCreateCaseWithoutPaymentId)
-                    .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
-                    .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
-                    .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getUpdateCaseApplicationEventId)
-                    .put(Pair.of(PA_APP_CREATED, null), CaseEvents::getPaymentFailedEventId)
-                    .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), CaseEvents::getPaymentFailedToSuccessEventId)
-                    .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), CaseEvents::getPaymentFailedAgainEventId)
-                    .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), CaseEvents::getPaymentFailedAgainEventId)
-                    .put(Pair.of(CASE_PAYMENT_FAILED, null), CaseEvents::getPaymentFailedAgainEventId)
-                    .build();
+        ImmutableMap.<Pair<CaseState, PaymentStatus>, Function<CaseEvents, EventId>>builder()
+            .put(Pair.of(DRAFT, INITIATED), CaseEvents::getCreateCaseApplicationEventId)
+            .put(Pair.of(DRAFT, NOT_REQUIRED), CaseEvents::getCreateCaseWithoutPaymentId)
+            .put(Pair.of(PA_APP_CREATED, SUCCESS), CaseEvents::getCreateCaseEventId)
+            .put(Pair.of(PA_APP_CREATED, FAILED), CaseEvents::getPaymentFailedEventId)
+            .put(Pair.of(PA_APP_CREATED, INITIATED), CaseEvents::getUpdateCaseApplicationEventId)
+            .put(Pair.of(PA_APP_CREATED, null), CaseEvents::getPaymentFailedEventId)
+            .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), CaseEvents::getPaymentFailedToSuccessEventId)
+            .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), CaseEvents::getPaymentFailedAgainEventId)
+            .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), CaseEvents::getPaymentFailedAgainEventId)
+            .put(Pair.of(CASE_PAYMENT_FAILED, null), CaseEvents::getPaymentFailedAgainEventId)
+            .build();
 
     private final CoreCaseDataService coreCaseDataService;
 
@@ -73,7 +73,7 @@ public class PaymentServiceImpl implements PaymentsService {
         ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDTO);
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
-        return updateCasePayment(caseId, paymentUpdateRequest, securityDTO, caseType, caseResponse, false);
+        return updateCasePayment(caseId, paymentUpdateRequest, securityDTO, caseType, caseResponse);
     }
 
     @Override
@@ -93,14 +93,14 @@ public class PaymentServiceImpl implements PaymentsService {
     private ProbateCaseDetails updateCase(String caseId, SecurityDTO securityDTO, CaseType caseType,
                                           ProbateCaseDetails probateCaseDetails) {
         CasePayment payment = probateCaseDetails.getCaseData().getPayments().get(0).getValue();
-        CaseState caseState =  probateCaseDetails.getCaseInfo().getState();
+        CaseState caseState = probateCaseDetails.getCaseInfo().getState();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         return coreCaseDataService.updateCase(caseId, probateCaseDetails.getCaseData(), eventId, securityDTO);
     }
 
     private ProbateCaseDetails updateCasePayment(String caseId, ProbatePaymentDetails paymentUpdateRequest,
-                                          SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse, Boolean asCaseWorker) {
+                                                 SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse) {
         CaseState caseState = caseResponse.getCaseInfo().getState();
         if (CaseState.CASE_CREATED.equals(caseState)) {
             return caseResponse;
@@ -110,9 +110,6 @@ public class PaymentServiceImpl implements PaymentsService {
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = createCaseData(caseResponse, payment);
         caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
-        if (asCaseWorker) {
-            return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
-        }
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }
 
@@ -123,11 +120,11 @@ public class PaymentServiceImpl implements PaymentsService {
         ProbateCaseDetails caseResponse = findCaseById(caseId, securityDTO);
         CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
-        return updateCase(caseId, probateUpdateRequest, securityDTO, caseType, caseResponse, true);
+        return updateCase(caseId, probateUpdateRequest, securityDTO, caseType, caseResponse);
     }
 
     private ProbateCaseDetails updateCase(String caseId, ProbateCaseDetails updateRequest,
-                                           SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse, Boolean asCaseWorker) {
+                                          SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse) {
         CaseState caseState = caseResponse.getCaseInfo().getState();
         if (CaseState.CASE_CREATED.equals(caseState)) {
             return caseResponse;
@@ -137,10 +134,7 @@ public class PaymentServiceImpl implements PaymentsService {
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = updateRequest.getCaseData();
         caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
-        if (asCaseWorker) {
-            return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
-        }
-        return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
+        return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
     }
 
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDTO securityDTO) {

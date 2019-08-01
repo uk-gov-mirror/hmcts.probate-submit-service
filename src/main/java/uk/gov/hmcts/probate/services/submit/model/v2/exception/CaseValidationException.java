@@ -9,7 +9,7 @@ import java.util.Set;
 public class CaseValidationException extends RuntimeException {
 
     @Getter
-    private transient Set<ConstraintViolation<CaseData>> constraintViolations;
+    private final transient Set<ConstraintViolation<CaseData>> constraintViolations;
 
     public CaseValidationException(Set<ConstraintViolation<CaseData>> constraintViolations) {
         this.constraintViolations = constraintViolations;

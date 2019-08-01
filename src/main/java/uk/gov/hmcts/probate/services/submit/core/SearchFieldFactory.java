@@ -17,6 +17,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SearchFieldFactory {
 
+    private static final String EXECUTORS_APPLYING_VALUE_APPLYING_EXECUTOR_INVITIATION_ID =
+        "executorsApplying.value.applyingExecutorInvitiationId";
     private final Map<CaseType, String> searchFieldsMap;
 
     public Pair<String, String> getSearchFieldValuePair(CaseType caseType, CaseData caseData) {
@@ -35,6 +37,6 @@ public class SearchFieldFactory {
     }
 
     public String getSearchInviteFieldName() {
-        return "executorsApplying.value.applyingExecutorInvitiationId";
+        return EXECUTORS_APPLYING_VALUE_APPLYING_EXECUTOR_INVITIATION_ID;
     }
 }

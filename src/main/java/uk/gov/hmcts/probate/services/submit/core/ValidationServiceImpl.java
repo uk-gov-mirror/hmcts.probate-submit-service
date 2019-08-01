@@ -47,25 +47,25 @@ public class ValidationServiceImpl implements ValidationService {
 
     private static final List<Class> CAVEAT_SUBMISSION_GROUPS = Lists.newArrayList();
 
-    private final Map<GrantType, List<Class>> GRANT_TYPE_VALIDATION_GROUP_MAP = ImmutableMap.<GrantType, List<Class>>builder()
+    private final Map<GrantType, List<Class>> grantTypeValidationGroupMap = ImmutableMap.<GrantType, List<Class>>builder()
         .put(GrantType.GRANT_OF_PROBATE, PA_VALIDATION_GROUPS)
         .put(GrantType.INTESTACY, INTESTACY_VALIDATION_GROUPS)
         .build();
 
 
-    private final Map<CaseType, Function<CaseData, List<Class>>> CASE_TYPE_VALIDATION_GROUP_MAP =
+    private final Map<CaseType, Function<CaseData, List<Class>>> caseTypeValidationGroupMap =
         ImmutableMap.<CaseType, Function<CaseData, List<Class>>>builder()
             .put(CaseType.GRANT_OF_REPRESENTATION, this::getGroupClassesForGrantOfRepresentation)
             .put(CaseType.CAVEAT, caseData -> CAVEAT_VALIDATION_GROUPS)
             .build();
 
-    private final Map<GrantType, List<Class>> GRANT_TYPE_SUBMISSION_GROUP_MAP = ImmutableMap.<GrantType, List<Class>>builder()
+    private final Map<GrantType, List<Class>> grantTypeSubmissionGroupMap = ImmutableMap.<GrantType, List<Class>>builder()
         .put(GrantType.GRANT_OF_PROBATE, PA_SUBMISSION_GROUPS)
         .put(GrantType.INTESTACY, INTESTACY_SUBMISSION_GROUPS)
         .build();
 
 
-    private final Map<CaseType, Function<CaseData, List<Class>>> CASE_TYPE_SUBMISSION_GROUP_MAP =
+    private final Map<CaseType, Function<CaseData, List<Class>>> caseTypeSubmissionGroupMap =
         ImmutableMap.<CaseType, Function<CaseData, List<Class>>>builder()
             .put(CaseType.GRANT_OF_REPRESENTATION, this::getGroupSubmissionClassesForGrantOfRepresentation)
             .put(CaseType.CAVEAT, caseData -> CAVEAT_SUBMISSION_GROUPS)
@@ -82,7 +82,7 @@ public class ValidationServiceImpl implements ValidationService {
     private void validate(ProbateCaseDetails probateCaseDetails, List<Class> submissionGroups) {
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        List<Class> validationGroupClasses = CASE_TYPE_VALIDATION_GROUP_MAP.get(caseType).apply(caseData);
+        List<Class> validationGroupClasses = caseTypeValidationGroupMap.get(caseType).apply(caseData);
         List<Class> allValidationGroups = new ArrayList<>();
         allValidationGroups.addAll(validationGroupClasses);
         allValidationGroups.addAll(submissionGroups);
@@ -97,17 +97,17 @@ public class ValidationServiceImpl implements ValidationService {
     public void validateForSubmission(ProbateCaseDetails probateCaseDetails) {
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        List<Class> submissionGroupClasses = CASE_TYPE_SUBMISSION_GROUP_MAP.get(caseType).apply(caseData);
+        List<Class> submissionGroupClasses = caseTypeSubmissionGroupMap.get(caseType).apply(caseData);
         validate(probateCaseDetails, submissionGroupClasses);
     }
 
     private List<Class> getGroupClassesForGrantOfRepresentation(CaseData caseData) {
         GrantOfRepresentationData grantOfRepresentationData = (GrantOfRepresentationData) caseData;
-        return GRANT_TYPE_VALIDATION_GROUP_MAP.get(grantOfRepresentationData.getGrantType());
+        return grantTypeValidationGroupMap.get(grantOfRepresentationData.getGrantType());
     }
 
     private List<Class> getGroupSubmissionClassesForGrantOfRepresentation(CaseData caseData) {
         GrantOfRepresentationData grantOfRepresentationData = (GrantOfRepresentationData) caseData;
-        return GRANT_TYPE_SUBMISSION_GROUP_MAP.get(grantOfRepresentationData.getGrantType());
+        return grantTypeSubmissionGroupMap.get(grantOfRepresentationData.getGrantType());
     }
 }

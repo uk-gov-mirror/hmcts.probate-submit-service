@@ -49,6 +49,7 @@ public class CoreCaseDataMapper {
     private static final String APPLICANT = "applicant";
     private static final String BINARY_URL_SUFFIX = "binary";
     public static final String IHT_FORM_ID = "ihtFormId";
+    public static final String STATEMENT_OF_TRUTH = "statementOfTruth";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -258,7 +259,10 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
         ccdData.setAll(map(probateData, documentUploadMap, this::documentUploadMapper));
-        ccdData.setAll(map(probateData, statementOfTruthMap, this::statementOfTruthMapper));
+        if (probateData.get(STATEMENT_OF_TRUTH) != null) {
+            ccdData.setAll(map(probateData, statementOfTruthMap, this::statementOfTruthMapper));
+        }
+
         return ccdData;
     }
 

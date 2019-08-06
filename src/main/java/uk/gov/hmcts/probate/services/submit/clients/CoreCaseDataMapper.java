@@ -49,7 +49,6 @@ public class CoreCaseDataMapper {
     private static final String APPLICANT = "applicant";
     private static final String BINARY_URL_SUFFIX = "binary";
     public static final String IHT_FORM_ID = "ihtFormId";
-    public static final String STATEMENT_OF_TRUTH = "statementOfTruthDocument";
     private final Logger logger = LoggerFactory.getLogger(CoreCaseDataMapper.class);
     private final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
     private final DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -569,8 +568,8 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> statementOfTruthMapper(JsonNode probateData, String fieldname) {
-        Optional<JsonNode> statementOfTruth = Optional.ofNullable(probateData.get(fieldname));
         Optional<JsonNode> ret = Optional.empty();
+        Optional<JsonNode> statementOfTruth = Optional.ofNullable(probateData.get(fieldname));
         if (statementOfTruth.isPresent()) {
             ret = mapStatementOfTruth(probateData.get(fieldname));
         }

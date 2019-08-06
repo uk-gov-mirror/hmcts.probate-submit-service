@@ -259,10 +259,7 @@ public class CoreCaseDataMapper {
         ccdData.setAll(map(probateData, legalStatementMap, this::legalStatementMapper));
         ccdData.setAll(map(probateData, addressMap, this::addressMapper));
         ccdData.setAll(map(probateData, documentUploadMap, this::documentUploadMapper));
-        if (probateData.get(STATEMENT_OF_TRUTH) != null) {
-            ccdData.setAll(map(probateData, statementOfTruthMap, this::statementOfTruthMapper));
-        }
-
+        ccdData.setAll(map(probateData, statementOfTruthMap, this::statementOfTruthMapper));
         return ccdData;
     }
 
@@ -572,8 +569,12 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> statementOfTruthMapper(JsonNode probateData, String fieldname) {
-        JsonNode statementOfTruth = probateData.get(fieldname);
-        return mapStatementOfTruth(statementOfTruth);
+        Optional<JsonNode> statementOfTruth = Optional.ofNullable(probateData.get(fieldname));
+        Optional<JsonNode> ret = Optional.empty();
+        if (statementOfTruth.isPresent()) {
+            ret = mapStatementOfTruth(probateData.get(fieldname));
+        }
+        return ret;
     }
 
     public Optional<JsonNode> mapStatementOfTruth(JsonNode statementOfTruth) {

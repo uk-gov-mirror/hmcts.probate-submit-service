@@ -90,7 +90,6 @@ public class GrantOfRepresentationCreator {
         payment.setSiteId("P223");
         paymentCollectionMember.setValue(payment);
         grantOfRepresentationData.setPayments(Lists.newArrayList(paymentCollectionMember));
-        grantOfRepresentationData.setUploadDocumentUrl("http://document-management/document/12345");
         return grantOfRepresentationData;
     }
 
@@ -151,7 +150,6 @@ public class GrantOfRepresentationCreator {
         payment.setSiteId("P223");
         paymentCollectionMember.setValue(payment);
         grantOfRepresentationData.setPayments(Lists.newArrayList(paymentCollectionMember));
-        grantOfRepresentationData.setUploadDocumentUrl("http://document-management/document/12345");
         return grantOfRepresentationData;
     }
 

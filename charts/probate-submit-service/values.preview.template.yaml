@@ -55,8 +55,6 @@ ccd:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
 
   importer:
-    definitions:
-      - https://github.com/hmcts/Probate-CCD-Import-Spreadsheets/blob/PRO-5247-Orchestrator/spreadsheet/orchestrator/CCD_Probate_Backoffice.xlsx?raw=true
     userRoles:
       - caseworker-probate
       - caseworker-probate-issuer

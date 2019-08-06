@@ -6,7 +6,7 @@ java:
   environment:
     SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-aat.service.core-compute-aat.internal
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL : http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat.internal
+    SERVICES_CORECASEDATA_BASEURL : https://data-store-api-probate-submit-service-pr-197.service.core-compute-preview.internal
     AUTH_PROVIDER_SERVICE_CLIENT_KEY: ${S2S_AUTH_TOTP_SECRET}
     MAIL_USERNAME: ${PROBATE_SUB_MAIL_USERNAME}
     MAIL_PASSWORD: ${PROBATE_SUB_MAIL_PASSWORD}
@@ -55,6 +55,8 @@ ccd:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
 
   importer:
+    definitions:
+      - https://github.com/hmcts/Probate-CCD-Import-Spreadsheets/blob/PRO-5247-Orchestrator/spreadsheet/orchestrator/CCD_Probate_Backoffice.xlsx?raw=true
     userRoles:
       - caseworker-probate
       - caseworker-probate-issuer

@@ -55,11 +55,16 @@ ccd:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
 
   importer:
-    definitions:
-      - https://github.com/dhruvpatel20/spreadsheets/blob/master/CCD_Probate_Backoffice.xlsx?raw=true
-    userRoles:
-      - caseworker-probate
-      - caseworker-probate-issuer
-      - caseworker-probate-solicitor
-      - citizen
-      - caseworker-probate-examiner
+    definition:
+      enabled: true
+      definitionFilename: https://github.com/dhruvpatel20/spreadsheets/blob/master/CCD_Probate_Backoffice.xlsx?raw=true
+      userRoles:
+        - caseworker-probate
+        - caseworker-probate-issuer
+        - caseworker-probate-solicitor
+        - caseworker-probate-systemupdate
+        - citizen
+        - caseworker-probate-caseadmin
+        - caseworker-probate-caseofficer
+        - caseworker-probate-registrar
+        - caseworker-probate-superuser

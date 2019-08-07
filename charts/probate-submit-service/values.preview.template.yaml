@@ -56,7 +56,7 @@ ccd:
 
   importer:
     definitions:
-      - https://github.com/hmcts/Probate-CCD-Import-Spreadsheets/raw/PRO-5247-Orchestrator/spreadsheet/orchestrator/CCD_Probate_Backoffice.xlsx
+      - https://github.com/dhruvpatel20/spreadsheets/blob/master/CCD_Probate_Backoffice.xlsx?raw=true
     userRoles:
       - caseworker-probate
       - caseworker-probate-issuer

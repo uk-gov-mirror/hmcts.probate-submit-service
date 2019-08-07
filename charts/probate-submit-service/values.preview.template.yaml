@@ -58,6 +58,13 @@ ccd:
     definition:
       enabled: true
       image: hmcts/ccd-definition-importer:latest
+      importerFromSecret: true
+      importerUsername:
+        secretKeyRefName: ccd-importer-username
+        secretKeyRefKey: key
+      importerPassword:
+        secretKeyRefName: ccd-importer-password
+        secretKeyRefKey: key
       definitions:
         - https://github.com/dhruvpatel20/spreadsheets/raw/master/CCD_Probate_Backoffice.xlsx
       userRoles:

@@ -53,27 +53,3 @@ ccd:
       value: ${ADMIN_WEB_IDAM_SECRET}
     environment:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
-
-  importer:
-    definition:
-      enabled: true
-      image: hmcts/ccd-definition-importer:latest
-      importerFromSecret: true
-      importerUsername:
-        secretKeyRefName: ccd-importer-username
-        secretKeyRefKey: key
-      importerPassword:
-        secretKeyRefName: ccd-importer-password
-        secretKeyRefKey: key
-      definitions:
-        - https://github.com/dhruvpatel20/spreadsheets/raw/master/CCD_Probate_Backoffice.xlsx
-      userRoles:
-        - caseworker-probate
-        - caseworker-probate-issuer
-        - caseworker-probate-solicitor
-        - caseworker-probate-systemupdate
-        - citizen
-        - caseworker-probate-caseadmin
-        - caseworker-probate-caseofficer
-        - caseworker-probate-registrar
-        - caseworker-probate-superuser

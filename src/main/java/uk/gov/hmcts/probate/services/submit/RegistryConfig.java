@@ -24,7 +24,7 @@ public class RegistryConfig {
     }
 
     @Bean
-    public Map<Integer, Registry> registryMap() {
+    public Map<Long, Registry> registryMap() {
         return registries
                 .stream()
                 .collect(Collectors.toMap(Registry::getId, s -> s));

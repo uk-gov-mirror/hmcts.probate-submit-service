@@ -13,7 +13,7 @@ public class Registry {
 
     private String name;
 
-    private int id;
+    private Long id;
 
     private String address;
 

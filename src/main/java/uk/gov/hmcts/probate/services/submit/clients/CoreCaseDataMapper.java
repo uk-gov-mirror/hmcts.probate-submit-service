@@ -568,8 +568,12 @@ public class CoreCaseDataMapper {
     }
 
     public Optional<JsonNode> statementOfTruthMapper(JsonNode probateData, String fieldname) {
-        JsonNode statementOfTruth = probateData.get(fieldname);
-        return mapStatementOfTruth(statementOfTruth);
+        Optional<JsonNode> ret = Optional.empty();
+        Optional<JsonNode> statementOfTruth = Optional.ofNullable(probateData.get(fieldname));
+        if (statementOfTruth.isPresent()) {
+            ret = mapStatementOfTruth(probateData.get(fieldname));
+        }
+        return ret;
     }
 
     public Optional<JsonNode> mapStatementOfTruth(JsonNode statementOfTruth) {

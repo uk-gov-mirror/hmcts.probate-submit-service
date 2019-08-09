@@ -30,7 +30,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .requestMatchers()
                 .antMatchers("/cases/**")
-                .antMatchers("/drafts/**")
                 .antMatchers("/submissions/**")
                 .antMatchers("/payments/**")
                 .antMatchers("/ccd-case-update/**")

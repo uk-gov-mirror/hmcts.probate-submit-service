@@ -12,14 +12,12 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.Registry;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.services.SequenceService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 
@@ -42,7 +40,6 @@ public class CreateCaseSubmissionsProcessorTest {
     private static final String APPLICANT_EMAIL = "test@test.com";
 
     private static final String CASE_ID = "12323213323";
-    private static final String STATE = "Draft";
 
     @Mock
     private SecurityUtils securityUtils;
@@ -57,7 +54,7 @@ public class CreateCaseSubmissionsProcessorTest {
     private SearchFieldFactory searchFieldFactory;
 
     @Mock
-    private SequenceService sequenceService;
+    private RegistryService registryService;
 
     @Mock
     private Registry registry;
@@ -99,8 +96,6 @@ public class CreateCaseSubmissionsProcessorTest {
                 .paymentFailedEventId(GOP_PAYMENT_FAILED)
                 .paymentFailedToSuccessEventId(GOP_PAYMENT_FAILED_TO_SUCCESS)
                 .build());
-        when(registry.getName()).thenReturn(RegistryLocation.MANCHESTER.getName());
-        when(sequenceService.identifyNextRegistry()).thenReturn(registry);
     }
 
     @Test

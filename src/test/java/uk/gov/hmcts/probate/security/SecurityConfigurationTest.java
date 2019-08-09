@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.probate.services.submit.services.SubmitService;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.SubjectResolver;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
@@ -53,17 +52,14 @@ public class SecurityConfigurationTest {
     @MockBean
     private RequestAuthorizer<User> userRequestAuthorizer;
 
-    @MockBean
-    private SubmitService submitService;
-
     private Service service;
 
     @Before
     public void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .defaultRequest(get("/").accept(MediaType.TEXT_HTML))
-                .build();
+            .apply(springSecurity())
+            .defaultRequest(get("/").accept(MediaType.TEXT_HTML))
+            .build();
 
         service = new Service(PRINCIPAL);
         when(serviceResolver.getTokenDetails(anyString())).thenReturn(service);
@@ -80,48 +76,40 @@ public class SecurityConfigurationTest {
     @Test
     public void shouldNotAuthenticateForSubmitEndpoint() throws Exception {
         mvc.perform(post("/submit")
-                .header("UserId", "123")
-                .header(AUTHORIZATION, "RANDOM2XXXXX"))
-                .andExpect(unauthenticated());
+            .header("UserId", "123")
+            .header(AUTHORIZATION, "RANDOM2XXXXX"))
+            .andExpect(unauthenticated());
     }
 
     @Test
     public void shouldNotAuthenticateForPaymentStatusEndpoint() throws Exception {
         mvc.perform(post("/updatePaymentStatus")
-                .header("UserId", "123")
-                .header(AUTHORIZATION, "RANDOM2XXXXX"))
-                .andExpect(unauthenticated());
+            .header("UserId", "123")
+            .header(AUTHORIZATION, "RANDOM2XXXXX"))
+            .andExpect(unauthenticated());
     }
 
     @Test
     public void shouldAuthenticateForCasesEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/cases/test@test.com")
-                .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
-                .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
-                .andExpect(authenticated());
-    }
-
-    @Test
-    public void shouldAuthenticateForDraftsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
-        mvc.perform(post("/drafts/test@test.com")
-                .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
-                .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
-                .andExpect(authenticated());
+            .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
+            .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
+            .andExpect(authenticated());
     }
 
     @Test
     public void shouldAuthenticateForSubmissionsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/submissions/test@test.com")
-                .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
-                .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
-                .andExpect(authenticated());
+            .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
+            .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
+            .andExpect(authenticated());
     }
 
     @Test
     public void shouldAuthenticateForPaymentsEndpointWithServiceAndUserAuthorizationHeader() throws Exception {
         mvc.perform(post("/payments/test@test.com")
-                .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
-                .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
-                .andExpect(authenticated());
+            .header(SERVICE_AUTHORIZATION, "Bearer xxxxx.yyyyy.zzzzz")
+            .header(AUTHORIZATION, "Bearer jddslfjsdlfj"))
+            .andExpect(authenticated());
     }
 }

@@ -7,16 +7,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.Registry;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
-import uk.gov.hmcts.probate.services.submit.services.SequenceService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.RegistryLocation;
 import uk.gov.hmcts.reform.probate.model.cases.SubmitResult;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 import uk.gov.hmcts.reform.probate.model.client.ValidationError;
@@ -32,7 +29,7 @@ public class CreateCaseSubmissionsProcessor {
 
     private final CoreCaseDataService coreCaseDataService;
     private final EventFactory eventFactory;
-    private final SequenceService sequenceService;
+    private final RegistryService registryService;
     private final SecurityUtils securityUtils;
     private final SearchFieldFactory searchFieldFactory;
     private final ValidationService validationService;
@@ -55,8 +52,7 @@ public class CreateCaseSubmissionsProcessor {
         checkDoesCaseExist(identifier, CaseType.getCaseType(caseData), securityDTO);
         log.info("Case not found with case Id: {}", identifier);
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
-        Registry registry = sequenceService.identifyNextRegistry();
-        caseData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(registry.getName()));
+        registryService.updateRegistry(caseData);
         return coreCaseDataService.createCase(caseData, caseEvents.getCreateCaseApplicationEventId(), securityDTO);
     }
 

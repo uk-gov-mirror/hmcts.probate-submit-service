@@ -57,18 +57,10 @@
     port: 8181
 
   services:
-    persistence:
-      baseUrl: http://localhost:8282
-      formdata.url:  ${services.persistence.baseUrl}/formdata
-      submissions.url:  ${services.persistence.baseUrl}/submissions
-      sequenceNumber.url:  ${services.persistence.baseUrl}/sequence-number
-
     coreCaseData:
       baseUrl: http://localhost:4452
       url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
       enabled: ${USE_CCD:true}
-
-  payment.api.url: http://localhost:8383
 
   auth.provider.service.client:
     baseUrl: http://localhost:4502
@@ -77,102 +69,6 @@
     tokenTimeToLiveInSeconds: '900'
 
   idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
-
-  ccd:
-    probate:
-      fullName: fullName
-      notApplyingKey: notApplyingKey
-      isApplying: isApplying
-      address: address
-      email: email
-      mobile: mobile
-      hasOtherName: hasOtherName
-      currentName: currentName
-      currentNameReason: currentNameReason
-      otherReason: otherReason
-      filename: filename
-      url: url
-    ccd:
-      notApplyingExecutorName: notApplyingExecutorName
-      notApplyingExecutorReason: notApplyingExecutorReason
-      value: value
-      applyingExecutorName: applyingExecutorName
-      applyingExecutorEmail: applyingExecutorEmail
-      applyingExecutorPhoneNumber: applyingExecutorPhoneNumber
-      applyingExecutorAddress: applyingExecutorAddress
-      applyingExecutorOtherNames: applyingExecutorOtherNames
-      applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
-      applyingExecutorOtherReason: applyingExecutorOtherReason
-      DocumentType: DocumentType
-      DocumentLink: DocumentLink
-      documentUrl: document_url
-      documentBinaryUrl: document_binary_url
-      documentFilename: document_filename
-      Comment: Comment
-    reasonMap:
-      optionDiedBefore: DiedBefore
-      optionDiedAfter: DiedAfter
-      optionPowerReserved: PowerReserved
-      optionRenunciated: Renunciation
-    dateMap:
-      deceasedDob: deceasedDateOfBirth
-      deceasedDod: deceasedDateOfDeath
-    fieldMap:
-      applicantFirstName: primaryApplicantForenames
-      applicantLastName: primaryApplicantSurname
-      applicantSameWillName: primaryApplicantSameWillName
-      applicantAlias: primaryApplicantAlias
-      applicantAliasReason: primaryApplicantAliasReason
-      applicantOtherReason: primaryApplicantOtherReason
-      applicantPhone: primaryApplicantPhoneNumber
-      applicantEmail: primaryApplicantEmailAddress
-      deceasedFirstname: deceasedForenames
-      deceasedSurname: deceasedSurname
-      willWithCodicils: willHasCodicils
-      deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
-      noOfApplicants: numberOfApplicants
-      noOfExecutors: numberOfExecutors
-      ihtIdentifier: ihtReferenceNumber
-      ihtFormId: ihtFormId
-      copiesUK: extraCopiesOfGrant
-      copiesOverseas: outsideUKGrantCopies
-      paymentReference: paymentReferenceNumber
-      willCodicilsNumber: willNumberOfCodicils
-      deceasedAliasAssets: deceasedAnyOtherNames
-      caseType: caseType
-      deceasedHasAssetsOutsideUK: deceasedHasAssetsOutsideUK
-      deceasedMartialStatus: deceasedMaritalStatus
-      deceasedDivorcedInEnglandOrWales: deceasedDivorcedInEnglandOrWales
-      primaryApplicantRelationshipToDeceased: primaryApplicantRelationshipToDeceased
-      primaryApplicantAdoptionInEnglandOrWales: primaryApplicantAdoptionInEnglandOrWales
-      deceasedSpouseNotApplyingReason: deceasedSpouseNotApplyingReason
-      deceasedOtherChildren: deceasedOtherChildren
-      allDeceasedChildrenOverEighteen: allDeceasedChildrenOverEighteen
-      anyDeceasedChildrenDieBeforeDeceased: anyDeceasedChildrenDieBeforeDeceased
-      anyDeceasedGrandChildrenUnderEighteen: anyDeceasedGrandChildrenUnderEighteen
-      deceasedAnyChildren: deceasedAnyChildren
-      foreignAsset: foreignAsset
-    monetaryValueMap:
-      ihtGrossValue: ihtGrossValue
-      ihtNetValue: ihtNetValue
-      totalFee: totalFee
-      foreignAssetEstateValue: foreignAssetEstateValue
-    declarationMap:
-      declaration: declaration
-    legalStatementMap:
-      legalStatement: legalStatement
-    executorMap:
-      executorsNotApplying: executorsNotApplying
-      executorsApplying: executorsApplying
-    aliasMap:
-      deceasedOtherNames: deceasedAliasNameList
-    addressMap:
-      applicantAddress: primaryApplicantAddress
-      deceasedAddress: deceasedAddress
-    documentUploadMap:
-      documentUploads: boDocumentsUploaded
-    statementOfTruthMap:
-      statementOfTruthDocument: statementOfTruthDocument
 
   logging:
     level:

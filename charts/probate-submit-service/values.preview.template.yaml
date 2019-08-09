@@ -53,3 +53,11 @@ ccd:
       value: ${ADMIN_WEB_IDAM_SECRET}
     environment:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
+
+  importer:
+    definitions:
+      - https://github.com/dhruvpatel20/spreadsheets/raw/master/CCD_Probate_Backoffice.xlsx
+    userRoles:
+      - caseworker-probate
+      - caseworker-probate-issuer
+      - caseworker-probate-solicitor

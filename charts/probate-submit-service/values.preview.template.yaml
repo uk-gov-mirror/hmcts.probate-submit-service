@@ -55,25 +55,12 @@ ccd:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
 
   importer:
-#    userprofile:
-#      enabled: true
-#      jurisdictions:
-#        - CMC
-#      users:
-#        - civilmoneyclaims+ccd@gmail.com|CMC|MoneyClaimCase|open
-#      userProfileDatabaseHost: ${SERVICE_NAME}-postgres
-#      userProfileDatabasePort: 5432
-#      userProfileDatabaseUser: hmcts
-#      userProfileDatabasePassword: hmcts
-#      userProfileDatabaseName: user-profile
     definition:
       enabled: true
-      image: hmctspublic.azurecr.io/cmc/ccd-definition-importer:1.2.21
+      image: hmctspublic.azurecr.io/ccd/definition-importer:latest
       kvSecretRef: kvcreds
       gitSecretRef: kvcreds
       redirectUri: https://case-management-web-${SERVICE_FQDN}/oauth2redirect
-      definitions:
-        - https://github.com/hmcts/Probate-CCD-Import-Spreadsheets/raw/PRO-5247-Orchestrator/spreadsheet/orchestrator/CCD_Probate_Backoffice.xlsx
       userRoles:
         - caseworker-probate
         - caseworker-probate-issuer

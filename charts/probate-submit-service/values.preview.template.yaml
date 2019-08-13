@@ -57,7 +57,7 @@ ccd:
   importer:
     definition:
       enabled: true
-      image: hmctspublic.azurecr.io/ccd/definition-importer:latest
+      image: hmctspublic.azurecr.io/cmc/ccd-definition-importer:1.2.21
       kvSecretRef: kvcreds
       gitSecretRef: kvcreds
       redirectUri: https://case-management-web-${SERVICE_FQDN}/oauth2redirect

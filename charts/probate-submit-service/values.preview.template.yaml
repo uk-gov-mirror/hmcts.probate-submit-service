@@ -73,7 +73,7 @@ ccd:
       gitSecretRef: kvcreds
       redirectUri: https://case-management-web-${SERVICE_FQDN}/oauth2redirect
       definitions:
-        - https://github.com/dhruvpatel20/spreadsheets/raw/master/CCD_Probate_Backoffice.xlsx
+        - https://github.com/hmcts/Probate-CCD-Import-Spreadsheets/raw/PRO-5247-Orchestrator/spreadsheet/orchestrator/CCD_Probate_Backoffice.xlsx
       userRoles:
         - caseworker-probate
         - caseworker-probate-issuer

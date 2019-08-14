@@ -5,7 +5,7 @@ vault_section = "preprod"
 packages_environment = "preprod"
 packages_version = "3.0.0"
 
-capacity = "1"   //changed until internal memory to changed to persistence
+capacity = "1"   //changed until internal memory to changed to persistence.
 
 idam_service_api  = "http://rpe-service-auth-provider-ithc.service.core-compute-ithc.internal"
 ccd_baseUrl = "http://ccd-data-store-api-ithc.service.core-compute-ithc.internal"

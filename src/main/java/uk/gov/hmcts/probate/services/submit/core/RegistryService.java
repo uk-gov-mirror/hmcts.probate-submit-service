@@ -1,6 +1,7 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.services.submit.Registry;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RegistryService {
 
     private final Map<Integer, Registry> registryMap;
@@ -20,6 +22,7 @@ public class RegistryService {
 
     public void updateRegistry(CaseData caseData) {
         Registry nextRegistry = getNextRegistry();
+        log.info("Updating with registry name: {} id: {}", nextRegistry.getName(), nextRegistry.getId());
         caseData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
         if (CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)){
             GrantOfRepresentationData grantOfRepresentationData = (GrantOfRepresentationData) caseData;

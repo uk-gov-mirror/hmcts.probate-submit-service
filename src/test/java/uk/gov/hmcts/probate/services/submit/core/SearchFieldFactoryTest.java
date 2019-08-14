@@ -54,4 +54,21 @@ public class SearchFieldFactoryTest {
 
         searchFieldFactory.getSearchFieldValuePair(GRANT_OF_REPRESENTATION, caveatData);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenFieldDoesNotExist(){
+        Map<CaseType, String> searchFieldMap = ImmutableMap.<CaseType, String>builder()
+            .put(GRANT_OF_REPRESENTATION, "random")
+            .build();
+        SearchFieldFactory searchFieldFactory = new SearchFieldFactory(searchFieldMap);
+
+        GrantOfRepresentationData grantOfRepresentationData = new GrantOfRepresentationData();
+
+        searchFieldFactory.getSearchFieldValuePair(GRANT_OF_REPRESENTATION, grantOfRepresentationData);
+    }
+
+    @Test
+    public void shouldGetInviteFieldName(){
+        assertThat(searchFieldFactory.getSearchInviteFieldName(), equalTo("executorsApplying.value.applyingExecutorInvitiationId"));
+    }
 }

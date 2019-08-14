@@ -16,9 +16,6 @@ public class SubmitHealthConfiguration
     @Value("${services.coreCaseData.baseUrl}")
     private String servicesCcdBaseUrl;
 
-    @Value("${services.persistence.baseUrl}")
-    private String servicesPersistenceBaseUrl;
-
     @Value("${idam.s2s-auth.url}")
     private String idamS2sAuthUrl;
 
@@ -26,11 +23,6 @@ public class SubmitHealthConfiguration
     @ConditionalOnProperty(prefix = "services.coreCaseData", name = "enabled", matchIfMissing = true)
     public SubmitHealthIndicator ccdServiceHealthIndicator() {
     	return new SubmitHealthIndicator(servicesCcdBaseUrl, restTemplate);
-    }
-
-    @Bean
-    public SubmitHealthIndicator persistenceServiceHealthIndicator() {
-    	return new SubmitHealthIndicator(servicesPersistenceBaseUrl, restTemplate);
     }
 
     @Bean

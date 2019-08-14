@@ -1,12 +1,12 @@
 tags:
-  ccd-enabled: false
-  ccd-idam-pr: false
+  ccd-enabled: true
+  ccd-idam-pr: true
 
 java:
   environment:
     SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-aat.service.core-compute-aat.internal
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL : http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat.internal
+    SERVICES_CORECASEDATA_BASEURL : http://data-store-api-probate-submit-service-pr-197.service.core-compute-preview.internal
     AUTH_PROVIDER_SERVICE_CLIENT_KEY: ${S2S_AUTH_TOTP_SECRET}
     MAIL_USERNAME: ${PROBATE_SUB_MAIL_USERNAME}
     MAIL_PASSWORD: ${PROBATE_SUB_MAIL_PASSWORD}
@@ -55,9 +55,19 @@ ccd:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
 
   importer:
-    userRoles:
-      - caseworker-probate
-      - caseworker-probate-issuer
-      - caseworker-probate-solicitor
-      - citizen
-      - caseworker-probate-examiner
+    definition:
+      enabled: true
+      image: hmctspublic.azurecr.io/cmc/ccd-definition-importer:1.2.21
+      kvSecretRef: kvcreds
+      gitSecretRef: kvcreds
+      redirectUri: https://case-management-web-${SERVICE_FQDN}/oauth2redirect
+      userRoles:
+        - caseworker-probate
+        - caseworker-probate-issuer
+        - caseworker-probate-solicitor
+        - caseworker-probate-systemupdate
+        - citizen
+        - caseworker-probate-caseadmin
+        - caseworker-probate-caseofficer
+        - caseworker-probate-registrar
+        - caseworker-probate-superuser

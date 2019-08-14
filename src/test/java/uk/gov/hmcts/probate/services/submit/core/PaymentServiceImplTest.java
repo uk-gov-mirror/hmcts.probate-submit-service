@@ -12,6 +12,7 @@ import uk.gov.hmcts.probate.security.SecurityUtils;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
@@ -48,7 +49,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 public class PaymentServiceImplTest {
 
     private static final String CASE_ID = "12323213323";
-    private static final String STATE = CaseState.PA_APP_CREATED.getName();
+    private static final CaseState STATE = CaseState.PA_APP_CREATED;
     private static final String APPLICANT_EMAIL = "test@test.com";
 
     @Mock
@@ -62,6 +63,12 @@ public class PaymentServiceImplTest {
 
     @Mock
     private SearchFieldFactory searchFieldFactory;
+
+    @Mock
+    private CaseSubmissionUpdater caseSubmissionUpdater;
+
+    @Mock
+    private ValidationService validationService;
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
@@ -129,6 +136,24 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDTO));
+        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
+    }
+
+    @Test
+    public void shouldNotAddPaymentToCaseWhenCaseStateIsCaseCreated() {
+        caseResponse.getCaseInfo().setState(CaseState.CASE_CREATED);
+        when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
+            .thenReturn(Optional.of(caseResponse));
+
+        ProbateCaseDetails actualCaseResponse = paymentService.addPaymentToCase(APPLICANT_EMAIL, paymentUpdateRequest);
+
+        assertThat(actualCaseResponse, equalTo(actualCaseResponse));
+        verify(mockSecurityUtils).getSecurityDTO();
+        verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(mockCoreCaseDataService, never()).updateCase(eq(CASE_ID), eq(caseData),
+            eq(GOP_CREATE_CASE), eq(securityDTO));
+        verify(caseSubmissionUpdater, never()).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
     }
 
     @Test
@@ -148,11 +173,12 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_PAYMENT_FAILED), eq(securityDTO));
+        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.FAILED));
     }
 
     @Test
     public void shouldAddPaymentToCaseWhenPaymentStatusIsFailedAgain() {
-        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED.getName());
+        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED);
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
             .thenReturn(Optional.of(caseResponse));
@@ -168,11 +194,12 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDTO));
+        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.FAILED));
     }
 
     @Test
     public void shouldAddPaymentToCaseWhenPaymentStatusIsSuccessAfterFailure() {
-        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED.getName());
+        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED);
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
             .thenReturn(Optional.of(caseResponse));
@@ -192,7 +219,7 @@ public class PaymentServiceImplTest {
 
     @Test(expected = CaseStatePreconditionException.class)
     public void shouldCasePreconditionExceptionIfInvalidStateForPayment() {
-        caseInfo.setState(CaseState.DRAFT.getName());
+        caseInfo.setState(CaseState.DRAFT);
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
             .thenReturn(Optional.of(caseResponse));
@@ -226,11 +253,12 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDTO);
         verify(mockCoreCaseDataService).updateCaseAsCaseworker(eq(CASE_ID), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDTO));
+        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
     }
 
     @Test
     public void shouldNotUpdatePaymentByCaseIdWhenCaseStateIsCaseCreated() {
-        caseResponse.getCaseInfo().setState(CaseState.CASE_CREATED.getName());
+        caseResponse.getCaseInfo().setState(CaseState.CASE_CREATED);
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCaseById(CASE_ID, securityDTO))
             .thenReturn(Optional.of(caseResponse));
@@ -283,7 +311,7 @@ public class PaymentServiceImplTest {
 
     @Test
     public void shouldCreateCaseWhenPaymentStatusIsFailedAgain() {
-        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED.getName());
+        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED);
         caseData.getPayments().get(0).getValue().setStatus(PaymentStatus.FAILED);
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))
@@ -303,7 +331,7 @@ public class PaymentServiceImplTest {
 
     @Test
     public void shouldCreateCaseWhenPaymentStatusIsSuccessAfterFailure() {
-        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED.getName());
+        caseInfo.setState(CaseState.CASE_PAYMENT_FAILED);
         caseData.getPayments().get(0).getValue().setStatus(PaymentStatus.SUCCESS);
         when(mockSecurityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(mockCoreCaseDataService.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO))

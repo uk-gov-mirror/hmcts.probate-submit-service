@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
+import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
@@ -56,11 +57,11 @@ public class PaymentsController {
         return new ResponseEntity(paymentsService.createCase(applicationId.toLowerCase(), probateCaseDetails), OK);
     }
 
-    @PostMapping(path = "/ccd-case-payments/{caseId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/ccd-case-update/{caseId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> updatePaymentByCaseId(@PathVariable("caseId") String caseId,
-                                                                    @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
-        return new ResponseEntity(paymentsService.updatePaymentByCaseId(caseId, probatePaymentDetails), OK);
+    public ResponseEntity<ProbateCaseDetails> updateCaseByCaseId(@PathVariable("caseId") String caseId,
+                                                                    @RequestBody ProbateCaseDetails probateCaseDetails) {
+        return new ResponseEntity(paymentsService.updateCaseByCaseId(caseId, probateCaseDetails), OK);
     }
 }

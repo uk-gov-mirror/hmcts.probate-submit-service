@@ -180,7 +180,11 @@
         "emailSent": true
       }
     ],
-    "softStop": "True"
+    "softStop": "True",
+    "statementOfTruthDocument": {
+      "url": "url_link1",
+      "filename": "statement_of_truth_1"
+    }
   },
   "registry": {
     "address": "test address"

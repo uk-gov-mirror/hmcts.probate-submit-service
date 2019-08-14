@@ -56,4 +56,21 @@ public class CasesControllerTest {
                 .andExpect(status().isOk());
         verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
+    
+    @Test
+    public void shouldGetCaseByIdForIntestacyGrantOfRepresentation() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(DRAFT);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        when(casesService.getCaseById(CASE_ID)).thenReturn(caseResponse);
+
+        mockMvc.perform(get(CASES_URL)
+                .param("caseId", CASE_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(casesService, times(1)).getCaseById(CASE_ID);
+    }
 }

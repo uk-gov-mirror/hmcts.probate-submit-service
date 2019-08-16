@@ -51,7 +51,7 @@ public class PaymentServiceImpl implements PaymentsService {
             .put(Pair.of(PA_APP_CREATED, null), CaseEvents::getPaymentFailedEventId)
             .put(Pair.of(CASE_PAYMENT_FAILED, SUCCESS), CaseEvents::getPaymentFailedToSuccessEventId)
             .put(Pair.of(CASE_PAYMENT_FAILED, FAILED), CaseEvents::getPaymentFailedAgainEventId)
-            .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), CaseEvents::getPaymentFailedAgainEventId)
+            .put(Pair.of(CASE_PAYMENT_FAILED, INITIATED), CaseEvents::getUpdatePaymentFailedEventId)
             .put(Pair.of(CASE_PAYMENT_FAILED, null), CaseEvents::getPaymentFailedAgainEventId)
             .build();
 
@@ -96,7 +96,9 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseState caseState = probateCaseDetails.getCaseInfo().getState();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
-        return coreCaseDataService.updateCase(caseId, probateCaseDetails.getCaseData(), eventId, securityDTO);
+        CaseData caseData = probateCaseDetails.getCaseData();
+        caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
+        return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }
 
     private ProbateCaseDetails updateCasePayment(String caseId, ProbatePaymentDetails paymentUpdateRequest,

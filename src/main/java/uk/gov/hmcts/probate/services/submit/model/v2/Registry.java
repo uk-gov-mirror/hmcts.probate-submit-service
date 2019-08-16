@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit;
+package uk.gov.hmcts.probate.services.submit.model.v2;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

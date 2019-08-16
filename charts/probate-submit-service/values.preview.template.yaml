@@ -23,6 +23,7 @@ java:
 
 ccd-elasticsearch:
   elasticsearch:
+    nameOverride: ccd-es
     master:
       persistence:
         enabled: false

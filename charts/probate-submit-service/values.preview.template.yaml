@@ -23,6 +23,7 @@ java:
 
 ccd-elasticsearch:
   elasticsearch:
+    host: "{{ .Release.Name }}-ccd-es-client"
     nameOverride: ccd-es
     master:
       persistence:

@@ -22,6 +22,17 @@ java:
   ingressHost: ${SERVICE_FQDN}
 
 ccd-elasticsearch:
+  logstash:
+    elasticsearch:
+      host: "{{ .Release.Name }}-ccd-es-client"
+  elasticsearch:
+    nameOverride: ccd-es
+    master:
+      persistence:
+        enabled: false
+    data:
+      persistence:
+        enabled: false
   ccd:
     ingressHost: ${SERVICE_FQDN}
     ingressIP: ${INGRESS_IP}

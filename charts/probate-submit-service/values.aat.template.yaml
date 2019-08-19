@@ -1,0 +1,82 @@
+tags:
+  ccd-enabled: false
+  ccd-idam-pr: false
+
+java:
+  environment:
+    SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-aat.service.core-compute-aat.internal
+    AUTH_PROVIDER_SERVICE_CLIENT_BASEURL : http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+    SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat.internal
+    AUTH_PROVIDER_SERVICE_CLIENT_KEY: ${S2S_AUTH_TOTP_SECRET}
+    MAIL_USERNAME: ${PROBATE_SUB_MAIL_USERNAME}
+    MAIL_PASSWORD: ${PROBATE_SUB_MAIL_PASSWORD}
+    MAIL_HOST: ${PROBATE_SUB_MAIL_HOST}
+    MAIL_PORT: ${PROBATE_SUB_MAIL_PORT}
+    MAIL_JAVAMAILPROPERTIES_SENDER: ${PROBATE_SUB_MAIL_SENDER}
+    MAIL_JAVAMAILPROPERTIES_RECIPIENT: ${PROBATE_SUB_MAIL_REC}
+    AUTH_IDAM_CLIENT_BASEURL: https://idam-api.aat.platform.hmcts.net
+  configmap:
+    SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","name":"ctsc"}]}'
+
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}
+  keyVaults:
+    "probate":
+      resourceGroup: probate
+      secrets:
+        - probateIdamSecret
+        - probateIdamUserName
+        - probateIdamPassword
+
+ccd-elasticsearch:
+  logstash:
+    elasticsearch:
+      host: "{{ .Release.Name }}-ccd-es-client"
+  elasticsearch:
+    nameOverride: ccd-es
+    master:
+      persistence:
+        enabled: false
+    data:
+      persistence:
+        enabled: false
+  ccd:
+    ingressHost: ${SERVICE_FQDN}
+    ingressIP: ${INGRESS_IP}
+    consulIP: ${CONSUL_LB_IP}
+    idam-pr:
+      releaseNameOverride: ${SERVICE_NAME}-ccd-idam-pr
+      redirect_uris:
+        CCD:
+          - https://case-management-web-${SERVICE_FQDN}/oauth2redirect
+        CCD Admin:
+          - https://admin-web-${SERVICE_FQDN}/oauth2redirect
+    definitionStoreApi:
+      s2sKey: ${DEFINITION_STORE_S2S_KEY}
+      s2sAuthorisedServices: ccd_admin,ccd_data,ccd_gw
+    apiGateway:
+      s2sKey: ${API_GATEWAY_S2S_KEY}
+      idamClientSecret:
+        value: ${API_GATEWAY_IDAM_SECRET}
+    dataStoreApi:
+      s2sKey: ${DATA_STORE_S2S_KEY}
+      image: "hmctspublic.azurecr.io/ccd/data-store-api:latest"
+    caseManagementWeb:
+      enabled: true
+      environment:
+        NODE_TLS_REJECT_UNAUTHORIZED: 0
+    adminWeb:
+      enabled: true
+      s2sKey: ${ADMIN_S2S_KEY}
+      idamClientSecret:
+        value: ${ADMIN_WEB_IDAM_SECRET}
+      environment:
+        NODE_TLS_REJECT_UNAUTHORIZED: 0
+
+    importer:
+      userRoles:
+        - caseworker-probate
+        - caseworker-probate-issuer
+        - caseworker-probate-solicitor
+        - citizen
+        - caseworker-probate-examiner

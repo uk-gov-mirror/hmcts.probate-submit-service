@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.Registry;
+import uk.gov.hmcts.probate.services.submit.model.v2.Registry;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseAlreadyExistsException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;

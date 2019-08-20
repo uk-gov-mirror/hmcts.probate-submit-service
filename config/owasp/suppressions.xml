@@ -346,7 +346,7 @@
    file name: jackson-databind-2.9.8.jar
    ]]></notes>
         <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2019-12384</cve>
+        <cve>CVE-2019-14439</cve>
     </suppress>
     <suppress>
     <notes><![CDATA[
@@ -396,7 +396,7 @@
    file name: jackson-databind-2.9.8.jar
    ]]></notes>
         <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2019-12086</cve>
+        <cve>CVE-2019-14379</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[

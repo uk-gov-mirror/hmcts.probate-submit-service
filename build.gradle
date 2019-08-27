@@ -181,8 +181,8 @@ processResources {
 }
 
 def versions = [
-    logging: '3.0.3',
-    serviceAuthProviderClient: '1.0.4',
+    logging: '5.0.1',
+    serviceAuthProviderClient: '3.0.0',
     authCheckerLib: '2.1.2',
     ccdClient: '4.4.1',
     springCloudStarterNetflixHystrix: '2.0.2.RELEASE',

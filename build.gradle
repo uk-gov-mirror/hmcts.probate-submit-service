@@ -185,7 +185,7 @@ def versions = [
     serviceAuthProviderClient: '3.0.0',
     authCheckerLib: '2.1.2',
     ccdClient: '4.4.1',
-    springCloudStarterNetflixHystrix: '2.0.2.RELEASE',
+    springCloudStarterNetflixHystrix: '2.1.1.RELEASE',
     springfoxSwagger: '2.9.2',
     springCloudWiremock: '1.2.4.RELEASE',
     serentity: '2.0.17'

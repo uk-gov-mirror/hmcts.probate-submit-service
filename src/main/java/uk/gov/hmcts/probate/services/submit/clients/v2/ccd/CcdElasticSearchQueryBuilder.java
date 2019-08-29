@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component;
 public class CcdElasticSearchQueryBuilder {
 
     String buildQuery(String searchValue, String searchField) {
-        return "{\"query\":{\"term\":{ \"data."
+        return "{\"query\":{\"bool\":{\"filter\":{\"match\":{\"data."
             + searchField
-            + ".keyword\":\"" + searchValue + "\"}}}";
+            + ".keyword\":\"" + searchValue + "\"}}}}}";
     }
-
 }

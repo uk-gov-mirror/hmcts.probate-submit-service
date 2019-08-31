@@ -496,6 +496,4 @@
         <gav regex="true">^info\.solidsoft\.gradle\.pitest:gradle-pitest-plugin:.*$</gav>
         <cve>CVE-2019-15052</cve>
     </suppress>
-
-    compile group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '0.30.1'
 </suppressions>

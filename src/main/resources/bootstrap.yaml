@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    propertiesvolume:
+      prefixed: false
+      paths: /mnt/secrets/probate
+      aliases:
+        probateIdamSecret: IDAM_SECRET
+        probateIdamUserName: IDAM_USERNAME
+        probateIdamPassword: IDAM_USERPASSWORD

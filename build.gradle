@@ -201,7 +201,7 @@ dependencies {
   compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
   compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
-  //compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
   compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.logging

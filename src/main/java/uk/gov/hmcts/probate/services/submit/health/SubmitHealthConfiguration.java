@@ -33,8 +33,4 @@ public class SubmitHealthConfiguration
     	return new SubmitHealthIndicator(servicesPersistenceBaseUrl, restTemplate);
     }
 
-    @Bean
-    public SubmitHealthIndicator serviceAuthHealthIndicator() {
-        return new SubmitHealthIndicator(idamS2sAuthUrl, restTemplate);
-    }
 }

@@ -27,6 +27,10 @@ java:
         - probateIdamSecret
         - probateIdamUserName
         - probateIdamPassword
+        - probate-notify-invite-apikey
+        - s2s-probate-backend
+        - AppInsightsInstrumentationKey
+        -
 
 ccd-elasticsearch:
   logstash:

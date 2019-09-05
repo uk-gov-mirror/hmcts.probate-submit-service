@@ -7,3 +7,6 @@ spring:
         probateIdamSecret: IDAM_SECRET
         probateIdamUserName: IDAM_USERNAME
         probateIdamPassword: IDAM_USERPASSWORD
+        probate-notify-invite-apikey: services.notify.apiKey
+        s2s-probate-backend: services.auth.provider.totp_secret
+        AppInsightsInstrumentationKey: azure.app_insights_key

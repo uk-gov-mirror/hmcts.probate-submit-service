@@ -12,7 +12,7 @@ public class CcdElasticSearchQueryBuilderTest {
     @Test
     public void shouldBuildQuery(){
         String result = ccdElasticSearchQueryBuilder.buildQuery("123456", "executorsApplying.value.applyingExecutorInvitationId");
-        Assert.assertThat(result, Matchers.equalTo("{\"query\":{\"term\":" +
+        Assert.assertThat(result, Matchers.equalTo("{\"query\":{\"match\":" +
                 "{ \"data.executorsApplying.value.applyingExecutorInvitationId.keyword\":\"123456\"}}}"));
 
     }

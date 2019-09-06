@@ -14,4 +14,6 @@ public interface CasesService {
     ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails);
 
     ProbateCaseDetails validate(String searchField, CaseType caseType);
+
+    ProbateCaseDetails saveCaseAsCaseworker(String toLowerCase, ProbateCaseDetails caseRequest);
 }

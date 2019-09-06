@@ -168,6 +168,31 @@ public class CasesServiceImplTest {
     }
 
     @Test
+    public void shouldUpdateCaseAsCaseworkerWhenExistingCase() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        when(searchFieldFactory.getSearchFieldValuePair(eq(CaseType.GRANT_OF_REPRESENTATION), any(CaseData.class)))
+                .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", EMAIL_ADDRESS));
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDTO))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService.updateCaseAsCaseworker(CASE_ID, caseData, UPDATE_DRAFT, securityDTO)).thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCaseAsCaseworker(EMAIL_ADDRESS, caseRequest);
+
+        assertThat(caseResponse.getCaseData(), is(caseData));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(coreCaseDataService, times(1)).updateCaseAsCaseworker(CASE_ID, caseData, UPDATE_DRAFT, securityDTO);
+    }
+
+    @Test
     public void shouldCreateNewCaseWhenNoneExisting() {
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);

@@ -69,6 +69,18 @@ public class CasesServiceImpl implements CasesService {
     @Override
     public ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails) {
         log.info("saveDraft - Saving draft for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
+        return saveCase(searchField, probateCaseDetails, Boolean.FALSE);
+    }
+
+
+    @Override
+    public ProbateCaseDetails saveCaseAsCaseworker(String searchField, ProbateCaseDetails probateCaseDetails) {
+        log.info("saveCaseAsCaseworker - Saving draft as caseworkefor case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
+        return saveCase(searchField, probateCaseDetails, Boolean.TRUE);
+    }
+
+    private ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails, Boolean asCaseworker) {
+        log.info("saveDraft - Saving draft for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
@@ -76,22 +88,30 @@ public class CasesServiceImpl implements CasesService {
         Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseInfoOptional = coreCaseDataService.findCase(searchField, caseType, securityDTO);
-        return saveCase(securityDTO, caseType, caseData, caseInfoOptional);
+        return saveCase(securityDTO, caseType, caseData, caseInfoOptional, asCaseworker);
+
     }
 
+
     private ProbateCaseDetails saveCase(SecurityDTO securityDTO, CaseType caseType, CaseData caseData,
-                                        Optional<ProbateCaseDetails> caseResponseOptional) {
+                                        Optional<ProbateCaseDetails> caseResponseOptional, Boolean asCaseworker) {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
             CaseState state = caseResponse.getCaseInfo().getState();
             log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
             EventId eventId = eventMap.get(state).apply(caseEvents);
-            return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDTO);
+            if(asCaseworker) {
+                return coreCaseDataService.updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDTO);
+            }
+            else{
+                return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDTO);
+            }
         }
         log.info("No case found");
         return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDTO);
     }
+
 
     @Override
     public ProbateCaseDetails getCaseByInvitationId(String invitationId, CaseType caseType) {

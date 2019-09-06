@@ -70,6 +70,16 @@ public class CasesController {
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(), caseRequest), OK);
     }
 
+
+    @PostMapping(path = "/cases/caseworker/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> saveCaseAsCaseworker(@PathVariable("applicationId") String applicationId,
+                                                       @RequestBody ProbateCaseDetails caseRequest) {
+        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        return new ResponseEntity(casesService.saveCaseAsCaseworker(applicationId.toLowerCase(), caseRequest), OK);
+    }
+
     @PutMapping(path = "/cases/{applicationId}/validations", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

@@ -1,19 +1,8 @@
-tags:
-  ccd-enabled: false
-  ccd-idam-pr: false
-
 java:
   environment:
     SERVICES_PERSISTENCE_BASEURL: http://probate-persistence-service-aat.service.core-compute-aat.internal
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL : http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
     SERVICES_CORECASEDATA_BASEURL : http://ccd-data-store-api-aat.service.core-compute-aat.internal
-    AUTH_PROVIDER_SERVICE_CLIENT_KEY: ${S2S_AUTH_TOTP_SECRET}
-    MAIL_USERNAME: ${PROBATE_SUB_MAIL_USERNAME}
-    MAIL_PASSWORD: ${PROBATE_SUB_MAIL_PASSWORD}
-    MAIL_HOST: ${PROBATE_SUB_MAIL_HOST}
-    MAIL_PORT: ${PROBATE_SUB_MAIL_PORT}
-    MAIL_JAVAMAILPROPERTIES_SENDER: ${PROBATE_SUB_MAIL_SENDER}
-    MAIL_JAVAMAILPROPERTIES_RECIPIENT: ${PROBATE_SUB_MAIL_REC}
     AUTH_IDAM_CLIENT_BASEURL: https://idam-api.aat.platform.hmcts.net
   configmap:
     SPRING_APPLICATION_JSON : '{"registries":[{"address":"Principal Registry of the Family Division (PRFD)\nHMCTS Probate\nPO Box 12625\nHarlow\nCM20 9QE","name":"ctsc"}]}'
@@ -24,6 +13,22 @@ java:
     "probate":
       resourceGroup: probate
       secrets:
+        - probatePersistenceUrl
+        - probateBusinessUrl
+        - s2sAuthTotpSecret
         - probateIdamSecret
         - probateIdamUserName
         - probateIdamPassword
+        - probate-notify-invite-apikey
+        - s2s-probate-backend
+        - AppInsightsInstrumentationKey
+        - probateCcdDataStoreApi
+        - serviceAuthProviderBaseUrl
+        - probateUserAuthUrl
+        - probateIdamOauthRedirectUrl
+        - probate-mail-host
+        - probate-mail-username
+        - probate-mail-password
+        - probate-mail-port
+        - probate-mail-sender
+        - probate-mail-recipient

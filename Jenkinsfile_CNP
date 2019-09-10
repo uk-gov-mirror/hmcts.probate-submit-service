@@ -52,6 +52,7 @@ withPipeline("java", product, component) {
 
 //  setVaultName('probate')
   loadVaultSecrets(secrets)
+  enableAksStagingDeployment()
   enableSlackNotifications('#probate-jenkins')
   enableDockerBuild()
   installCharts()

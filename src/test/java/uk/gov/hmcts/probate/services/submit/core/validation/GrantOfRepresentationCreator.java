@@ -54,7 +54,7 @@ public class GrantOfRepresentationCreator {
         aliasName.setLastName("North");
         aliasNameCollectionMember.setValue(aliasName);
         grantOfRepresentationData.setDeceasedAliasNameList(Lists.newArrayList(aliasNameCollectionMember));
-        grantOfRepresentationData.setDeceasedMartialStatus(MaritalStatus.MARRIED);
+        grantOfRepresentationData.setDeceasedMaritalStatus(MaritalStatus.MARRIED);
         grantOfRepresentationData.setDeceasedDivorcedInEnglandOrWales(false);
         grantOfRepresentationData.setDeceasedOtherChildren(true);
         grantOfRepresentationData.setChildrenDied(false);

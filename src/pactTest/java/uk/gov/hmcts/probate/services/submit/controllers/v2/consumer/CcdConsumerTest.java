@@ -50,8 +50,8 @@ import static org.hamcrest.MatcherAssert.*;
 })
 public class CcdConsumerTest {
 
-    public static final String SOME_AUTHORIZATION_TOKEN = "someAuthorizationToken";
-    public static final String SOME_SERVICE_AUTHORIZATION_TOKEN = "someAuthorizationToken";
+    public static final String SOME_AUTHORIZATION_TOKEN = "Bearer UserAuthToken";
+    public static final String SOME_SERVICE_AUTHORIZATION_TOKEN = "ServiceToken";
     private static final String ACCESS_TOKEN = "someAccessToken";
     public static final String REGEX_DATE = "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$";
     private static final String TOKEN = "someToken";
@@ -99,10 +99,11 @@ public class CcdConsumerTest {
                 .uponReceiving("a request for that case")
                 .path("/cases/" + CASE_ID)
                 .method("GET")
-                .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN)
+                .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
                 .matchHeader("experimental", "true")
                 .willRespondWith()
-                .status(201)
+                .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
+                .status(200)
                 .body(buildCaseDataPactDsl("someEmailAddress.com", true))
                 .toPact();
     }
@@ -126,7 +127,8 @@ public class CcdConsumerTest {
                 .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION,
                         SOME_SERVICE_AUTHORIZATION_TOKEN)
                 .willRespondWith()
-                .status(201)
+                .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
+                .status(200)
                 .body(newJsonBody((o) -> {
                     o.stringValue("event_id", EventId.GOP_UPDATE_DRAFT.name())
                             .stringType("token", "123234543456");
@@ -151,6 +153,7 @@ public class CcdConsumerTest {
                 .matchQuery("ignore-warning", Boolean.TRUE.toString())
                 .body(createJsonObject(caseDataContent))
                 .willRespondWith()
+                .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
                 .status(201)
                 .body(createJsonObject(caseDetails))
                 .toPact();
@@ -189,7 +192,7 @@ public class CcdConsumerTest {
 
     private DslPart buildCaseDataPactDsl(String someemailaddressHostCom, boolean withExecutors) {
         return newJsonBody((o) -> {
-            o.numberType("id", CASE_ID)
+            o.stringType("id", CASE_ID.toString())
                     .stringMatcher("state", "Draft|PaAppCreated|CaseCreated", "Draft")
                     .stringValue("case_type", CaseType.GRANT_OF_REPRESENTATION.name())
                     .object("data", (cd) -> {

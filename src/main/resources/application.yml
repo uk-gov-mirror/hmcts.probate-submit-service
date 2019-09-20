@@ -93,7 +93,7 @@
 
   authorised.services: probate_backend,probate_frontend
 
-  auth.idam.client.baseUrl: http://localhost:4501
+  auth.idam.client.baseUrl: http://localhost:5000
   s2s.auth.totp.secret: ${auth.provider.service.client.key}
   service.name: ${auth.provider.service.client.microservice}
 

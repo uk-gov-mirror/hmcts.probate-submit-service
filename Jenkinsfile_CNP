@@ -7,7 +7,7 @@ String product = "probate"
 String component = "submit-service"
 
 def secrets = [
-        'probate-${env}'      : [
+        'probate-${env}': [
                 secret('probatePersistenceUrl', 'TEST_PERSISTENCE_URL'),
                 secret('probateBusinessUrl', 'TEST_BUSINESS_URL'),
                 secret('s2sAuthTotpSecret', 'S2S_AUTH_TOTP_SECRET'),
@@ -25,14 +25,14 @@ def secrets = [
                 secret('probate-mail-sender', 'PROBATE_SUB_MAIL_SENDER'),
                 secret('probate-mail-recipient', 'PROBATE_SUB_MAIL_REC')
         ],
-        's2s-${env}'      : [
+        's2s-${env}'    : [
                 secret('microservicekey-ccd-data', 'DATA_STORE_S2S_KEY'),
                 secret('microservicekey-ccd-definition', 'DEFINITION_STORE_S2S_KEY'),
                 secret('microservicekey-ccd-gw', 'API_GATEWAY_S2S_KEY'),
                 secret('microservicekey-ccd-admin', 'ADMIN_S2S_KEY'),
                 secret('microservicekey-ccd-ps', 'PRINT_S2S_KEY')
         ],
-        'ccd-${env}'      : [
+        'ccd-${env}'    : [
                 secret('ccd-admin-web-oauth2-client-secret', 'ADMIN_WEB_IDAM_SECRET'),
                 secret('ccd-api-gateway-oauth2-client-secret', 'API_GATEWAY_IDAM_SECRET')
         ]
@@ -40,92 +40,92 @@ def secrets = [
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-  [ $class: 'AzureKeyVaultSecret',
-    secretType: 'Secret',
-    name: secretName,
-    version: '',
-    envVariable: envVar
-  ]
+    [$class     : 'AzureKeyVaultSecret',
+     secretType : 'Secret',
+     name       : secretName,
+     version    : '',
+     envVariable: envVar
+    ]
 }
 
 withPipeline("java", product, component) {
 
 //  setVaultName('probate')
-  loadVaultSecrets(secrets)
-  enableSlackNotifications('#probate-jenkins')
-  enableDockerBuild()
-  installCharts()
-  /*    
-    before('buildinfra:prod') {
-        error 'Deliberately breaking pipeline to prevent prod deployment'
-    }
-  */ 
-  
+    loadVaultSecrets(secrets)
+    enableSlackNotifications('#probate-jenkins')
+    enableDockerBuild()
+    installCharts()
+    /*
+      before('buildinfra:prod') {
+          error 'Deliberately breaking pipeline to prevent prod deployment'
+      }
+    */
+
     after('test') {
-//        try {
-//            if (env.CHANGE_BRANCH || env.BRANCH_NAME == 'master') {
-//                env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
-//                env.PACT_BROKER_PORT = "443"
-//                env.PACT_BROKER_SCHEME = "https"
-//                env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
-//                env.PACT_BRANCH_NAME = env.CHANGE_BRANCH
-//                if (env.BRANCH_NAME == 'master') {
-//                    env.PACT_BRANCH_NAME = 'master'
-//                }
-//                // sh './gradlew pitest'
-//                env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
-//                sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
-//            }
-//        } finally {
-//            archiveArtifacts "build/reports/tests/**/*.*"
-////        archiveArtifacts "build/reports/pitest/**/*.*"
-//        }
+        try {
+            if (env.CHANGE_BRANCH || env.BRANCH_NAME == 'master') {
+                env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
+                env.PACT_BROKER_PORT = "443"
+                env.PACT_BROKER_SCHEME = "https"
+                env.PACT_BROKER_FULL_URL = "https://pact-broker.platform.hmcts.net"
+                env.PACT_BRANCH_NAME = env.CHANGE_BRANCH
+                if (env.BRANCH_NAME == 'master') {
+                    env.PACT_BRANCH_NAME = 'master'
+                }
+                // sh './gradlew pitest'
+                env.PACT_BROKER_VERSION = sh(returnStdout: true, script: 'git rev-parse --verify --short HEAD')
+                sh './gradlew pactTask -Dpact.provider.version=${PACT_BROKER_VERSION}'
+            }
+        } finally {
+            archiveArtifacts "build/reports/tests/**/*.*"
+//        archiveArtifacts "build/reports/pitest/**/*.*"
+        }
 
-    junit 'build/test-results/test/**/*.xml'
-    archiveArtifacts 'build/reports/tests/test/index.html'
-    publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "build/reports/tests/test",
-            reportFiles          : "index.html",
-            reportName           : "probate-submit-service Test Report"
-    ]
+        junit 'build/test-results/test/**/*.xml'
+        archiveArtifacts 'build/reports/tests/test/index.html'
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/tests/test",
+                reportFiles          : "index.html",
+                reportName           : "probate-submit-service Test Report"
+        ]
 
-    publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "build/reports/jacoco",
-            reportFiles          : "index.html",
-            reportName           : "probate-submit-service Code Coverage Report"
-    ]
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/jacoco",
+                reportFiles          : "index.html",
+                reportName           : "probate-submit-service Code Coverage Report"
+        ]
 
-    publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "build/reports/findbugs",
-            reportFiles          : "main.html",
-            reportName           : "probate-submit-service find Bugs Report"
-    ]
-  }
+        publishHTML target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/findbugs",
+                reportFiles          : "main.html",
+                reportName           : "probate-submit-service find Bugs Report"
+        ]
+    }
 
-  after('functionalTest:aat') {
-      publishHTML target: [
-              reportDir            : "target/site/serenity/",
-              reportFiles          : "index.html",
-              reportName           : "AAT Functional Tests",
-              alwaysLinkToLastBuild: true
-      ]
-  }
+    after('functionalTest:aat') {
+        publishHTML target: [
+                reportDir            : "target/site/serenity/",
+                reportFiles          : "index.html",
+                reportName           : "AAT Functional Tests",
+                alwaysLinkToLastBuild: true
+        ]
+    }
 
-  after('functionalTest:spreview') {
-      publishHTML target: [
-              reportDir            : "target/site/serenity/",
-              reportFiles          : "index.html",
-              reportName           : "Preview Functional Tests",
-              alwaysLinkToLastBuild: true
-      ]
-  }
+    after('functionalTest:spreview') {
+        publishHTML target: [
+                reportDir            : "target/site/serenity/",
+                reportFiles          : "index.html",
+                reportName           : "Preview Functional Tests",
+                alwaysLinkToLastBuild: true
+        ]
+    }
 }

@@ -51,15 +51,16 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withPipeline("java", product, component) {
 
 //  setVaultName('probate')
-    loadVaultSecrets(secrets)
-    enableSlackNotifications('#probate-jenkins')
-    enableDockerBuild()
-    installCharts()
-    /*
-      before('buildinfra:prod') {
-          error 'Deliberately breaking pipeline to prevent prod deployment'
-      }
-    */
+
+  loadVaultSecrets(secrets)
+  enableAksStagingDeployment()
+  enableSlackNotifications('#probate-jenkins')
+  enableDockerBuild()
+  installCharts()
+
+    before('buildinfra:prod') {
+        error 'Deliberately breaking pipeline to prevent prod deployment'
+    }
 
     after('test') {
         try {

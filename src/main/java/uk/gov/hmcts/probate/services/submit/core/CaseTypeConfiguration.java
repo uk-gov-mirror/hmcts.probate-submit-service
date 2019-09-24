@@ -74,10 +74,10 @@ public class CaseTypeConfiguration {
     @Bean
     public Map<CaseType, String> searchFieldsMap() {
         return ImmutableMap.<CaseType, String>builder()
-                .put(GRANT_OF_REPRESENTATION, "primaryApplicantEmailAddress")
-                .put(CAVEAT, "applicationId")
-                .put(WILL_LODGEMENT, "deceasedEmailAddress")
-                .put(STANDING_SEARCH, "applicantEmailAddress")
+                .put(GRANT_OF_REPRESENTATION, "reference")
+                .put(CAVEAT, "data.applicationId")
+                .put(WILL_LODGEMENT, "data.deceasedEmailAddress")
+                .put(STANDING_SEARCH, "data.applicantEmailAddress")
                 .build();
     }
 

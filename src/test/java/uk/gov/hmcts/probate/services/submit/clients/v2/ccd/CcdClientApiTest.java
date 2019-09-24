@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
@@ -27,7 +28,8 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -102,23 +104,24 @@ public class CcdClientApiTest {
         when(searchFieldFactory.getSearchInviteFieldName()).thenReturn(inviteField);
 
         securityDTO = SecurityDTO.builder()
-            .authorisation(AUTHORIZATION)
-            .serviceAuthorisation(SERVICE_AUTHORIZATION)
-            .userId(USER_ID)
-            .build();
+                .authorisation(AUTHORIZATION)
+                .serviceAuthorisation(SERVICE_AUTHORIZATION)
+                .userId(USER_ID)
+                .build();
 
         caseData = new GrantOfRepresentationData();
         startEventResponse = StartEventResponse.builder()
-            .token(TOKEN)
-            .build();
+                .token(TOKEN)
+                .build();
 
         caseDetails = CaseDetails.builder()
-            .id(CASE_ID)
-            .state(STATE.getName())
-            .caseTypeId(GRANT_OF_REPRESENTATION.getName())
-            .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
-                "caseType", GrantType.INTESTACY))
-            .build();
+                .id(CASE_ID)
+                .state(STATE.getName())
+                .caseTypeId(GRANT_OF_REPRESENTATION.getName())
+                .createdDate(LocalDateTime.now())
+                .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
+                        "caseType", GrantType.INTESTACY))
+                .build();
 
         caseDataContent = CaseDataContent.builder()
                 .eventToken(TOKEN)
@@ -213,6 +216,25 @@ public class CcdClientApiTest {
     }
 
     @Test
+    public void shouldFindAllCase() {
+
+        String queryString = "queryString";
+        when(mockInvitationElasticSearchQueryBuilder.buildFindAllCasesQuery()).thenReturn(queryString);
+
+        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString))).thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build());
+
+        List<ProbateCaseDetails> results = ccdClientApi.findCases(GRANT_OF_REPRESENTATION, securityDTO);
+
+        CaseInfo caseInfo = results.stream().findFirst().get().getCaseInfo();
+        assertThat(results, is(notNullValue()));
+        assertThat(caseInfo.getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseInfo.getState(), is(STATE));
+        verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString));
+    }
+
+    @Test
     public void shouldFindCaseById() {
         when(mockCoreCaseDataApi.getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString())))
                 .thenReturn(caseDetails);
@@ -229,7 +251,7 @@ public class CcdClientApiTest {
     @Test
     public void shouldReturnEmptyOptionalWhenCaseNotFoundById() {
         when(mockCoreCaseDataApi.getCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(CASE_ID.toString())))
-            .thenReturn(null);
+                .thenReturn(null);
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseById(CASE_ID.toString(), securityDTO);
 

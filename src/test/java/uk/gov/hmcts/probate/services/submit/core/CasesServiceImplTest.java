@@ -143,6 +143,20 @@ public class CasesServiceImplTest {
     }
 
     @Test
+    public void shouldGetAllCases() {
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.findCaseById(CASE_ID, securityDTO)).thenReturn(caseResponseOptional);
+
+        ProbateCaseDetails caseResponse = casesService.getCaseById(CASE_ID);
+
+        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(coreCaseDataService, times(1)).findCaseById(CASE_ID, securityDTO);
+    }
+
+    @Test
     public void shouldUpdateCaseWhenExistingCase() {
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
@@ -150,8 +164,6 @@ public class CasesServiceImplTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
-        when(searchFieldFactory.getSearchFieldValuePair(eq(CaseType.GRANT_OF_REPRESENTATION), any(CaseData.class)))
-            .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", EMAIL_ADDRESS));
         SecurityDTO securityDTO = SecurityDTO.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
@@ -175,8 +187,6 @@ public class CasesServiceImplTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
-        when(searchFieldFactory.getSearchFieldValuePair(eq(CaseType.GRANT_OF_REPRESENTATION), any(CaseData.class)))
-                .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", EMAIL_ADDRESS));
         SecurityDTO securityDTO = SecurityDTO.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
@@ -200,8 +210,6 @@ public class CasesServiceImplTest {
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
-        when(searchFieldFactory.getSearchFieldValuePair(eq(CaseType.GRANT_OF_REPRESENTATION), any(CaseData.class)))
-            .thenReturn(ImmutablePair.of("primaryApplicantEmailAddress", EMAIL_ADDRESS));
         SecurityDTO securityDTO = SecurityDTO.builder().build();
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDTO))
@@ -213,6 +221,24 @@ public class CasesServiceImplTest {
         assertThat(caseResponse.getCaseData(), is(caseData));
         verify(securityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDTO);
+        verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDTO);
+    }
+
+    @Test
+    public void shouldInitiateCase() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        CaseType caseType = CaseType.getCaseType(caseData);
+
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.createCase(caseData, CREATE_DRAFT, securityDTO))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.initiateCase(caseRequest);
+
+        assertThat(caseResponse.getCaseData(), is(caseData));
+        verify(securityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDTO);
     }
 }

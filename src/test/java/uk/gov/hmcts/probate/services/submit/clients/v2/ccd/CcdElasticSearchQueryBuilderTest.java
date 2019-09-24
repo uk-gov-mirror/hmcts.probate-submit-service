@@ -11,9 +11,16 @@ public class CcdElasticSearchQueryBuilderTest {
 
     @Test
     public void shouldBuildQuery(){
-        String result = ccdElasticSearchQueryBuilder.buildQuery("123456", "executorsApplying.value.applyingExecutorInvitationId");
+        String result = ccdElasticSearchQueryBuilder.buildQuery("123456", "data.executorsApplying.value.applyingExecutorInvitationId");
         Assert.assertThat(result, Matchers.equalTo("{\"query\":{\"term\":" +
                 "{ \"data.executorsApplying.value.applyingExecutorInvitationId.keyword\":\"123456\"}}}"));
+
+    }
+
+    @Test
+    public void shouldBuildAllCasesQuery(){
+        String result = ccdElasticSearchQueryBuilder.buildFindAllCasesQuery();
+        Assert.assertThat(result, Matchers.equalTo("{\"query\":{\"match_all\":{}},\"size\": 50}"));
 
     }
 }

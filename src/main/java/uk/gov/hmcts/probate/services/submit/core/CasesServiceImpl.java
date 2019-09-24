@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -58,6 +59,14 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
+    public List<ProbateCaseDetails> getAllCases(CaseType caseType) {
+        log.info("Getting all cases of caseType: {}", caseType.getName());
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        return coreCaseDataService
+                .findCases(caseType, securityDTO);
+    }
+
+    @Override
     public ProbateCaseDetails getCaseById(String caseId) {
         log.info("Getting case by caseId: {}", caseId);
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
@@ -72,6 +81,16 @@ public class CasesServiceImpl implements CasesService {
         return saveCase(searchField, probateCaseDetails, Boolean.FALSE);
     }
 
+    @Override
+    public ProbateCaseDetails initiateCase(ProbateCaseDetails probateCaseDetails) {
+        log.info("initiateCase - Initiating case for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
+        CaseData caseData = probateCaseDetails.getCaseData();
+        CaseType caseType = CaseType.getCaseType(caseData);
+        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDTO);
+
+    }
 
     @Override
     public ProbateCaseDetails saveCaseAsCaseworker(String searchField, ProbateCaseDetails probateCaseDetails) {
@@ -83,9 +102,11 @@ public class CasesServiceImpl implements CasesService {
         log.info("saveDraft - Saving draft for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
-        Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
-        String searchValue = searchFieldValuePair.getRight();
-        Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
+        if(!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
+            Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
+            String searchValue = searchFieldValuePair.getRight();
+            Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
+        }
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
         Optional<ProbateCaseDetails> caseInfoOptional = coreCaseDataService.findCase(searchField, caseType, securityDTO);
         return saveCase(securityDTO, caseType, caseData, caseInfoOptional, asCaseworker);

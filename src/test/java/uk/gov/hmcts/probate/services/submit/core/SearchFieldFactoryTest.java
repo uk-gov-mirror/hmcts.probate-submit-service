@@ -69,6 +69,6 @@ public class SearchFieldFactoryTest {
 
     @Test
     public void shouldGetInviteFieldName(){
-        assertThat(searchFieldFactory.getSearchInviteFieldName(), equalTo("executorsApplying.value.applyingExecutorInvitationId"));
+        assertThat(searchFieldFactory.getSearchInviteFieldName(), equalTo("data.executorsApplying.value.applyingExecutorInvitationId"));
     }
 }

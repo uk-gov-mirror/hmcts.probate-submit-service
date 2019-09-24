@@ -23,6 +23,8 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
@@ -47,6 +49,17 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
+    @ApiOperation(value = "Get all cases from CCD using session identifier", notes = "Get all cases from CCD")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Cases retrieval from CCD successful"),
+            @ApiResponse(code = 400, message = "Cases retrieval from CCD successful")
+    })
+    @GetMapping(path = "/cases/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<ProbateCaseDetails>> getAllCases(@RequestParam("caseType") CaseType caseType) {
+        log.info("Retrieving cases of caseType: {}", caseType.getName());
+        return ResponseEntity.ok(casesService.getAllCases(caseType));
+    }
 
     @ApiOperation(value = "Get case by Invitation Id from CCD", notes = "Get case bu invite id from CCD")
     @ApiResponses(value = {
@@ -70,6 +83,13 @@ public class CasesController {
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(), caseRequest), OK);
     }
 
+    @PostMapping(path = "/cases/initiate", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> initiateCase(@RequestBody ProbateCaseDetails caseRequest) {
+        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        return new ResponseEntity(casesService.initiateCase(caseRequest), OK);
+    }
 
     @PostMapping(path = "/cases/caseworker/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

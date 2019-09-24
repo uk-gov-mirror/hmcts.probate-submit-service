@@ -11,10 +11,15 @@ import org.springframework.stereotype.Component;
 public class CcdElasticSearchQueryBuilder {
 
     String buildQuery(String searchValue, String searchField) {
-        String searchString = "{\"query\":{\"term\":{ \"data."
+        String searchString = "{\"query\":{\"term\":{ \""
                 + searchField
                 +".keyword\":\"" + searchValue + "\"}}}";
         return searchString;
     }
+
+    String buildFindAllCasesQuery() {
+        return "{\"query\":{\"match_all\":{}},\"size\": 50}";
+    }
+
 
 }

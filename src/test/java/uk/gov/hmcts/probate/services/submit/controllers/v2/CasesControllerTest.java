@@ -21,16 +21,15 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
-import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
 import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Path;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -48,6 +47,8 @@ public class
 CasesControllerTest {
 
     private static final String CASES_URL = "/cases";
+    private static final String CASES_INITATE_URL = "/cases/initiate";
+    private static final String CASES_ALL_URL = "/cases/all";
     private static final String CASES_CASEWORKER_URL = "/cases/caseworker";
     private static final String CASES_INVITATION_URL = "/cases/invitation";
     private static final String EMAIL_ADDRESS = "test@test.com";
@@ -80,6 +81,24 @@ CasesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
+    }
+
+
+    @Test
+    public void shouldGetAllCaseForGrantOfRepresentation() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        when(casesService.getAllCases(CaseType.GRANT_OF_REPRESENTATION)).thenReturn(Arrays.asList(caseResponse));
+
+        mockMvc.perform(get(CASES_ALL_URL)
+                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(casesService, times(1)).getAllCases(CaseType.GRANT_OF_REPRESENTATION);
     }
 
     @Test
@@ -118,10 +137,10 @@ CasesControllerTest {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
 
         mockMvc.perform(put(CASES_URL + "/" + EMAIL_ADDRESS + VALIDATE_ENDPOINT)
-            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-            .content(objectMapper.writeValueAsString(caseData))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+                .content(objectMapper.writeValueAsString(caseData))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
         verify(casesService, times(1)).validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
@@ -141,12 +160,12 @@ CasesControllerTest {
         when(casesService.validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenThrow(caseValidationException);
 
         mockMvc.perform(put(CASES_URL + "/" + EMAIL_ADDRESS + VALIDATE_ENDPOINT)
-            .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.errors", hasSize(1)))
-            .andExpect(jsonPath("$.errors[0].field", is("fieldName")))
-            .andExpect(jsonPath("$.errors[0].message", is("must not be null")))
-            .andExpect(status().isBadRequest());
+                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].field", is("fieldName")))
+                .andExpect(jsonPath("$.errors[0].message", is("must not be null")))
+                .andExpect(status().isBadRequest());
 
         verify(casesService, times(1)).validate(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
@@ -157,13 +176,26 @@ CasesControllerTest {
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
-            .content(objectMapper.writeValueAsString(probateCaseDetails))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+                .content(objectMapper.writeValueAsString(probateCaseDetails))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }
 
+
+    @Test
+    public void shouldInitiateCase() throws Exception {
+        CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
+        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
+
+        mockMvc.perform(post(CASES_INITATE_URL)
+                .content(objectMapper.writeValueAsString(probateCaseDetails))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(casesService, times(1)).initiateCase(any(ProbateCaseDetails.class));
+    }
 
     @Test
     public void shouldSaveCaseAsCaseworker() throws Exception {
@@ -183,12 +215,12 @@ CasesControllerTest {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
         when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class)))
-            .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
+                .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
-            .content(objectMapper.writeValueAsString(probateCaseDetails))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isInternalServerError());
+                .content(objectMapper.writeValueAsString(probateCaseDetails))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError());
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }

@@ -152,7 +152,6 @@ public class CoreCaseDataClient {
             logger.info("Exception while saving case to CCD", e);
             logger.info(STATUS_CODE_LOG, e.getStatusText());
             logger.info("url", url);
-            logger.info("ccdSaveRequest", ccdSaveRequest);
             throw new HttpClientErrorException(e.getStatusCode());
         }
     }

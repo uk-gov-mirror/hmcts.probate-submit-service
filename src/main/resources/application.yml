@@ -3,9 +3,6 @@ security:
   basic:
     enabled: false
 
-#  management:
-#    security:
-#      enabled: false
 
 management:
   endpoints:
@@ -16,20 +13,6 @@ management:
   endpoint:
     health:
       show-details: always
-
-mail:
-  username: localhost
-  password: dummyKey
-
-  host: localhost
-  port: 1025
-
-  javaMailProperties.subject: Online Probate Application
-  javaMailProperties.sender: dummySender@email.hmcts
-  javaMailProperties.recipient: dummyTest@gmail.com
-
-  javaMailProperties.mail.smtp.auth: false
-  javaMailProperties.mail.smtp.ssl.enable: false
 
 # THYMELEAF (ThymeleafAutoConfiguration)
 spring:
@@ -71,7 +54,7 @@ services:
 auth.provider.service.client:
   baseUrl: http://localhost:4502
   microservice: 'probate_backend'
-  key: 'AAAAAAAAAAAAAAAA'
+  key: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
   tokenTimeToLiveInSeconds: '900'
 
 idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
@@ -197,8 +180,9 @@ registries:
 authorised.services: probate_backend,probate_frontend
 
 auth.idam.client.baseUrl: http://localhost:4501
-s2s.auth.totp.secret: ${auth.provider.service.client.key}
+s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}
 
 core_case_data.api.url: ${services.coreCaseData.baseUrl}
 
+186 : 

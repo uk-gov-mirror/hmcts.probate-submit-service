@@ -2,6 +2,8 @@ package uk.gov.hmcts.probate.services.submit.core;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -29,9 +31,11 @@ public class DraftServiceImpl implements DraftService {
 
     private final SearchFieldFactory searchFieldFactory;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public ProbateCaseDetails saveDraft(String searchField, ProbateCaseDetails caseRequest) {
-        log.info("saveDraft - Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        logger.info("saveDraft - Saving draft for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         CaseData caseData = caseRequest.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
@@ -47,11 +51,11 @@ public class DraftServiceImpl implements DraftService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
-            log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
+            logger.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
             return coreCaseDataService.updateCase(caseResponse.getCaseInfo().getCaseId(), caseData,
                     caseEvents.getUpdateDraftEventId(), securityDTO);
         }
-        log.info("No case found");
+        logger.info("No case found");
         return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDTO);
     }
 }

@@ -23,36 +23,6 @@ data "azurerm_key_vault_secret" "s2s_key" {
   vault_uri = "https://s2s-${local.localenv}.vault.azure.net/"
 }
 
-data "azurerm_key_vault_secret" "probate_mail_host" {
-  name = "probate-mail-host"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "probate_mail_username" {
-  name = "probate-mail-username"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "probate_mail_password" {
-  name = "probate-mail-password"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "probate_mail_port" {
-  name = "probate-mail-port"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "probate_mail_sender" {
-  name = "probate-mail-sender"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
-}
-
-data "azurerm_key_vault_secret" "probate_mail_recipient" {
-  name = "probate-mail-recipient"
-  vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
-}
-
 data "azurerm_key_vault_secret" "spring_application_json_submit_service" {
   name = "spring-application-json-submit-service-azure"
   vault_uri = "${data.azurerm_key_vault.probate_key_vault.vault_uri}"
@@ -81,13 +51,6 @@ module "probate-submit-service" {
   
 
     DEPLOYMENT_ENV= "${var.deployment_env}"
-
-    MAIL_USERNAME = "${data.azurerm_key_vault_secret.probate_mail_username.value}"
-    MAIL_PASSWORD = "${data.azurerm_key_vault_secret.probate_mail_password.value}"
-    MAIL_HOST = "${data.azurerm_key_vault_secret.probate_mail_host.value}"
-    MAIL_PORT = "${data.azurerm_key_vault_secret.probate_mail_port.value}"
-    MAIL_JAVAMAILPROPERTIES_SENDER = "${data.azurerm_key_vault_secret.probate_mail_sender.value}"
-    MAIL_JAVAMAILPROPERTIES_RECIPIENT = "${data.azurerm_key_vault_secret.probate_mail_recipient.value}"
 
     AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.azurerm_key_vault_secret.s2s_key.value}"
     SPRING_APPLICATION_JSON = "${data.azurerm_key_vault_secret.spring_application_json_submit_service.value}"

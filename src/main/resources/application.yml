@@ -184,5 +184,3 @@ s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}
 
 core_case_data.api.url: ${services.coreCaseData.baseUrl}
-
-186 : 

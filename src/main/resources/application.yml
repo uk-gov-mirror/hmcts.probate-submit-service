@@ -49,7 +49,7 @@ services:
   coreCaseData:
     baseUrl: http://localhost:4452
     url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
-    enabled: ${USE_CCD:true}
+    enabled: true
 
 auth.provider.service.client:
   baseUrl: http://localhost:4502

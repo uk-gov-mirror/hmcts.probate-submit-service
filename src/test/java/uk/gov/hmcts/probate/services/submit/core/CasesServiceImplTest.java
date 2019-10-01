@@ -103,6 +103,20 @@ public class CasesServiceImplTest {
     }
 
     @Test
+    public void shouldGetCaseByApplicantEmail() {
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.findCaseByApplicantEmail(EMAIL_ADDRESS, CASE_TYPE, securityDTO)).thenReturn(caseResponseOptional);
+
+        ProbateCaseDetails caseResponse = casesService.getCaseByApplicantEmail(EMAIL_ADDRESS, CASE_TYPE);
+
+        assertThat(caseResponse, equalTo(caseResponseOptional.get()));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(coreCaseDataService, times(1)).findCaseByApplicantEmail(EMAIL_ADDRESS, CASE_TYPE, securityDTO);
+    }
+
+    @Test
     public void shouldGetCaseByInvitationId() {
         SecurityDTO securityDTO = SecurityDTO.builder().build();
         Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(ProbateCaseDetails.builder().build());

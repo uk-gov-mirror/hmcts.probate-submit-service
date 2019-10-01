@@ -155,6 +155,25 @@ public class CcdClientApi implements CoreCaseDataService {
 
 
     @Override
+    public Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        String searchString = elasticSearchQueryBuilder.buildQuery(searchField, searchFieldFactory.getSearchApplicantEmailFieldName());
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseType.getName(),
+                searchString).getCases();
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        if (caseDetails.size() > 1) {
+            throw new IllegalStateException("Multiple cases exist with case id provided!");
+        }
+        return caseDetails.stream().findFirst().map(this::createCaseResponse);
+    }
+
+
+    @Override
     public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
         String searchString = elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getSearchFieldName(caseType));

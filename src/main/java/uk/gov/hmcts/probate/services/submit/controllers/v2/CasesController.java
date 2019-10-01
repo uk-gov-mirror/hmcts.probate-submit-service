@@ -49,6 +49,19 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
+    @ApiOperation(value = "Get case to CCD using applicant email", notes = "Get case to CCD")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+    })
+    @GetMapping(path = "/cases/applicantEmail/{applicantEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> getCaseByApplicantEmail(@RequestParam("caseType") CaseType caseType,
+                                                      @PathVariable("applicantEmail") String applicantEmail) {
+        log.info("Retrieving case of caseType: {}", caseType.getName());
+        return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail.toLowerCase(), caseType));
+    }
+
     @ApiOperation(value = "Get all cases from CCD using session identifier", notes = "Get all cases from CCD")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Cases retrieval from CCD successful"),

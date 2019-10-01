@@ -25,4 +25,6 @@ public interface CoreCaseDataService {
 
     ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
             SecurityDTO securityDTO);
+
+    Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO);
 }

@@ -98,6 +98,8 @@ public class CcdClientApiTest {
 
         when(searchFieldFactory.getSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
+        when(searchFieldFactory.getSearchApplicantEmailFieldName()).thenReturn("primaryApplicantEmailAddress");
+
 
         String inviteField = "inviteField";
 
@@ -206,6 +208,26 @@ public class CcdClientApiTest {
 
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+
+        ProbateCaseDetails caseResponse = optionalCaseResponse.get();
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString));
+    }
+
+    @Test
+    public void shouldFindCaseByApplicantEmail() {
+
+        String queryString = "queryString";
+        when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress")).thenReturn(queryString);
+
+        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString))).thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build());
+
+
+        Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCaseByApplicantEmail(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
 
         ProbateCaseDetails caseResponse = optionalCaseResponse.get();
         assertThat(caseResponse, is(notNullValue()));

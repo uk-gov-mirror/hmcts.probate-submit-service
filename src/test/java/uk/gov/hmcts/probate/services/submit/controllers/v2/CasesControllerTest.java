@@ -47,6 +47,7 @@ public class
 CasesControllerTest {
 
     private static final String CASES_URL = "/cases";
+    private static final String CASES_BY_APPLICANT_EMAIL_URL = "/cases/applicantEmail";
     private static final String CASES_INITATE_URL = "/cases/initiate";
     private static final String CASES_ALL_URL = "/cases/all";
     private static final String CASES_CASEWORKER_URL = "/cases/caseworker";
@@ -81,6 +82,23 @@ CasesControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
+    }
+
+    @Test
+    public void shouldGetCaseByApplicantEmailForIntestacyGrantOfRepresentation() throws Exception {
+        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.DRAFT);
+        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
+
+        mockMvc.perform(get(CASES_BY_APPLICANT_EMAIL_URL + "/" + EMAIL_ADDRESS)
+                .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(casesService, times(1)).getCaseByApplicantEmail(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
     }
 
 
@@ -182,7 +200,6 @@ CasesControllerTest {
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }
-
 
     @Test
     public void shouldInitiateCase() throws Exception {

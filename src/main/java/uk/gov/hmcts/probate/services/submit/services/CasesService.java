@@ -9,6 +9,8 @@ public interface CasesService {
 
     ProbateCaseDetails getCase(String searchField, CaseType caseType);
 
+    ProbateCaseDetails getCaseByApplicantEmail(String searchField, CaseType caseType);
+
     ProbateCaseDetails getCaseById(String caseId);
 
     ProbateCaseDetails getCaseByInvitationId(String invitationId, CaseType caseType);

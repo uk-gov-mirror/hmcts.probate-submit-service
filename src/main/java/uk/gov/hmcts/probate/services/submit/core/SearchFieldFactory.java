@@ -39,4 +39,8 @@ public class SearchFieldFactory {
     public String getSearchInviteFieldName() {
         return EXECUTORS_APPLYING_VALUE_APPLYING_EXECUTOR_INVITIATION_ID;
     }
+
+    public String getSearchApplicantEmailFieldName() {
+        return "data.primaryApplicantEmailAddress";
+    }
 }

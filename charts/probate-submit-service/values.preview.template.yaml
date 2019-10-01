@@ -1,6 +1,7 @@
 tags:
   ccd-enabled: false
   ccd-idam-pr: false
+  ccd-elasticsearch: false
 
 java:
   image: ${IMAGE_NAME}

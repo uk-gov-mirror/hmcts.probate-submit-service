@@ -1,3 +1,8 @@
+tags:
+  ccd-enabled: false
+  ccd-idam-pr: false
+  ccd-elasticsearch: false
+
 java:
   applicationPort: 8181
   ingressHost: probate-submit-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal

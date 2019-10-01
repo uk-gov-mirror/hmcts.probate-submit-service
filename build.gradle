@@ -175,7 +175,7 @@ repositories {
 }
 
 def versions = [
-    logging: '5.0.1',
+    logging: '5.1.0',
     serviceAuthProviderClient: '3.0.0',
     authCheckerLib: '2.1.2',
     ccdClient: '4.4.1',
@@ -192,7 +192,7 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
   compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
     force = true
   }
 
@@ -200,10 +200,10 @@ dependencies {
   compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
   compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
-  compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
+  compile group: 'uk.gov.hmcts.reform', name: 'logging-httpcomponents', version: versions.logging
   compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
   compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
   compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
@@ -227,7 +227,7 @@ dependencies {
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
   testCompile group: 'org.springframework.security', name: 'spring-security-test'
   testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
-  testCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+  testCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
     force = true
   }
 
@@ -237,7 +237,7 @@ dependencies {
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
-  testFunctionalCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+  testFunctionalCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
     force = true
   }
   testFunctionalCompile sourceSets.main.runtimeClasspath
@@ -250,7 +250,7 @@ dependencies {
 
   testSmokeCompile sourceSets.main.runtimeClasspath
   testSmokeCompile sourceSets.test.runtimeClasspath
-  testSmokeCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+  testSmokeCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
     force = true
   }
 
@@ -260,7 +260,7 @@ dependencies {
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
-  testContractCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+  testContractCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
     force = true
   }
   testContractCompile sourceSets.main.runtimeClasspath

@@ -63,7 +63,9 @@ module "probate-submit-service" {
     SERVICES_CORECASEDATA_BASEURL = "${var.ccd_baseUrl}"
     SERVICES_CORECASEDATA_ENABLED = "${var.ccd_enabled}"
     AUTH_IDAM_CLIENT_BASEURL = "${var.auth_idam_client_baseurl}"
-   
+	  
+    TESTING = "TESTING"
+    
     java_app_name = "${var.microservice}"
     LOG_LEVEL = "${var.log_level}"
 

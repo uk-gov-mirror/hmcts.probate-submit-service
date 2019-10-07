@@ -192,7 +192,7 @@ dependencies {
   compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
   compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
   compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
+  compile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
     force = true
   }
 
@@ -227,7 +227,7 @@ dependencies {
   testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
   testCompile group: 'org.springframework.security', name: 'spring-security-test'
   testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
-  testCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
+  testCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
     force = true
   }
 
@@ -237,7 +237,7 @@ dependencies {
   testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testFunctionalCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testFunctionalCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
-  testFunctionalCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
+  testFunctionalCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
     force = true
   }
   testFunctionalCompile sourceSets.main.runtimeClasspath
@@ -250,7 +250,7 @@ dependencies {
 
   testSmokeCompile sourceSets.main.runtimeClasspath
   testSmokeCompile sourceSets.test.runtimeClasspath
-  testSmokeCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
+  testSmokeCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
     force = true
   }
 
@@ -260,7 +260,7 @@ dependencies {
   testContractCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serentity
   testContractCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
   testContractCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.1'
-  testContractCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.9.3") {
+  testContractCompile ("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
     force = true
   }
   testContractCompile sourceSets.main.runtimeClasspath

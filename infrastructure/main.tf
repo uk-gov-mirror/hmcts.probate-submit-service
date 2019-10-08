@@ -52,7 +52,7 @@ module "probate-submit-service" {
 
     DEPLOYMENT_ENV= "${var.deployment_env}"
 
-    AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.azurerm_key_vault_secret.s2s_key.value}"
+    S2S_AUTH_TOTP_SECRET = "${data.azurerm_key_vault_secret.s2s_key.value}"
     SPRING_APPLICATION_JSON = "${data.azurerm_key_vault_secret.spring_application_json_submit_service.value}"
    
     MAIL_JAVAMAILPROPERTIES_SUBJECT = "${var.probate_mail_subject}"

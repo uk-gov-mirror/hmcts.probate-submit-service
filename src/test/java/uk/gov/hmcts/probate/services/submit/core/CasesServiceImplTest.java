@@ -255,4 +255,23 @@ public class CasesServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDTO);
     }
+
+
+    @Test
+    public void shouldInitiateCaseAsCaseworker() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        CaseType caseType = CaseType.getCaseType(caseData);
+
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
+        SecurityDTO securityDTO = SecurityDTO.builder().build();
+        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
+        when(coreCaseDataService.createCaseAsCaseworker(caseData, CREATE_DRAFT, securityDTO))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.initiateCaseAsCaseworker(caseRequest);
+
+        assertThat(caseResponse.getCaseData(), is(caseData));
+        verify(securityUtils, times(1)).getSecurityDTO();
+        verify(coreCaseDataService, times(1)).createCaseAsCaseworker(caseData, CREATE_DRAFT, securityDTO);
+    }
 }

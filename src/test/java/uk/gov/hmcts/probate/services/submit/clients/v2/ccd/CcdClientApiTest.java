@@ -155,6 +155,26 @@ public class CcdClientApiTest {
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent));
     }
 
+
+    @Test
+    public void shouldCreateCaseCaseAsCaseworker() {
+        when(mockCoreCaseDataApi.startForCaseworker(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
+                GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName())).thenReturn(startEventResponse);
+
+        when(mockCoreCaseDataApi.submitForCaseworker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+
+        ProbateCaseDetails caseResponse = ccdClientApi.createCaseAsCaseworker(caseData, CREATE_DRAFT, securityDTO);
+
+        assertThat(caseResponse, is(notNullValue()));
+        assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
+        assertThat(caseResponse.getCaseInfo().getState(), is(STATE));
+        verify(mockCoreCaseDataApi, times(1)).startForCaseworker(AUTHORIZATION, SERVICE_AUTHORIZATION, USER_ID, PROBATE.name(),
+                GRANT_OF_REPRESENTATION.getName(), CREATE_DRAFT.getName());
+        verify(mockCoreCaseDataApi, times(1)).submitForCaseworker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent));
+    }
+
     @Test
     public void shouldUpdateCase() {
         caseDataContent.getEvent().setId(UPDATE_DRAFT.getName());

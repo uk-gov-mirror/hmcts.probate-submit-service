@@ -49,6 +49,7 @@ CasesControllerTest {
     private static final String CASES_URL = "/cases";
     private static final String CASES_BY_APPLICANT_EMAIL_URL = "/cases/applicantEmail";
     private static final String CASES_INITATE_URL = "/cases/initiate";
+    private static final String CASES_CASEWORKER_INITATE_URL = "/cases/initiate/caseworker";
     private static final String CASES_ALL_URL = "/cases/all";
     private static final String CASES_CASEWORKER_URL = "/cases/caseworker";
     private static final String CASES_INVITATION_URL = "/cases/invitation";
@@ -212,6 +213,19 @@ CasesControllerTest {
                 .andExpect(status().isOk());
 
         verify(casesService, times(1)).initiateCase(any(ProbateCaseDetails.class));
+    }
+
+    @Test
+    public void shouldInitiateCaseAsCasewoker() throws Exception {
+        CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
+        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
+
+        mockMvc.perform(post(CASES_CASEWORKER_INITATE_URL)
+                .content(objectMapper.writeValueAsString(probateCaseDetails))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(casesService, times(1)).initiateCaseAsCaseworker(any(ProbateCaseDetails.class));
     }
 
     @Test

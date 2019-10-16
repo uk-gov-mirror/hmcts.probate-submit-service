@@ -104,6 +104,16 @@ public class CasesController {
         return new ResponseEntity(casesService.initiateCase(caseRequest), OK);
     }
 
+
+    @PostMapping(path = "/cases/initiate/caseworker", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> initiateCaseAsCaseWorker(@RequestBody ProbateCaseDetails caseRequest) {
+        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        return new ResponseEntity(casesService.initiateCaseAsCaseworker(caseRequest), OK);
+    }
+
+
     @PostMapping(path = "/cases/caseworker/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

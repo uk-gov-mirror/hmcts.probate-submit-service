@@ -65,15 +65,17 @@ public class CreateCaseSubmissionsProcessor {
     }
 
     private void assertIdentifierMatchesCase(String identifier, CaseData caseData, CaseType caseType) {
-        Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
-        String searchFieldValueInBody = searchFieldValuePair.getRight();
-        if (!searchFieldValueInBody.equals(identifier)) {
-            throw new AssertFieldException(ValidationErrorResponse.builder()
-                .errors(Lists.newArrayList(ValidationError.builder()
-                    .field(searchFieldValuePair.getLeft())
-                    .message("Path variable identifier must match identifier in form")
-                    .build()))
-                .build());
+        if(!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
+            Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
+            String searchFieldValueInBody = searchFieldValuePair.getRight();
+            if (!searchFieldValueInBody.equals(identifier)) {
+                throw new AssertFieldException(ValidationErrorResponse.builder()
+                        .errors(Lists.newArrayList(ValidationError.builder()
+                                .field(searchFieldValuePair.getLeft())
+                                .message("Path variable identifier must match identifier in form")
+                                .build()))
+                        .build());
+            }
         }
     }
 }

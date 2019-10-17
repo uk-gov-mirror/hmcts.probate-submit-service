@@ -96,7 +96,7 @@ public class CcdClientApiTest {
     public void setUp() {
         ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
 
-        when(searchFieldFactory.getSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
+        when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
         when(searchFieldFactory.getSearchApplicantEmailFieldName()).thenReturn("primaryApplicantEmailAddress");
 
@@ -164,7 +164,8 @@ public class CcdClientApiTest {
         when(mockCoreCaseDataApi.submitForCaseworker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
 
-        ProbateCaseDetails caseResponse = ccdClientApi.createCaseAsCaseworker(caseData, CREATE_DRAFT, securityDTO);
+        ProbateCaseDetails caseResponse = ccdClientApi.createCaseAsCaseworker(
+                caseData, CREATE_DRAFT, securityDTO);
 
         assertThat(caseResponse, is(notNullValue()));
         assertThat(caseResponse.getCaseInfo().getCaseId(), is(CASE_ID.toString()));

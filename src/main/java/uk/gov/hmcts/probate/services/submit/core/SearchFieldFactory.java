@@ -36,6 +36,15 @@ public class SearchFieldFactory {
         return Optional.ofNullable(searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
     }
 
+    public String getEsSearchFieldName(CaseType caseType) {
+        if(caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
+            return Optional.ofNullable(searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+        }
+        else{
+            return Optional.ofNullable("data." + searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+        }
+    }
+
     public String getSearchInviteFieldName() {
         return EXECUTORS_APPLYING_VALUE_APPLYING_EXECUTOR_INVITIATION_ID;
     }

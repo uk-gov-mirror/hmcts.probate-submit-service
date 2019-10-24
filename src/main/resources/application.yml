@@ -53,7 +53,7 @@ services:
 
 auth.provider.service.client:
   baseUrl: http://localhost:4502
-  microservice: 'probate_backend'
+  microservice: ${AUTH_S2S_CLIENT_ID:probate_backend}
   key: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
   tokenTimeToLiveInSeconds: '900'
 
@@ -158,8 +158,8 @@ ccd:
 
 logging:
   level:
-    org.springframework.web: ERROR
-    uk.gov.hmcts.probate: DEBUG
+    org.springframework.web: ${LOG_LEVEL:ERROR}
+    uk.gov.hmcts.probate: ${LOG_LEVEL:DEBUG}
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n"
 

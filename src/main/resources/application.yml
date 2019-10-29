@@ -54,7 +54,7 @@ auth.provider.service.client:
   key: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
   tokenTimeToLiveInSeconds: '900'
 
-  idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
+idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
 
 ccd:
   probate:

@@ -175,18 +175,12 @@ repositories {
     jcenter()
 }
 
-processResources {
-    from('src/lib/AI-Agent.xml') {
-        into 'lib'
-    }
-}
-
 def versions = [
-        logging                         : '3.0.3',
-        serviceAuthProviderClient       : '1.0.4',
+        logging                         : '5.1.0',
+        serviceAuthProviderClient       : '3.0.0',
         authCheckerLib                  : '2.1.2',
         ccdClient                       : '4.6.4',
-        springCloudStarterNetflixHystrix: '2.0.2.RELEASE',
+        springCloudStarterNetflixHystrix: '2.1.1.RELEASE',
         springfoxSwagger                : '2.9.2',
         springCloudWiremock             : '1.2.4.RELEASE',
         serentity                       : '2.0.17',
@@ -198,7 +192,6 @@ def versions = [
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
     compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
@@ -209,19 +202,21 @@ dependencies {
         force = true
     }
 
+
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.logging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.logging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.logging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-httpcomponents', version: versions.logging
     compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
     compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
-    compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.3'
+    compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: '0.0.5'
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'uk.gov.hmcts.reform.probate', name: 'probate-commons', version: versions.probateCommons
 
@@ -233,15 +228,18 @@ dependencies {
     compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
     compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
 
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.0.RELEASE'
-
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "com.vaadin.external.google", module: "android-json"
+    }
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testCompile group: 'org.springframework.security', name: 'spring-security-test'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
     testCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
         force = true
     }
-
+    testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    testRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity

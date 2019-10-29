@@ -3,6 +3,9 @@ security:
   basic:
     enabled: false
 
+  #  management:
+  #    security:
+  #      enabled: false
 
 management:
   endpoints:
@@ -14,7 +17,7 @@ management:
     health:
       show-details: always
 
-# THYMELEAF (ThymeleafAutoConfiguration)
+  # THYMELEAF (ThymeleafAutoConfiguration)
 spring:
   application:
     name: probate-submit-service
@@ -40,12 +43,6 @@ server:
   port: 8181
 
 services:
-  persistence:
-    baseUrl: http://localhost:8282
-    formdata.url:  ${services.persistence.baseUrl}/formdata
-    submissions.url:  ${services.persistence.baseUrl}/submissions
-    sequenceNumber.url:  ${services.persistence.baseUrl}/sequence-number
-
   coreCaseData:
     baseUrl: http://localhost:4452
     url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
@@ -176,8 +173,17 @@ registries:
 
 authorised.services: probate_backend,probate_frontend
 
-auth.idam.client.baseUrl: http://localhost:4501
+auth.idam.client.baseUrl: http://localhost:5000
 s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}
 
 core_case_data.api.url: ${services.coreCaseData.baseUrl}
+
+feign:
+  client:
+    config:
+      core-case-data-api:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+        errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder

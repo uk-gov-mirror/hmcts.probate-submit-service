@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,7 @@ import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -34,6 +35,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private final CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
 
     private final SearchFieldFactory searchFieldFactory;
+
+    private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
 
     @Override
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
@@ -67,10 +70,10 @@ public class CcdClientApi implements CoreCaseDataService {
         );
         return createCaseResponse(caseDetails);
     }
-    
+
     @Override
     public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
-                                         SecurityDTO securityDTO) {
+                                                     SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case as for caseType: {}, caseId: {}, eventId: {}",
                 caseType.getName(), caseId, eventId.getName());
@@ -104,7 +107,7 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
-        log.info("Create case for caseType: {}, caseId: {}, eventId: {}",
+        log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
                 caseType.getName(), eventId.getName());
         log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
                 caseType.getName(), eventId.getName());
@@ -130,16 +133,85 @@ public class CcdClientApi implements CoreCaseDataService {
         return createCaseResponse(caseDetails);
     }
 
+
     @Override
-    public Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) {
-        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
-        List<CaseDetails> caseDetails = coreCaseDataApi.searchForCitizen(
+    public ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
+        CaseType caseType = CaseType.getCaseType(caseData);
+        log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
+                caseType.getName(), eventId.getName());
+        log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
+                caseType.getName(), eventId.getName());
+        StartEventResponse startEventResponse = coreCaseDataApi.startForCaseworker(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
                 securityDTO.getUserId(),
                 JurisdictionId.PROBATE.name(),
                 caseType.getName(),
-                ImmutableMap.of(CASE_QUERY_PARAM + searchFieldFactory.getSearchFieldName(caseType), searchField));
+                eventId.getName()
+        );
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
+        CaseDetails caseDetails = coreCaseDataApi.submitForCaseworker(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                false,
+                caseDataContent
+        );
+        return createCaseResponse(caseDetails);
+    }
+
+
+    @Override
+    public Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+
+        String searchString = elasticSearchQueryBuilder.buildQuery(inviteId, searchFieldFactory.getSearchInviteFieldName());
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseType.getName(),
+                searchString).getCases();
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        if (caseDetails.size() > 1) {
+            throw new IllegalStateException("Multiple cases exist with invite id provided!");
+        }
+        return caseDetails.stream().findFirst().map(this::createCaseResponse);
+    }
+
+
+    @Override
+    public Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        String searchString = elasticSearchQueryBuilder.buildQuery(searchField, searchFieldFactory.getSearchApplicantEmailFieldName());
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseType.getName(),
+                searchString).getCases();
+        if (caseDetails == null) {
+            return Optional.empty();
+        }
+        if (caseDetails.size() > 1) {
+            throw new IllegalStateException("Multiple cases exist with case id provided!");
+        }
+        return caseDetails.stream().findFirst().map(this::createCaseResponse);
+    }
+
+
+    @Override
+    public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        String searchString = elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getEsSearchFieldName(caseType));
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseType.getName(),
+                searchString).getCases();
         if (caseDetails == null) {
             return Optional.empty();
         }
@@ -147,6 +219,18 @@ public class CcdClientApi implements CoreCaseDataService {
             throw new IllegalStateException("Multiple cases exist with applicant email provided!");
         }
         return caseDetails.stream().findFirst().map(this::createCaseResponse);
+    }
+
+    @Override
+    public List<ProbateCaseDetails> findCases(CaseType caseType, SecurityDTO securityDTO) {
+        log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());
+        String searchString = elasticSearchQueryBuilder.buildFindAllCasesQuery();
+        List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                caseType.getName(),
+                searchString).getCases();
+        return caseDetails.stream().map(this::createCaseResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -164,7 +248,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());
-        caseInfo.setState(caseDetails.getState());
+        caseInfo.setState(CaseState.getState(caseDetails.getState()));
+        caseInfo.setCaseCreatedDate(caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
 
         return ProbateCaseDetails.builder()
                 .caseData(caseDetailsToCaseDataMapper.map(caseDetails))

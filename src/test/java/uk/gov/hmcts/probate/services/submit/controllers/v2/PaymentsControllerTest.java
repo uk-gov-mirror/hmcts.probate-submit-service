@@ -14,6 +14,7 @@ import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
+import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
@@ -62,7 +63,7 @@ public class PaymentsControllerTest {
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(APPLICATION_CREATED);
+        caseInfo.setState(CaseState.PA_APP_CREATED);
         CasePayment payment = grantOfRepresentation.getPayments().get(0).getValue();
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         ProbatePaymentDetails paymentUpdateRequest = ProbatePaymentDetails.builder()
@@ -84,7 +85,7 @@ public class PaymentsControllerTest {
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(APPLICATION_CREATED);
+        caseInfo.setState(CaseState.PA_APP_CREATED);
         ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         when(paymentsService.createCase(eq(EMAIL_ADDRESS), eq(caseResponse))).thenReturn(caseResponse);
 

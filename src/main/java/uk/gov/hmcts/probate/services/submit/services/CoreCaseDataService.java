@@ -6,11 +6,16 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CoreCaseDataService {
 
-    Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO);
+    Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO);
+
+    Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) ;
+
+    List<ProbateCaseDetails> findCases(CaseType caseType, SecurityDTO securityDTO) ;
 
     Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDTO securityDTO);
 
@@ -18,6 +23,10 @@ public interface CoreCaseDataService {
 
     ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO);
 
+    ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDTO securityDTO);
+
     ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
             SecurityDTO securityDTO);
+
+    Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO);
 }

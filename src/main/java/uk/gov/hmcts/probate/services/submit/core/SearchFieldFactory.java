@@ -17,6 +17,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SearchFieldFactory {
 
+    private static final String EXECUTORS_APPLYING_VALUE_APPLYING_EXECUTOR_INVITIATION_ID =
+        "data.executorsApplying.value.applyingExecutorInvitationId";
     private final Map<CaseType, String> searchFieldsMap;
 
     public Pair<String, String> getSearchFieldValuePair(CaseType caseType, CaseData caseData) {
@@ -32,5 +34,22 @@ public class SearchFieldFactory {
 
     public String getSearchFieldName(CaseType caseType) {
         return Optional.ofNullable(searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+    }
+
+    public String getEsSearchFieldName(CaseType caseType) {
+        if(caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
+            return Optional.ofNullable(searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+        }
+        else{
+            return Optional.ofNullable("data." + searchFieldsMap.get(caseType)).orElseThrow(IllegalArgumentException::new);
+        }
+    }
+
+    public String getSearchInviteFieldName() {
+        return EXECUTORS_APPLYING_VALUE_APPLYING_EXECUTOR_INVITIATION_ID;
+    }
+
+    public String getSearchApplicantEmailFieldName() {
+        return "data.primaryApplicantEmailAddress";
     }
 }

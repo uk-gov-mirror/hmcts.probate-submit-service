@@ -1,109 +1,189 @@
 ---
-  security:
-    basic:
-      enabled: false
+security:
+  basic:
+    enabled: false
 
-#  management:
-#    security:
-#      enabled: false
+  #  management:
+  #    security:
+  #      enabled: false
 
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: '*'
-        base-path: /
-    endpoint:
-      health:
-        show-details: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /
+  endpoint:
+    health:
+      show-details: always
 
-  mail:
-    username: localhost
-    password: dummyKey
+  # THYMELEAF (ThymeleafAutoConfiguration)
+spring:
+  application:
+    name: probate-submit-service
+  thymeleaf.check-template-location: true
+  thymeleaf.prefix=classpath: /templates/
+  thymeleaf.excluded-view-names: # comma-separated list of view names   that should be excluded from resolution
+  thymeleaf.view-names: # comma-separated list of view names that can be resolved
+  thymeleaf.suffix: .html
+  thymeleaf.mode: HTML5
+  thymeleaf.encoding: UTF-8
+  thymeleaf.content-type: text/html # ;charset=<encoding> is added
+  thymeleaf.cache: false # set to false for hot refresh
 
-    host: localhost
-    port: 1025
+  messages:
+    basename: messages
+    cache-seconds: -1
+    encoding: UTF-8
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: true
 
-    javaMailProperties.subject: Online Probate Application
-    javaMailProperties.sender: dummySender@email.hmcts
-    javaMailProperties.recipient: dummyTest@gmail.com
+server:
+  port: 8181
 
-    javaMailProperties.mail.smtp.auth: false
-    javaMailProperties.mail.smtp.ssl.enable: false
+services:
+  coreCaseData:
+    baseUrl: http://localhost:4452
+    url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
+    enabled: ${USE_CCD:true}
 
-# THYMELEAF (ThymeleafAutoConfiguration)
-  spring:
-    application:
-      name: probate-submit-service
-    thymeleaf.check-template-location: true
-    thymeleaf.prefix=classpath: /templates/
-    thymeleaf.excluded-view-names: # comma-separated list of view names   that should be excluded from resolution
-    thymeleaf.view-names: # comma-separated list of view names that can be resolved
-    thymeleaf.suffix: .html
-    thymeleaf.mode: HTML5
-    thymeleaf.encoding: UTF-8
-    thymeleaf.content-type: text/html # ;charset=<encoding> is added
-    thymeleaf.cache: false # set to false for hot refresh
+auth.provider.service.client:
+  baseUrl: http://localhost:4502
+  microservice: ${AUTH_S2S_CLIENT_ID:probate_backend}
+  key: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
+  tokenTimeToLiveInSeconds: '900'
 
-    messages:
-      basename: messages
-      cache-seconds: -1
-      encoding: UTF-8
-    jackson:
-      deserialization:
-        FAIL_ON_UNKNOWN_PROPERTIES: true
+idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
 
-  server:
-    port: 8181
+ccd:
+  probate:
+    fullName: fullName
+    notApplyingKey: notApplyingKey
+    isApplying: isApplying
+    address: address
+    email: email
+    mobile: mobile
+    hasOtherName: hasOtherName
+    currentName: currentName
+    currentNameReason: currentNameReason
+    otherReason: otherReason
+    filename: filename
+    url: url
+  ccd:
+    notApplyingExecutorName: notApplyingExecutorName
+    notApplyingExecutorReason: notApplyingExecutorReason
+    value: value
+    applyingExecutorName: applyingExecutorName
+    applyingExecutorEmail: applyingExecutorEmail
+    applyingExecutorPhoneNumber: applyingExecutorPhoneNumber
+    applyingExecutorAddress: applyingExecutorAddress
+    applyingExecutorOtherNames: applyingExecutorOtherNames
+    applyingExecutorOtherNamesReason: applyingExecutorOtherNamesReason
+    applyingExecutorOtherReason: applyingExecutorOtherReason
+    DocumentType: DocumentType
+    DocumentLink: DocumentLink
+    documentUrl: document_url
+    documentBinaryUrl: document_binary_url
+    documentFilename: document_filename
+    Comment: Comment
+  reasonMap:
+    optionDiedBefore: DiedBefore
+    optionDiedAfter: DiedAfter
+    optionPowerReserved: PowerReserved
+    optionRenunciated: Renunciation
+  dateMap:
+    deceasedDob: deceasedDateOfBirth
+    deceasedDod: deceasedDateOfDeath
+  fieldMap:
+    applicantFirstName: primaryApplicantForenames
+    applicantLastName: primaryApplicantSurname
+    applicantSameWillName: primaryApplicantSameWillName
+    applicantAlias: primaryApplicantAlias
+    applicantAliasReason: primaryApplicantAliasReason
+    applicantOtherReason: primaryApplicantOtherReason
+    applicantPhone: primaryApplicantPhoneNumber
+    applicantEmail: primaryApplicantEmailAddress
+    deceasedFirstname: deceasedForenames
+    deceasedSurname: deceasedSurname
+    willWithCodicils: willHasCodicils
+    deceasedMarriedAfterDateOnWill: deceasedMarriedAfterWillOrCodicilDate
+    noOfApplicants: numberOfApplicants
+    noOfExecutors: numberOfExecutors
+    ihtIdentifier: ihtReferenceNumber
+    ihtFormId: ihtFormId
+    copiesUK: extraCopiesOfGrant
+    copiesOverseas: outsideUKGrantCopies
+    paymentReference: paymentReferenceNumber
+    willCodicilsNumber: willNumberOfCodicils
+    deceasedAliasAssets: deceasedAnyOtherNames
+    caseType: caseType
+    deceasedHasAssetsOutsideUK: deceasedHasAssetsOutsideUK
+    deceasedMartialStatus: deceasedMaritalStatus
+    deceasedDivorcedInEnglandOrWales: deceasedDivorcedInEnglandOrWales
+    primaryApplicantRelationshipToDeceased: primaryApplicantRelationshipToDeceased
+    primaryApplicantAdoptionInEnglandOrWales: primaryApplicantAdoptionInEnglandOrWales
+    deceasedSpouseNotApplyingReason: deceasedSpouseNotApplyingReason
+    deceasedOtherChildren: deceasedOtherChildren
+    allDeceasedChildrenOverEighteen: allDeceasedChildrenOverEighteen
+    anyDeceasedChildrenDieBeforeDeceased: anyDeceasedChildrenDieBeforeDeceased
+    anyDeceasedGrandChildrenUnderEighteen: anyDeceasedGrandChildrenUnderEighteen
+    deceasedAnyChildren: deceasedAnyChildren
+    foreignAsset: foreignAsset
+  monetaryValueMap:
+    ihtGrossValue: ihtGrossValue
+    ihtNetValue: ihtNetValue
+    totalFee: totalFee
+    foreignAssetEstateValue: foreignAssetEstateValue
+  declarationMap:
+    declaration: declaration
+  legalStatementMap:
+    legalStatement: legalStatement
+  executorMap:
+    executorsNotApplying: executorsNotApplying
+    executorsApplying: executorsApplying
+  aliasMap:
+    deceasedOtherNames: deceasedAliasNameList
+  addressMap:
+    applicantAddress: primaryApplicantAddress
+    deceasedAddress: deceasedAddress
+  documentUploadMap:
+    documentUploads: boDocumentsUploaded
+  statementOfTruthMap:
+    statementOfTruthDocument: statementOfTruthDocument
 
-  services:
-    coreCaseData:
-      baseUrl: http://localhost:4452
-      url: ${services.coreCaseData.baseUrl}/citizens/%s/jurisdictions/PROBATE/case-types/GrantOfRepresentation
-      enabled: ${USE_CCD:true}
 
-  auth.provider.service.client:
-    baseUrl: http://localhost:4502
-    microservice: 'probate_backend'
-    key: 'AAAAAAAAAAAAAAAA'
-    tokenTimeToLiveInSeconds: '900'
+logging:
+  level:
+    org.springframework.web: ${LOG_LEVEL:ERROR}
+    uk.gov.hmcts.probate: ${LOG_LEVEL:DEBUG}
+  pattern:
+    console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n"
 
-  idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
-
-  logging:
-    level:
-      org.springframework.web: ERROR
-      uk.gov.hmcts.probate: DEBUG
-    pattern:
-      console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n"
-
-  azure:
-    app_insights_key: ${APPINSIGHTS_INSTRUMENTATIONKEY:false}
-
-  registries:
-    - name: ctsc
-      id: 0
-      email: ctsc@email.com
-      address: |
-        Line 1 Ox
-        Line 2 Ox
-        Line 3 Ox
-        PostCode Ox
+registries:
+  - name: ctsc
+    id: 0
+    email: ctsc@email.com
+    address: |
+      Line 1 Ox
+      Line 2 Ox
+      Line 3 Ox
+      PostCode Ox
 
 
-  authorised.services: probate_backend,probate_frontend
+authorised.services: probate_backend,probate_frontend
 
-  auth.idam.client.baseUrl: http://localhost:5000
-  s2s.auth.totp.secret: ${auth.provider.service.client.key}
-  service.name: ${auth.provider.service.client.microservice}
+auth.idam.client.baseUrl: http://localhost:5000
+s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
+service.name: ${auth.provider.service.client.microservice}
 
-  core_case_data.api.url: ${services.coreCaseData.baseUrl}
+core_case_data.api.url: ${services.coreCaseData.baseUrl}
 
-  feign:
-    client:
-      config:
-        core-case-data-api:
-          connectTimeout: 5000
-          readTimeout: 5000
-          loggerLevel: full
-          errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder
+feign:
+  client:
+    config:
+      core-case-data-api:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+        errorDecoder: uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CcdClientApiErrorDecoder

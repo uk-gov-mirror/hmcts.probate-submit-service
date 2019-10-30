@@ -24,9 +24,4 @@ public class SubmitHealthConfiguration
     public SubmitHealthIndicator ccdServiceHealthIndicator() {
     	return new SubmitHealthIndicator(servicesCcdBaseUrl, restTemplate);
     }
-
-    @Bean
-    public SubmitHealthIndicator serviceAuthHealthIndicator() {
-        return new SubmitHealthIndicator(idamS2sAuthUrl, restTemplate);
-    }
 }

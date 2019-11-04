@@ -65,7 +65,7 @@ public class PaymentServiceImplTest {
     private SearchFieldFactory searchFieldFactory;
 
     @Mock
-    private CaseSubmissionUpdater caseSubmissionUpdater;
+    private RegistryService registryService;
 
     @Mock
     private ValidationService validationService;
@@ -136,7 +136,7 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDTO));
-        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
+        verify(registryService).updateRegistry(eq(caseData));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService, never()).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDTO));
-        verify(caseSubmissionUpdater, never()).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
+        verify(registryService, never()).updateRegistry(eq(caseData));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_PAYMENT_FAILED), eq(securityDTO));
-        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.FAILED));
+        verify(registryService).updateRegistry(eq(caseData));
     }
 
     @Test
@@ -194,7 +194,7 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
             eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDTO));
-        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.FAILED));
+        verify(registryService).updateRegistry(eq(caseData));
     }
 
     @Test
@@ -253,7 +253,7 @@ public class PaymentServiceImplTest {
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDTO);
         verify(mockCoreCaseDataService).updateCaseAsCaseworker(eq(CASE_ID), eq(caseData),
             eq(GOP_CREATE_CASE), eq(securityDTO));
-        verify(caseSubmissionUpdater).updateCaseForSubmission(eq(caseData), eq(PaymentStatus.SUCCESS));
+        verify(registryService).updateRegistry(eq(caseData));
     }
 
     @Test

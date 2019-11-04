@@ -61,9 +61,11 @@ public class PaymentServiceImpl implements PaymentsService {
 
     private final EventFactory eventFactory;
 
-    private final CaseSubmissionUpdater caseSubmissionUpdater;
+    private final RegistryService registryService;
 
     private final ValidationService validationService;
+
+
 
     @Override
     public ProbateCaseDetails addPaymentToCase(String searchField, ProbatePaymentDetails paymentUpdateRequest) {
@@ -97,7 +99,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = probateCaseDetails.getCaseData();
-        caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
+        registryService.updateRegistry(caseData);
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }
 
@@ -111,7 +113,7 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = createCaseData(caseResponse, payment);
-        caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
+        registryService.updateRegistry(caseData);
         return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDTO);
     }
 
@@ -128,6 +130,7 @@ public class PaymentServiceImpl implements PaymentsService {
     private ProbateCaseDetails updateCase(String caseId, ProbateCaseDetails updateRequest,
                                           SecurityDTO securityDTO, CaseType caseType, ProbateCaseDetails caseResponse) {
         CaseState caseState = caseResponse.getCaseInfo().getState();
+        log.info("Updating case with id: {} and state: {}", caseId, caseState);
         if (CaseState.CASE_CREATED.equals(caseState)) {
             return caseResponse;
         }
@@ -135,7 +138,9 @@ public class PaymentServiceImpl implements PaymentsService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         EventId eventId = getEventId(caseState, payment).apply(caseEvents);
         CaseData caseData = updateRequest.getCaseData();
-        caseSubmissionUpdater.updateCaseForSubmission(caseData, payment.getStatus());
+        log.info("Updating registry");
+        registryService.updateRegistry(caseData);
+        log.info("Updating case as caseWorker with eventId:{}", eventId);
         return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO);
     }
 

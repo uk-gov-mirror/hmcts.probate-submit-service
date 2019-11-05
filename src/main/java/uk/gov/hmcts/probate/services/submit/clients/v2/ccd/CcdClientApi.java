@@ -6,11 +6,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
+import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+import uk.gov.hmcts.reform.ccd.client.model.UserId;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
@@ -31,6 +33,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private static final String CASE_QUERY_PARAM = "case.";
 
     private final CoreCaseDataApi coreCaseDataApi;
+
+    private final CaseAccessApi caseAccessApi;
 
     private final CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
 
@@ -244,6 +248,18 @@ public class CcdClientApi implements CoreCaseDataService {
         }
         return Optional.of(createCaseResponse(caseDetails));
     }
+
+    @Override
+    public void grantAccessForCase(CaseType caseType, String caseId, String applicantEmail, SecurityDTO securityDTO) {
+        caseAccessApi.grantAccessToCase(
+                securityDTO.getAuthorisation(),
+                securityDTO.getServiceAuthorisation(),
+                securityDTO.getUserId(),
+                JurisdictionId.PROBATE.name(),
+                caseType.getName(),
+                caseId,new UserId(applicantEmail));
+    }
+
 
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         CaseInfo caseInfo = new CaseInfo();

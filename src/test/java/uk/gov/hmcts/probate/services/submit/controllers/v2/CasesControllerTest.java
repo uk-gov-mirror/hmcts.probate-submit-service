@@ -58,6 +58,8 @@ CasesControllerTest {
     private static final String CASE_ID = "1343242352";
     private static final String DRAFT = "Draft";
     private static final String VALIDATE_ENDPOINT = "/validations";
+   // "/cases/{caseId}/caseworker/grantaccess/applicant/{applicantEmail}"
+    private static final String GRANT_ACCESS_ENDPOINT = "grantaccess/applicant/";
 
     @MockBean
     private CasesService casesService;
@@ -254,5 +256,15 @@ CasesControllerTest {
                 .andExpect(status().isInternalServerError());
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
+    }
+
+    @Test
+    public void shouldGrantCaseAccessToUser() throws Exception {
+        
+        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" +GRANT_ACCESS_ENDPOINT+ EMAIL_ADDRESS)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(casesService, times(1)).grantAccessForCase(any(CaseType.class), anyString(), anyString());
     }
 }

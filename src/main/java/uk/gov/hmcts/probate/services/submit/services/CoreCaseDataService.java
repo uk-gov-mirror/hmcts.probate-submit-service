@@ -13,9 +13,9 @@ public interface CoreCaseDataService {
 
     Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO);
 
-    Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO) ;
+    Optional<ProbateCaseDetails> findCase(String searchField, CaseType caseType, SecurityDTO securityDTO);
 
-    List<ProbateCaseDetails> findCases(CaseType caseType, SecurityDTO securityDTO) ;
+    List<ProbateCaseDetails> findCases(CaseType caseType, SecurityDTO securityDTO);
 
     Optional<ProbateCaseDetails> findCaseById(String caseId, SecurityDTO securityDTO);
 
@@ -26,7 +26,9 @@ public interface CoreCaseDataService {
     ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDTO securityDTO);
 
     ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
-            SecurityDTO securityDTO);
+                                              SecurityDTO securityDTO);
 
     Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO);
+
+    void grantAccessForCase(CaseType caseType, String caseId, String applicantEmail, SecurityDTO securityDTO);
 }

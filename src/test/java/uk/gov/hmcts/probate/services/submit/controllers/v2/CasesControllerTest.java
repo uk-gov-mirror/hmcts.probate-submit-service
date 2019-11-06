@@ -32,6 +32,7 @@ import javax.validation.Path;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,9 +57,8 @@ CasesControllerTest {
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String INVITATION_ID = "invitationId";
     private static final String CASE_ID = "1343242352";
-    private static final String DRAFT = "Draft";
+    private static final String USER_ID = "6471ea60-1bc2-4a34-b7e0-db3394428498";
     private static final String VALIDATE_ENDPOINT = "/validations";
-   // "/cases/{caseId}/caseworker/grantaccess/applicant/{applicantEmail}"
     private static final String GRANT_ACCESS_ENDPOINT = "grantaccess/applicant/";
 
     @MockBean
@@ -260,11 +260,11 @@ CasesControllerTest {
 
     @Test
     public void shouldGrantCaseAccessToUser() throws Exception {
-        
-        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" +GRANT_ACCESS_ENDPOINT+ EMAIL_ADDRESS)
+
+        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" +GRANT_ACCESS_ENDPOINT+ USER_ID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(casesService, times(1)).grantAccessForCase(any(CaseType.class), anyString(), anyString());
+        verify(casesService, times(1)).grantAccessForCase(eq(CaseType.GRANT_OF_REPRESENTATION), eq(CASE_ID), eq(USER_ID));
     }
 }

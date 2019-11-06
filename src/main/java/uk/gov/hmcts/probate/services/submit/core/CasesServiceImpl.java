@@ -172,10 +172,10 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String applicantEmail) {
+    public void grantAccessForCase(CaseType caseType, String caseId, String userId) {
         log.info("Grant access for case of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-        coreCaseDataService.grantAccessForCase(caseType, caseId, applicantEmail, securityDTO);
+        coreCaseDataService.grantAccessForCase(caseType, caseId, userId, securityDTO);
 
     }
 }

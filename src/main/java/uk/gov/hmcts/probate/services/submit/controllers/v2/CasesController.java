@@ -124,12 +124,12 @@ public class CasesController {
     }
 
 
-    @PostMapping(path = "/cases/{caseId}/caseworker/grantaccess/applicant/{applicantEmail}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/cases/{caseId}/caseworker/grantaccess/applicant/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity grantCaseAccessToUser(@PathVariable("caseId") String caseId, @PathVariable("applicantEmail") String applicantEmail) {
-        log.info("Granting access to case for caseId: {} and applicantEmail : {}", caseId, applicantEmail);
-        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION,caseId, applicantEmail);
+    public ResponseEntity grantCaseAccessToUser(@PathVariable("caseId") String caseId, @PathVariable("userId") String userId) {
+        log.info("Granting access to case for caseId: {} and userId : {}", caseId, userId);
+        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION,caseId, userId);
         return new ResponseEntity(OK);
     }
 

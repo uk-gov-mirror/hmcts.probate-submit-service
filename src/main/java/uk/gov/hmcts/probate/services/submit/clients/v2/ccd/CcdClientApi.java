@@ -250,14 +250,14 @@ public class CcdClientApi implements CoreCaseDataService {
     }
 
     @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String applicantEmail, SecurityDTO securityDTO) {
+    public void grantAccessForCase(CaseType caseType, String caseId, String userId, SecurityDTO securityDTO) {
         caseAccessApi.grantAccessToCase(
                 securityDTO.getAuthorisation(),
                 securityDTO.getServiceAuthorisation(),
                 securityDTO.getUserId(),
                 JurisdictionId.PROBATE.name(),
                 caseType.getName(),
-                caseId,new UserId(applicantEmail));
+                caseId,new UserId(userId));
     }
 
 

@@ -30,5 +30,5 @@ public interface CoreCaseDataService {
 
     Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO);
 
-    void grantAccessForCase(CaseType caseType, String caseId, String applicantEmail, SecurityDTO securityDTO);
+    void grantAccessForCase(CaseType caseType, String caseId, String userId, SecurityDTO securityDTO);
 }

@@ -200,9 +200,6 @@ public class CcdClientApi implements CoreCaseDataService {
         if (caseDetails == null) {
             return Optional.empty();
         }
-        if (caseDetails.size() > 1) {
-            throw new IllegalStateException("Multiple cases exist with case id provided!");
-        }
         return caseDetails.stream().findFirst().map(this::createCaseResponse);
     }
 

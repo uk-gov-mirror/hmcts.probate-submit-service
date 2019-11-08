@@ -59,7 +59,7 @@ public class CasesController {
     public ResponseEntity<ProbateCaseDetails> getCaseByApplicantEmail(@RequestParam("caseType") CaseType caseType,
                                                       @PathVariable("applicantEmail") String applicantEmail) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
-        return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail.toLowerCase(), caseType));
+        return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail, caseType));
     }
 
     @ApiOperation(value = "Get all cases from CCD using session identifier", notes = "Get all cases from CCD")

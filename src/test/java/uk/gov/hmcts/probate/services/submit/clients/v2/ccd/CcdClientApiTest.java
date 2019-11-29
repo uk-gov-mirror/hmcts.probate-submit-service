@@ -8,16 +8,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDTO;
 import uk.gov.hmcts.probate.services.submit.core.SearchFieldFactory;
+import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.SearchResult;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+import uk.gov.hmcts.reform.ccd.client.model.UserId;
 import uk.gov.hmcts.reform.probate.model.cases.ApplicationType;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
@@ -68,6 +72,8 @@ public class CcdClientApiTest {
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
+    @Mock
+    private CaseAccessApi mockCaseAccessApi;
 
     @Mock
     private SearchFieldFactory searchFieldFactory;
@@ -92,9 +98,12 @@ public class CcdClientApiTest {
 
     private String inviteField = "inviteField";
 
+    @Captor
+    private ArgumentCaptor<UserId> userIdCaptor;
+
     @Before
     public void setUp() {
-        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
+        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, mockCaseAccessApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
 
         when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
@@ -362,5 +371,14 @@ public class CcdClientApiTest {
 
 
         ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
+    }
+
+    @Test
+    public void shouldGrantAccessToCaseByApplicantEmail() {
+
+       ccdClientApi.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, CASE_ID.toString(), APPLICANT_EMAIL, securityDTO);
+
+        verify(mockCaseAccessApi, times(1)).grantAccessToCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),         eq(USER_ID), eq(PROBATE.name()), eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), userIdCaptor.capture());
+        assertThat(userIdCaptor.getValue().getId(), is(APPLICANT_EMAIL));
     }
 }

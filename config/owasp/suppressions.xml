@@ -865,4 +865,39 @@
         <sha1>9adc8b94857c7728f709f47a426ab3ba10fb32c1</sha1>
         <cpe>cpe:/a:netty:netty</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: feign-httpclient-10.2.3.jar
+   ]]></notes>
+        <gav regex="true">^io\.github\.openfeign:feign-httpclient:.*$</gav>
+        <cpe>cpe:/a:github:github</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: springfox-swagger-ui-2.9.2.jar
+   ]]></notes>
+        <gav regex="true">^io\.springfox:springfox-swagger-ui:.*$</gav>
+        <cpe>cpe:/a:swagger_project:swagger-ui</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar
+   ]]></notes>
+        <gav regex="true">^com\.google\.guava:listenablefuture:.*$</gav>
+        <cpe>cpe:/a:google:guava</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.19.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
+        <cpe>cpe:/a:apache_tomcat:apache_tomcat</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: bcprov-jdk15on-1.60.jar
+   ]]></notes>
+        <gav regex="true">^org\.bouncycastle:bcprov-jdk15on:.*$</gav>
+        <cpe>cpe:/a:oracle:jdk</cpe>
+    </suppress>
 </suppressions>

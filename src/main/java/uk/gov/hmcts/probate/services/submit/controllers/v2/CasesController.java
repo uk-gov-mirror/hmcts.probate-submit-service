@@ -59,7 +59,7 @@ public class CasesController {
     public ResponseEntity<ProbateCaseDetails> getCaseByApplicantEmail(@RequestParam("caseType") CaseType caseType,
                                                       @PathVariable("applicantEmail") String applicantEmail) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
-        return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail.toLowerCase(), caseType));
+        return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail, caseType));
     }
 
     @ApiOperation(value = "Get all cases from CCD using session identifier", notes = "Get all cases from CCD")
@@ -122,6 +122,17 @@ public class CasesController {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCaseAsCaseworker(applicationId.toLowerCase(), caseRequest), OK);
     }
+
+
+    @PostMapping(path = "/cases/{caseId}/caseworker/grantaccess/applicant/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity grantCaseAccessToUser(@PathVariable("caseId") String caseId, @PathVariable("userId") String userId) {
+        log.info("Granting access to case for caseId: {} and userId : {}", caseId, userId);
+        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION,caseId, userId);
+        return new ResponseEntity(OK);
+    }
+
 
     @PutMapping(path = "/cases/{applicationId}/validations", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)

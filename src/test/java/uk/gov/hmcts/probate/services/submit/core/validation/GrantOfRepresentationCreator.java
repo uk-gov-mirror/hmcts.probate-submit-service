@@ -65,7 +65,7 @@ public class GrantOfRepresentationCreator {
 
         grantOfRepresentationData.setRegistryLocation(RegistryLocation.BIRMINGHAM);
         grantOfRepresentationData.setDeceasedHasAssetsOutsideUK(true);
-        grantOfRepresentationData.setIhtFormId(IhtFormType.IHT205);
+        grantOfRepresentationData.setIhtFormId(IhtFormType.optionIHT205);
         grantOfRepresentationData.setIhtFormCompletedOnline(true);
         grantOfRepresentationData.setIhtGrossValue(100000L);
         grantOfRepresentationData.setIhtNetValue(100000L);
@@ -128,7 +128,7 @@ public class GrantOfRepresentationCreator {
 
         grantOfRepresentationData.setRegistryLocation(RegistryLocation.BIRMINGHAM);
         grantOfRepresentationData.setDeceasedHasAssetsOutsideUK(true);
-        grantOfRepresentationData.setIhtFormId(IhtFormType.IHT205);
+        grantOfRepresentationData.setIhtFormId(IhtFormType.optionIHT205);
         grantOfRepresentationData.setIhtFormCompletedOnline(true);
         grantOfRepresentationData.setIhtGrossValue(100000L);
         grantOfRepresentationData.setIhtNetValue(100000L);

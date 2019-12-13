@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -69,12 +68,16 @@ public class CcdClientApiTest {
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
     public static final String INVITATION_ID = "12334345";
     public static final String INVIATION_QUERY = "inviationQuery";
+    private static final String PROBATE_DESCRIPTOR = "Probate application";
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
     @Mock
     private CaseAccessApi mockCaseAccessApi;
-
+    @Mock
+    private CaseContentBuilder caseContentBuilder;
+    @Mock
+    private CaseResponseBuilder caseResponseBuilder;
     @Mock
     private SearchFieldFactory searchFieldFactory;
 
@@ -97,18 +100,21 @@ public class CcdClientApiTest {
     private CaseDataContent caseDataContent;
 
     private String inviteField = "inviteField";
+    
+    private SearchResult searchResult;
+    
+    private ProbateCaseDetails probateCaseDetails;
 
     @Captor
     private ArgumentCaptor<UserId> userIdCaptor;
 
     @Before
     public void setUp() {
-        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, mockCaseAccessApi, new CaseDetailsToCaseDataMapper(new ObjectMapper()), searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
+        ccdClientApi = new CcdClientApi(mockCoreCaseDataApi, mockCaseAccessApi, caseContentBuilder, caseResponseBuilder, searchFieldFactory, mockInvitationElasticSearchQueryBuilder);
 
         when(searchFieldFactory.getEsSearchFieldName(CaseType.GRANT_OF_REPRESENTATION)).thenReturn("primaryApplicantEmailAddress");
 
         when(searchFieldFactory.getSearchApplicantEmailFieldName()).thenReturn("primaryApplicantEmailAddress");
-
 
         String inviteField = "inviteField";
 
@@ -138,11 +144,26 @@ public class CcdClientApiTest {
                 .eventToken(TOKEN)
                 .event(Event.builder()
                         .id(CREATE_DRAFT.getName())
-                        .description("Probate application")
-                        .summary("Probate application")
+                        .description(PROBATE_DESCRIPTOR)
+                        .summary(PROBATE_DESCRIPTOR)
                         .build())
                 .data(caseData)
                 .build();
+
+        searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(caseDetails.getId().toString());
+        caseInfo.setState(CaseState.getState(caseDetails.getState()));
+        caseInfo.setCaseCreatedDate(caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
+
+        probateCaseDetails = ProbateCaseDetails.builder()
+            .caseData(caseData)
+            .caseInfo(caseInfo)
+            .build();
+
+        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+
+
     }
 
     @Test
@@ -152,7 +173,8 @@ public class CcdClientApiTest {
 
         when(mockCoreCaseDataApi.submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
-
+        when(caseContentBuilder.createCaseDataContent(caseData, CREATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+            .thenReturn(caseDataContent);
         ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, CREATE_DRAFT, securityDTO);
 
         assertThat(caseResponse, is(notNullValue()));
@@ -172,6 +194,8 @@ public class CcdClientApiTest {
 
         when(mockCoreCaseDataApi.submitForCaseworker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+        when(caseContentBuilder.createCaseDataContent(caseData, CREATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+            .thenReturn(caseDataContent);
 
         ProbateCaseDetails caseResponse = ccdClientApi.createCaseAsCaseworker(
                 caseData, CREATE_DRAFT, securityDTO);
@@ -194,6 +218,8 @@ public class CcdClientApiTest {
 
         when(mockCoreCaseDataApi.submitEventForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+            .thenReturn(caseDataContent);
 
         ProbateCaseDetails caseResponse = ccdClientApi.updateCase(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDTO);
 
@@ -215,6 +241,8 @@ public class CcdClientApiTest {
 
         when(mockCoreCaseDataApi.submitEventForCaseWorker(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
+        when(caseContentBuilder.createCaseDataContent(caseData, UPDATE_DRAFT, startEventResponse, PROBATE_DESCRIPTOR))
+            .thenReturn(caseDataContent);
 
         ProbateCaseDetails caseResponse = ccdClientApi.updateCaseAsCaseworker(CASE_ID.toString(), caseData, UPDATE_DRAFT, securityDTO);
 
@@ -234,7 +262,7 @@ public class CcdClientApiTest {
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress")).thenReturn(queryString);
 
         when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString))).thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build());
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString))).thenReturn(searchResult);
 
 
         Optional<ProbateCaseDetails> optionalCaseResponse = ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);

@@ -160,11 +160,15 @@ jacocoTestReport {
 }
 
 pitest {
-    targetClasses = ['uk.gov.hmcts.probate.*']
-    threads = 4
+    targetClasses = ['**uk.gov.hmcts.probate.security.*']
+    excludedClasses = ['**uk.gov.hmcts.probate.security.SecurityDTO*']
+    threads = 16
+    enableDefaultIncrementalAnalysis = true
+    historyInputLocation = ['build/reports/pitest/fastermutationtesting']
+    historyOutputLocation = ['build/reports/pitest/fastermutationtestingoutput']
     outputFormats = ['XML', 'HTML']
-    timestampedReports = false
-    mutationThreshold = 50
+    timestampedReports = true
+    mutationThreshold = 80
 }
 
 repositories {
@@ -186,7 +190,10 @@ def versions = [
         serentity                       : '2.0.17',
         pact_version                    : '3.5.24',
         probateCommons                  : '1.0.3.01',
-        feignHttpClient                 : '10.2.3'
+        feignHttpClient                 : '10.2.3',
+        pitest                          : '1.3.2',
+        gradlePitest                    : '1.3.0',
+        sonarPitest                     : '0.5'
 ]
 
 
@@ -223,9 +230,9 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
     compile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
 
-    compile group: 'org.pitest', name: 'pitest', version: '1.3.2'
-    compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
-    compile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    compile group: 'org.pitest', name: 'pitest', version: versions.pitest
+    compile group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
+    compile group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', version: versions.sonarPitest
 
     testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "com.vaadin.external.google", module: "android-json"
@@ -240,7 +247,7 @@ dependencies {
     testRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
     testCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-    
+
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity

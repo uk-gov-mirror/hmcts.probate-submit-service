@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.security;
+package uk.gov.hmcts.probate.security.component;
 
 import org.junit.Before;
 import org.junit.Test;

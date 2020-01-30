@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.component;
+package uk.gov.hmcts.probate.services.submit.core;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;

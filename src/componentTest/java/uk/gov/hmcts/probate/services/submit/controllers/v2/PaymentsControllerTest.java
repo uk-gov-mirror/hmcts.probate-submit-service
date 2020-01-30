@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.component;
+package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;

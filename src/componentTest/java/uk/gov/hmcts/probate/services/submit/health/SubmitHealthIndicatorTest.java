@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.component;
+package uk.gov.hmcts.probate.services.submit.health;
 
 import org.junit.Before;
 import org.junit.Test;

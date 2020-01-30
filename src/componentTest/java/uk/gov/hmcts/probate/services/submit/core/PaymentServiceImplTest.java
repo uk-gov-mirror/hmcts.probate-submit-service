@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.component;
+package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.Lists;
 import org.junit.Before;

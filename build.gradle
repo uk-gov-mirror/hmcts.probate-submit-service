@@ -45,13 +45,13 @@ jacoco {
     toolVersion = '0.8.0'
 }
 
-jacocoTestReport {
-    group = "Reporting"
-    reports {
-        xml.enabled false
-        html.destination "${buildDir}/reports/jacoco"
-    }
-}
+//jacocoTestReport {
+//    group = "Reporting"
+//    reports {
+//        xml.enabled false
+//        html.destination "${buildDir}/reports/jacoco"
+//    }
+//}
 
 tasks.withType(FindBugs) {
     reports {
@@ -93,7 +93,14 @@ sourceSets {
         }
         resources.srcDir file('src/functionalTest/resources')
     }
-
+    testComponent {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/componentTest/java')
+        }
+        resources.srcDir file('src/componentTest/resources')
+    }
     testSmoke {
         java {
             compileClasspath += main.output
@@ -118,6 +125,12 @@ sourceSets {
         }
         resources.srcDir file('src/pactTest/resources')
     }
+}
+
+task testComponent(type: Test) {
+    description = "Runs Component Tests"
+    testClassesDirs = sourceSets.testComponent.output.classesDirs
+    classpath = sourceSets.testComponent.runtimeClasspath
 }
 
 task functionalTask(type: Test) {
@@ -240,7 +253,27 @@ dependencies {
     testRuntime group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
     testCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-    
+///
+    testComponentCompile sourceSets.main.runtimeClasspath
+    testComponentCompile sourceSets.test.runtimeClasspath
+
+    testComponentCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "com.vaadin.external.google", module: "android-json"
+    }
+    testComponentCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testComponentCompile group: 'org.springframework.security', name: 'spring-security-test'
+    testComponentCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
+    testComponentCompile("com.fasterxml.jackson.core:jackson-databind:2.9.8") {
+        force = true
+    }
+    testComponentCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    testComponentCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
+    testComponentRuntime group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testComponentCompile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testComponentCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+    testComponentCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testComponentRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    ///
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serentity
     testFunctionalCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serentity

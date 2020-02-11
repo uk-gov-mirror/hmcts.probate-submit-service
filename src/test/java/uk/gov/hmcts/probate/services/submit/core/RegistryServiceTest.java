@@ -28,7 +28,7 @@ public class RegistryServiceTest {
     @Test
     public void shouldGetRegistry() {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
-            .build();
+                .build();
 
         registryService.updateRegistry(grantOfRepresentationData);
         assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CTSC));
@@ -36,11 +36,44 @@ public class RegistryServiceTest {
         assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
 
         CaveatData caveatData = CaveatData.builder()
-            .build();
+                .build();
         registryService.updateRegistry(caveatData);
 
         assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
     }
 
+    @Test
+    public void shouldSetCardiffRegistryForWelshCase() {
+        GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.TRUE)
+                .build();
+
+        registryService.updateRegistry(grantOfRepresentationData);
+        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
+        assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
+        assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
+
+        CaveatData caveatData = CaveatData.builder()
+                .build();
+        registryService.updateRegistry(caveatData);
+
+        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
+    }
+
+    @Test
+    public void shouldSetCtcsRegistryForEnglishCaseIfPreviouslyCardiff() {
+        GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder().languagePreferenceWelsh(Boolean.FALSE).registryLocation(RegistryLocation.CARDIFF)
+                .build();
+
+        registryService.updateRegistry(grantOfRepresentationData);
+        assertThat(grantOfRepresentationData.getRegistryLocation(), is(RegistryLocation.CTSC));
+        assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
+        assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
+
+        CaveatData caveatData = CaveatData.builder()
+                .build();
+        registryService.updateRegistry(caveatData);
+
+        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
+    }
 
 }

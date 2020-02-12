@@ -28,7 +28,7 @@ public class RegistryService {
         }
         if (CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)) {
             GrantOfRepresentationData grantOfRepresentationData = (GrantOfRepresentationData) caseData;
-            determineRegistryLocationName(nextRgit egistry, grantOfRepresentationData);
+            determineRegistryLocationName(nextRegistry, grantOfRepresentationData);
             grantOfRepresentationData.setRegistryAddress(nextRegistry.getAddress());
             grantOfRepresentationData.setRegistryEmailAddress(nextRegistry.getEmail());
             grantOfRepresentationData.setRegistrySequenceNumber(new Long(registryCounter));

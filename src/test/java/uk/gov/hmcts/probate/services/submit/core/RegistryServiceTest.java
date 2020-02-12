@@ -52,11 +52,11 @@ public class RegistryServiceTest {
         assertThat(grantOfRepresentationData.getRegistryAddress(), is(CTSC_ADDRESS));
         assertThat(grantOfRepresentationData.getRegistryEmailAddress(), is(CTSC_EMAIL));
 
-        CaveatData caveatData = CaveatData.builder()
+        CaveatData caveatData = CaveatData.builder().languagePreferenceWelsh(Boolean.TRUE)
                 .build();
         registryService.updateRegistry(caveatData);
 
-        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CTSC));
+        assertThat(caveatData.getRegistryLocation(), is(RegistryLocation.CARDIFF));
     }
 
     @Test

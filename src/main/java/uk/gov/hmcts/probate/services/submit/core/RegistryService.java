@@ -24,18 +24,30 @@ public class RegistryService {
         log.info("Updating with registry name: {} id: {}", nextRegistry.getName(), nextRegistry.getId());
         if (CaseType.getCaseType(caseData).equals(CaseType.CAVEAT)) {
             CaveatData caveatData = (CaveatData) caseData;
-            if (caveatData.getRegistryLocation() == null) {
-                caveatData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
-            }
+            determineRegistryLocationName(nextRegistry, caveatData);
         }
         if (CaseType.getCaseType(caseData).equals(CaseType.GRANT_OF_REPRESENTATION)) {
             GrantOfRepresentationData grantOfRepresentationData = (GrantOfRepresentationData) caseData;
-            if (grantOfRepresentationData.getRegistryLocation() == null) {
-                grantOfRepresentationData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
-                grantOfRepresentationData.setRegistryAddress(nextRegistry.getAddress());
-                grantOfRepresentationData.setRegistryEmailAddress(nextRegistry.getEmail());
-                grantOfRepresentationData.setRegistrySequenceNumber(new Long(registryCounter));
-            }
+            determineRegistryLocationName(nextRegistry, grantOfRepresentationData);
+            grantOfRepresentationData.setRegistryAddress(nextRegistry.getAddress());
+            grantOfRepresentationData.setRegistryEmailAddress(nextRegistry.getEmail());
+            grantOfRepresentationData.setRegistrySequenceNumber(new Long(registryCounter));
+        }
+    }
+
+    private void determineRegistryLocationName(Registry nextRegistry, GrantOfRepresentationData grantOfRepresentationData) {
+        if (grantOfRepresentationData.getLanguagePreferenceWelsh() != null && grantOfRepresentationData.getLanguagePreferenceWelsh()) {
+            grantOfRepresentationData.setRegistryLocation(RegistryLocation.CARDIFF);
+        } else if (grantOfRepresentationData.getRegistryLocation() == null || (grantOfRepresentationData.getLanguagePreferenceWelsh() != null && !grantOfRepresentationData.getLanguagePreferenceWelsh() && grantOfRepresentationData.getRegistryLocation().equals(RegistryLocation.CARDIFF))) {
+            grantOfRepresentationData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
+        }
+    }
+
+    private void determineRegistryLocationName(Registry nextRegistry, CaveatData caveatData) {
+        if (caveatData.getLanguagePreferenceWelsh() != null && caveatData.getLanguagePreferenceWelsh()) {
+            caveatData.setRegistryLocation(RegistryLocation.CARDIFF);
+        } else if (caveatData.getRegistryLocation() == null || (caveatData.getLanguagePreferenceWelsh() != null && !caveatData.getLanguagePreferenceWelsh() && caveatData.getRegistryLocation().equals(RegistryLocation.CARDIFF))) {
+            caveatData.setRegistryLocation(RegistryLocation.findRegistryLocationByName(nextRegistry.getName()));
         }
     }
 

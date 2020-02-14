@@ -17,6 +17,14 @@ public class CcdElasticSearchQueryBuilder {
         return searchString;
     }
 
+    public String buildQueryForCaveatExpiry(String expiryDate) {
+        String searchString = "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"data.expiryDate\":\""+expiryDate+"\"}}]," +
+            "\"should\":[{\"match\":{\"state\":\"CaveatNotMatched\"}},{\"match\":{\"state\":\"AwaitingCaveatResolution\"}}," +
+            "{\"match\":{\"state\":\"WarningValidation\"}}," +
+            "{\"match\":{\"state\":\"AwaitingWarningResponse\"}}],\"minimum_should_match\":1}}}";
+        return searchString;
+    }
+
     String buildFindAllCasesQuery() {
         return "{\"query\":{\"match_all\":{}},\"size\": 50}";
     }

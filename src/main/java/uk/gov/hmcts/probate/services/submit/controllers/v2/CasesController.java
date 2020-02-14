@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.CasesService;
+import uk.gov.hmcts.probate.services.submit.services.CaveatExpiryService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
@@ -35,11 +36,12 @@ import static org.springframework.http.HttpStatus.OK;
 public class CasesController {
 
     private final CasesService casesService;
+    private final CaveatExpiryService caveatExpiryService;
 
     @ApiOperation(value = "Get case to CCD using session identifier", notes = "Get case to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -51,21 +53,21 @@ public class CasesController {
 
     @ApiOperation(value = "Get case to CCD using applicant email", notes = "Get case to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/applicantEmail/{applicantEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCaseByApplicantEmail(@RequestParam("caseType") CaseType caseType,
-                                                      @PathVariable("applicantEmail") String applicantEmail) {
+                                                                      @PathVariable("applicantEmail") String applicantEmail) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
         return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail, caseType));
     }
 
     @ApiOperation(value = "Get all cases from CCD using session identifier", notes = "Get all cases from CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Cases retrieval from CCD successful"),
-            @ApiResponse(code = 400, message = "Cases retrieval from CCD successful")
+        @ApiResponse(code = 200, message = "Cases retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Cases retrieval from CCD successful")
     })
     @GetMapping(path = "/cases/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -97,7 +99,7 @@ public class CasesController {
     }
 
     @PostMapping(path = "/cases/initiate", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> initiateCase(@RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
@@ -106,7 +108,7 @@ public class CasesController {
 
 
     @PostMapping(path = "/cases/initiate/caseworker", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> initiateCaseAsCaseWorker(@RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
@@ -115,21 +117,21 @@ public class CasesController {
 
 
     @PostMapping(path = "/cases/caseworker/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCaseAsCaseworker(@PathVariable("applicationId") String applicationId,
-                                                       @RequestBody ProbateCaseDetails caseRequest) {
+                                                                   @RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCaseAsCaseworker(applicationId.toLowerCase(), caseRequest), OK);
     }
 
 
     @PostMapping(path = "/cases/{caseId}/caseworker/grantaccess/applicant/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity grantCaseAccessToUser(@PathVariable("caseId") String caseId, @PathVariable("userId") String userId) {
         log.info("Granting access to case for caseId: {} and userId : {}", caseId, userId);
-        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION,caseId, userId);
+        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, caseId, userId);
         return new ResponseEntity(OK);
     }
 
@@ -141,15 +143,29 @@ public class CasesController {
                                              @RequestParam("caseType") CaseType caseType) {
         return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
     }
+
     @ApiOperation(value = "Get case to CCD using case Id", notes = "Get case to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-            @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
     })
     @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name="caseId") String caseId) {
+    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name = "caseId") String caseId) {
         log.info("Retrieving case using application id: {}", caseId.toLowerCase());
         return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
     }
+
+    @ApiOperation(value = "Caveat expire from CCD by expiryDate", notes = "Get expired caveats from CCD")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Caveat search from CCD successful"),
+        @ApiResponse(code = 400, message = "Caveat search from CCD not successful")
+    })
+    @GetMapping(path = "/cases/caveats/expire", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<ProbateCaseDetails>> expireCaveats(@RequestParam("expiryDate") String expiryDate) {
+        log.info("Expiring Caveats for expiryDate: {}", expiryDate);
+        return ResponseEntity.ok(caveatExpiryService.expireCaveats(expiryDate));
+    }
+
 }

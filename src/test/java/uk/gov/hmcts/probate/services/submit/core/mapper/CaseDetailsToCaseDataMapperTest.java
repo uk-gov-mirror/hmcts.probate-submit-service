@@ -8,8 +8,10 @@ import org.junit.Test;
 import uk.gov.hmcts.probate.services.submit.clients.v2.ccd.CaseDetailsToCaseDataMapper;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
+import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertThat;
@@ -36,5 +38,44 @@ public class CaseDetailsToCaseDataMapperTest {
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
 
         assertThat(caseData, Matchers.instanceOf(GrantOfRepresentationData.class));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowMappingException() {
+        Map<String, Object> map = new HashMap();
+        map.put("applicationType", "Personal");
+        map.put("caseType", "intestacy");
+        map.put("deceasedForenames", "Robert");
+        map.put("deceasedSurname", null);
+
+        CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
+
+        CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
+    }
+
+    @Test
+    public void shouldMapWithNullsForGoR() {
+        Map<String, Object> map = new HashMap();
+        map.put("applicationType", "Personal");
+        map.put("caseType", "intestacy");
+        map.put("deceasedForenames", "Robert");
+        map.put("deceasedSurname", null);
+
+        CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
+
+        CaseData caseData = caseDetailsToCaseDataMapper.mapWithNulls(caseDetails);
+        assertThat(((GrantOfRepresentationData) caseData).getDeceasedSurname(), Matchers.equalTo(null));
+    }
+    @Test
+    public void shouldMapWithNullsForCaveat() {
+        Map<String, Object> map = new HashMap();
+        map.put("applicationType", "Personal");
+        map.put("deceasedForenames", "Robert");
+        map.put("deceasedSurname", null);
+
+        CaseDetails caseDetails = CaseDetails.builder().caseTypeId("Caveat").data(map).build();
+
+        CaseData caseData = caseDetailsToCaseDataMapper.mapWithNulls(caseDetails);
+        assertThat(((CaveatData) caseData).getDeceasedSurname(), Matchers.equalTo(null));
     }
 }

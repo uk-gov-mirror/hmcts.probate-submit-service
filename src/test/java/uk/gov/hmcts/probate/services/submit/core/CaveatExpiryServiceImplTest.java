@@ -107,7 +107,7 @@ public class CaveatExpiryServiceImplTest {
             .build();
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
-        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+        when(caseResponseBuilder.createCaseResponseWithNulls(caseDetails)).thenReturn(probateCaseDetails);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
@@ -146,7 +146,7 @@ public class CaveatExpiryServiceImplTest {
             .build();
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
-        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+        when(caseResponseBuilder.createCaseResponseWithNulls(caseDetails)).thenReturn(probateCaseDetails);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
@@ -185,7 +185,7 @@ public class CaveatExpiryServiceImplTest {
             .build();
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
-        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+        when(caseResponseBuilder.createCaseResponseWithNulls(caseDetails)).thenReturn(probateCaseDetails);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
@@ -224,7 +224,7 @@ public class CaveatExpiryServiceImplTest {
             .build();
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
-        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+        when(caseResponseBuilder.createCaseResponseWithNulls(caseDetails)).thenReturn(probateCaseDetails);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(
@@ -262,7 +262,7 @@ public class CaveatExpiryServiceImplTest {
             .build();
         SearchResult searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
 
-        when(caseResponseBuilder.createCaseResponse(caseDetails)).thenReturn(probateCaseDetails);
+        when(caseResponseBuilder.createCaseResponseWithNulls(caseDetails)).thenReturn(probateCaseDetails);
         when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
         when(elasticSearchQueryBuilder.buildQueryForCaveatExpiry(EXPIRY_DATE)).thenReturn(SEARCH_QUERY);
         when(coreCaseDataApi.searchCases(

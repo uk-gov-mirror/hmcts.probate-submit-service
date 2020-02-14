@@ -16,14 +16,28 @@ public class CaseResponseBuilder {
     private final CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
 
     public ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
-        CaseInfo caseInfo = new CaseInfo();
-        caseInfo.setCaseId(caseDetails.getId().toString());
-        caseInfo.setState(CaseState.getState(caseDetails.getState()));
-        caseInfo.setCaseCreatedDate(caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
+        CaseInfo caseInfo = getCaseInfo(caseDetails);
 
         return ProbateCaseDetails.builder()
             .caseData(caseDetailsToCaseDataMapper.map(caseDetails))
             .caseInfo(caseInfo)
             .build();
+    }
+
+    public ProbateCaseDetails createCaseResponseWithNulls(CaseDetails caseDetails) {
+        CaseInfo caseInfo = getCaseInfo(caseDetails);
+
+        return ProbateCaseDetails.builder()
+            .caseData(caseDetailsToCaseDataMapper.mapWithNulls(caseDetails))
+            .caseInfo(caseInfo)
+            .build();
+    }
+
+    private CaseInfo getCaseInfo(CaseDetails caseDetails) {
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(caseDetails.getId().toString());
+        caseInfo.setState(CaseState.getState(caseDetails.getState()));
+        caseInfo.setCaseCreatedDate(caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
+        return caseInfo;
     }
 }

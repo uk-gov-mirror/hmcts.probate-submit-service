@@ -24,15 +24,6 @@ public class CaseResponseBuilder {
             .build();
     }
 
-    public ProbateCaseDetails createCaseResponseWithNulls(CaseDetails caseDetails) {
-        CaseInfo caseInfo = getCaseInfo(caseDetails);
-
-        return ProbateCaseDetails.builder()
-            .caseData(caseDetailsToCaseDataMapper.mapWithNulls(caseDetails))
-            .caseInfo(caseInfo)
-            .build();
-    }
-
     private CaseInfo getCaseInfo(CaseDetails caseDetails) {
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());

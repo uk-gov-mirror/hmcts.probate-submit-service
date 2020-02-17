@@ -69,7 +69,7 @@ public class CaveatExpiryServiceImpl implements CaveatExpiryService {
     }
 
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
-        return caseResponseBuilder.createCaseResponseWithNulls(caseDetails);    
+        return caseResponseBuilder.createCaseResponse(caseDetails);    
     }
 
     private void updateAutoExpiredCaveat(CaveatData caveatData) {

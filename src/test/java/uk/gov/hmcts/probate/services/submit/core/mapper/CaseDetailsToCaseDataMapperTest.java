@@ -40,7 +40,7 @@ public class CaseDetailsToCaseDataMapperTest {
         assertThat(caseData, Matchers.instanceOf(GrantOfRepresentationData.class));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldThrowMappingException() {
         Map<String, Object> map = new HashMap();
         map.put("applicationType", "Personal");
@@ -51,31 +51,6 @@ public class CaseDetailsToCaseDataMapperTest {
         CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
 
         CaseData caseData = caseDetailsToCaseDataMapper.map(caseDetails);
-    }
-
-    @Test
-    public void shouldMapWithNullsForGoR() {
-        Map<String, Object> map = new HashMap();
-        map.put("applicationType", "Personal");
-        map.put("caseType", "intestacy");
-        map.put("deceasedForenames", "Robert");
-        map.put("deceasedSurname", null);
-
-        CaseDetails caseDetails = CaseDetails.builder().caseTypeId("GrantOfRepresentation").data(map).build();
-
-        CaseData caseData = caseDetailsToCaseDataMapper.mapWithNulls(caseDetails);
-        assertThat(((GrantOfRepresentationData) caseData).getDeceasedSurname(), Matchers.equalTo(null));
-    }
-    @Test
-    public void shouldMapWithNullsForCaveat() {
-        Map<String, Object> map = new HashMap();
-        map.put("applicationType", "Personal");
-        map.put("deceasedForenames", "Robert");
-        map.put("deceasedSurname", null);
-
-        CaseDetails caseDetails = CaseDetails.builder().caseTypeId("Caveat").data(map).build();
-
-        CaseData caseData = caseDetailsToCaseDataMapper.mapWithNulls(caseDetails);
-        assertThat(((CaveatData) caseData).getDeceasedSurname(), Matchers.equalTo(null));
+        assertThat(caseData, Matchers.instanceOf(GrantOfRepresentationData.class));
     }
 }

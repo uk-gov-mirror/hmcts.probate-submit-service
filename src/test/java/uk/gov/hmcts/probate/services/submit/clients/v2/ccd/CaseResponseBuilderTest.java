@@ -70,29 +70,4 @@ public class CaseResponseBuilderTest {
         assertThat(probateCaseDetails.getCaseInfo().getCaseCreatedDate(), is(nullValue()));
     }
 
-    @Test
-    public void shouldCreateResponseWithDateWithNulls() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        LocalDate localDate = localDateTime.toLocalDate();
-
-        when(caseDetails.getCreatedDate()).thenReturn(localDateTime);
-
-        ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponseWithNulls(caseDetails);
-        assertThat(probateCaseDetails, is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo(), is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(probateCaseDetails.getCaseInfo().getState().getName(), is(STATE_NAME));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseCreatedDate(), is(localDate));
-    }
-
-    @Test
-    public void shouldCreateResponseWithoutDateWithNulls() {
-        ProbateCaseDetails probateCaseDetails = caseResponseBuilder.createCaseResponseWithNulls(caseDetails);
-        assertThat(probateCaseDetails, is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo(), is(notNullValue()));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseId(), is(CASE_ID.toString()));
-        assertThat(probateCaseDetails.getCaseInfo().getState().getName(), is(STATE_NAME));
-        assertThat(probateCaseDetails.getCaseInfo().getCaseCreatedDate(), is(nullValue()));
-    }
-    
 }

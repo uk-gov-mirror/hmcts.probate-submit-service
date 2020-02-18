@@ -50,7 +50,7 @@ withPipeline("java", product, component) {
   enableSlackNotifications('#probate-jenkins')
 //  enableDockerBuild()
   installCharts()
-        
+
   //disableLegacyDeployment()
 
 //    before('buildinfra:prod') {

@@ -10,12 +10,9 @@ import uk.gov.hmcts.reform.ccd.client.CaseAccessApi;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import uk.gov.hmcts.reform.ccd.client.model.UserId;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
-import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
-import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
@@ -30,13 +27,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CcdClientApi implements CoreCaseDataService {
 
-    private static final String CASE_QUERY_PARAM = "case.";
+    private static final String EVENT_DESCRIPTOR = "Probate application";
 
     private final CoreCaseDataApi coreCaseDataApi;
 
     private final CaseAccessApi caseAccessApi;
 
-    private final CaseDetailsToCaseDataMapper caseDetailsToCaseDataMapper;
+    private final CaseContentBuilder caseContentBuilder;
+
+    private final CaseResponseBuilder caseResponseBuilder;
 
     private final SearchFieldFactory searchFieldFactory;
 
@@ -59,7 +58,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 caseId,
                 eventId.getName()
         );
-        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
         log.info("Submit event to CCD for Citizen, caseType: {}, caseId: {}",
                 caseType.getName(), caseId);
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCitizen(
@@ -78,32 +77,38 @@ public class CcdClientApi implements CoreCaseDataService {
     @Override
     public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
                                                      SecurityDTO securityDTO) {
+        return updateCaseAsCaseworker(caseId, caseData, eventId, securityDTO, EVENT_DESCRIPTOR);
+    }
+
+    @Override
+    public ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
+                                                     SecurityDTO securityDTO, String eventDescriptor) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Update case as for caseType: {}, caseId: {}, eventId: {}",
-                caseType.getName(), caseId, eventId.getName());
+            caseType.getName(), caseId, eventId.getName());
         log.info("Retrieve event token from CCD for Caseworker, caseType: {}, caseId: {}, eventId: {}",
-                caseType.getName(), caseId, eventId.getName());
+            caseType.getName(), caseId, eventId.getName());
         StartEventResponse startEventResponse = coreCaseDataApi.startEventForCaseWorker(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
-                caseType.getName(),
-                caseId,
-                eventId.getName()
+            securityDTO.getAuthorisation(),
+            securityDTO.getServiceAuthorisation(),
+            securityDTO.getUserId(),
+            JurisdictionId.PROBATE.name(),
+            caseType.getName(),
+            caseId,
+            eventId.getName()
         );
-        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse, eventDescriptor);
         log.info("Submit event to CCD for Caseworker, caseType: {}, caseId: {}",
-                caseType.getName(), caseId);
+            caseType.getName(), caseId);
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
-                caseType.getName(),
-                caseId,
-                false,
-                caseDataContent
+            securityDTO.getAuthorisation(),
+            securityDTO.getServiceAuthorisation(),
+            securityDTO.getUserId(),
+            JurisdictionId.PROBATE.name(),
+            caseType.getName(),
+            caseId,
+            false,
+            caseDataContent
         );
         return createCaseResponse(caseDetails);
     }
@@ -123,7 +128,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 caseType.getName(),
                 eventId.getName()
         );
-        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
         log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
         CaseDetails caseDetails = coreCaseDataApi.submitForCitizen(
                 securityDTO.getAuthorisation(),
@@ -142,7 +147,7 @@ public class CcdClientApi implements CoreCaseDataService {
     public ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
         CaseType caseType = CaseType.getCaseType(caseData);
         log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
-                caseType.getName(), eventId.getName());
+            caseType.getName(), eventId.getName());
         log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
                 caseType.getName(), eventId.getName());
         StartEventResponse startEventResponse = coreCaseDataApi.startForCaseworker(
@@ -153,7 +158,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 caseType.getName(),
                 eventId.getName()
         );
-        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse);
+        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
         log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
         CaseDetails caseDetails = coreCaseDataApi.submitForCaseworker(
                 securityDTO.getAuthorisation(),
@@ -202,7 +207,6 @@ public class CcdClientApi implements CoreCaseDataService {
         }
         return caseDetails.stream().findFirst().map(this::createCaseResponse);
     }
-
 
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDTO securityDTO) {
@@ -257,32 +261,12 @@ public class CcdClientApi implements CoreCaseDataService {
                 caseId,new UserId(userId));
     }
 
-
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
-        CaseInfo caseInfo = new CaseInfo();
-        caseInfo.setCaseId(caseDetails.getId().toString());
-        caseInfo.setState(CaseState.getState(caseDetails.getState()));
-        caseInfo.setCaseCreatedDate(caseDetails.getCreatedDate() != null ? caseDetails.getCreatedDate().toLocalDate() : null);
-
-        return ProbateCaseDetails.builder()
-                .caseData(caseDetailsToCaseDataMapper.map(caseDetails))
-                .caseInfo(caseInfo)
-                .build();
+        return caseResponseBuilder.createCaseResponse(caseDetails);
     }
 
-    private CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId, StartEventResponse startEventResponse) {
-        return CaseDataContent.builder()
-                .event(createEvent(eventId))
-                .eventToken(startEventResponse.getToken())
-                .data(caseData)
-                .build();
+    private CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId, StartEventResponse startEventResponse, String eventDescriptor) {
+        return caseContentBuilder.createCaseDataContent(caseData, eventId, startEventResponse, eventDescriptor);
     }
 
-    private Event createEvent(EventId eventId) {
-        return Event.builder()
-                .id(eventId.getName())
-                .description("Probate application")
-                .summary("Probate application")
-                .build();
-    }
 }

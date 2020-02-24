@@ -712,10 +712,11 @@
     <suppress>
         <notes><![CDATA[
    file name: spring-core-5.1.7.RELEASE.jar
-   ]]></notes>
+    ]]></notes>
         <gav regex="true">^org\.springframework:spring-core:.*$</gav>
-        <cve>CVE-2020-5938</cve>
+        <cve>CVE-2020-5398</cve>
     </suppress>
+
     <suppress>
         <notes><![CDATA[
    file name: jackson-annotations-2.9.0.jar

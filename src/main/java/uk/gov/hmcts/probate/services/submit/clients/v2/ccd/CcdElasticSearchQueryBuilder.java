@@ -21,7 +21,7 @@ public class CcdElasticSearchQueryBuilder {
         String searchString = "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"data.expiryDate\":\""+expiryDate+"\"}}]," +
             "\"should\":[{\"match\":{\"state\":\"CaveatNotMatched\"}},{\"match\":{\"state\":\"AwaitingCaveatResolution\"}}," +
             "{\"match\":{\"state\":\"WarningValidation\"}}," +
-            "{\"match\":{\"state\":\"AwaitingWarningResponse\"}}],\"minimum_should_match\":1}}}";
+            "{\"match\":{\"state\":\"AwaitingWarningResponse\"}}],\"minimum_should_match\":1}},\"size\": 100}";
         return searchString;
     }
 

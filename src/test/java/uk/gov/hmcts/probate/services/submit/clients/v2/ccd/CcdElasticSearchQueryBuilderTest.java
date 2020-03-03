@@ -30,7 +30,7 @@ public class CcdElasticSearchQueryBuilderTest {
         Assert.assertThat(result, Matchers.equalTo("{\"query\":{\"bool\":{\"must\":[{\"match\":{\"data.expiryDate\":\"2020-12-31\"}}]" +
             ",\"should\":[{\"match\":{\"state\":\"CaveatNotMatched\"}},{\"match\":{\"state\":\"AwaitingCaveatResolution\"}}" +
             ",{\"match\":{\"state\":\"WarningValidation\"}}," +
-            "{\"match\":{\"state\":\"AwaitingWarningResponse\"}}],\"minimum_should_match\":1}}}"));
+            "{\"match\":{\"state\":\"AwaitingWarningResponse\"}}],\"minimum_should_match\":1}},\"size\": 100}"));
 
     }
 }

@@ -13,6 +13,7 @@
   "primaryApplicantPhoneNumber": "123455678",
   "primaryApplicantRelationshipToDeceased": "adoptedChild",
   "primaryApplicantAdoptionInEnglandOrWales": "Yes",
+  "pcqId": "1234",
   "deceasedForenames": "Ned",
   "deceasedSurname": "Stark",
   "deceasedDateOfBirth": "1930-01-01",
@@ -49,6 +50,7 @@
   "ihtReferenceNumber": "GOT123456",
   "extraCopiesOfGrant": 5,
   "outsideUKGrantCopies": 6,
+  "pcqId": "1234",
   "payments": [
     {
       "value": {

@@ -80,6 +80,7 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     private void validate(ProbateCaseDetails probateCaseDetails, List<Class> submissionGroups) {
+        log.info("validationServiceImpl.validate caseId: {}", probateCaseDetails.getCaseInfo().getCaseId());
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         List<Class> validationGroupClasses = caseTypeValidationGroupMap.get(caseType).apply(caseData);

@@ -141,6 +141,7 @@ public class CasesController {
     @ResponseBody
     public ResponseEntity<CaseData> validate(@PathVariable("applicationId") String applicationId,
                                              @RequestParam("caseType") CaseType caseType) {
+        log.info("CasesController.validate() caseType: {}, applicationId: {}", caseType.getName(), applicationId);
         return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
     }
 

@@ -687,6 +687,7 @@
    ]]></notes>
         <gav regex="true">^org\.springframework\.security:spring-security-core:.*$</gav>
         <cpe>cpe:/a:security-framework_project:security-framework</cpe>
+        <cve>CVE-2020-5408</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -835,6 +836,8 @@
    ]]></notes>
         <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
         <cpe>cpe:/a:apache_software_foundation:tomcat</cpe>
+        <cve>CVE-2020-11996</cve>
+        <cve>CVE-2020-9484</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[

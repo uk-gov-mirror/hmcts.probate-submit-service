@@ -165,7 +165,7 @@ public class CasesServiceImpl implements CasesService {
 
     @Override
     public ProbateCaseDetails validate(String searchField, CaseType caseType) {
-        log.info("Validating case of caseType: {}", caseType.getName());
+        log.info("Validating case of caseType: {}, applicationId: {}", caseType.getName(), searchField);
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;

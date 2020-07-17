@@ -71,6 +71,7 @@ public class CasesServiceImpl implements CasesService {
     public List<ProbateCaseDetails> getAllCases(CaseType caseType) {
         log.info("Getting all cases of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        log.info("getAllCases auth: {}, user: {}", securityDTO.getAuthorisation(), securityDTO.getUserId());
         return coreCaseDataService
                 .findCases(caseType, securityDTO);
     }

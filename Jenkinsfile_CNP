@@ -47,7 +47,6 @@ withPipeline("java", product, component) {
   loadVaultSecrets(secrets)
   enableAksStagingDeployment()
   enableSlackNotifications('#probate-jenkins')
-  installCharts()
 
   disableLegacyDeployment()
 

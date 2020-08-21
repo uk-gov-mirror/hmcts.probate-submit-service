@@ -111,6 +111,8 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> initiateCaseAsCaseWorker(@RequestBody ProbateCaseDetails caseRequest) {
+        log.info("PRO-7946: ENDPOINT USED /cases/initiate/caseworker");
+
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.initiateCaseAsCaseworker(caseRequest), OK);
     }
@@ -130,6 +132,8 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity grantCaseAccessToUser(@PathVariable("caseId") String caseId, @PathVariable("userId") String userId) {
+        log.info("PRO-7946: ENDPOINT USED /cases/{caseId}/caseworker/grantaccess/applicant/{userId}");
+
         log.info("Granting access to case for caseId: {} and userId : {}", caseId, userId);
         casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, caseId, userId);
         return new ResponseEntity(OK);

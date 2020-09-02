@@ -219,17 +219,6 @@ public class CcdClientApi implements CoreCaseDataService {
         return Optional.of(createCaseResponse(caseDetails));
     }
 
-    @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String userId, SecurityDTO securityDTO) {
-        caseAccessApi.grantAccessToCase(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
-                caseType.getName(),
-                caseId,new UserId(userId));
-    }
-
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {
         return caseResponseBuilder.createCaseResponse(caseDetails);
     }

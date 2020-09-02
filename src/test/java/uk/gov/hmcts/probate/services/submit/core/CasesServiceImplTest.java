@@ -255,15 +255,4 @@ public class CasesServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDTO();
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDTO);
     }
-
-
-    @Test
-    public void shouldGrantAccessToCaseAsCaseworker() {
-
-        SecurityDTO securityDTO = SecurityDTO.builder().build();
-        when(securityUtils.getSecurityDTO()).thenReturn(securityDTO);
-        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION,CASE_ID, EMAIL_ADDRESS);
-
-        verify(coreCaseDataService).grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION,CASE_ID, EMAIL_ADDRESS, securityDTO);
-    }
 }

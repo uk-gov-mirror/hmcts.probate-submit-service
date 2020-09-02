@@ -25,6 +25,4 @@ public interface CasesService {
 
     List<ProbateCaseDetails> getAllCases(CaseType caseType);
 
-    void grantAccessForCase(CaseType caseType, String caseId, String userId);
-
 }

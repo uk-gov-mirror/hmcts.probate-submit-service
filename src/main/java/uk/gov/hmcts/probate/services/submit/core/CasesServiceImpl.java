@@ -161,12 +161,4 @@ public class CasesServiceImpl implements CasesService {
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;
     }
-
-    @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String userId) {
-        log.info("Grant access for case of caseType: {}", caseType.getName());
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-        coreCaseDataService.grantAccessForCase(caseType, caseId, userId, securityDTO);
-
-    }
 }

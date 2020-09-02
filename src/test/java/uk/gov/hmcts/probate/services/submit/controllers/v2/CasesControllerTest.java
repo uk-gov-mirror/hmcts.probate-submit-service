@@ -263,14 +263,4 @@ CasesControllerTest {
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
     }
-
-    @Test
-    public void shouldGrantCaseAccessToUser() throws Exception {
-
-        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" +GRANT_ACCESS_ENDPOINT+ USER_ID)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        verify(casesService, times(1)).grantAccessForCase(eq(CaseType.GRANT_OF_REPRESENTATION), eq(CASE_ID), eq(USER_ID));
-    }
 }

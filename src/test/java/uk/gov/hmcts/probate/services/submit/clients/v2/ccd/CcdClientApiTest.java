@@ -377,13 +377,4 @@ public class CcdClientApiTest {
 
         ccdClientApi.findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDTO);
     }
-
-    @Test
-    public void shouldGrantAccessToCaseByApplicantEmail() {
-
-       ccdClientApi.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, CASE_ID.toString(), APPLICANT_EMAIL, securityDTO);
-
-        verify(mockCaseAccessApi, times(1)).grantAccessToCase(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),         eq(USER_ID), eq(PROBATE.name()), eq(GRANT_OF_REPRESENTATION.getName()), eq(CASE_ID.toString()), userIdCaptor.capture());
-        assertThat(userIdCaptor.getValue().getId(), is(APPLICANT_EMAIL));
-    }
 }

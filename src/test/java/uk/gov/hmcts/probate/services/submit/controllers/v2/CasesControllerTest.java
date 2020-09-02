@@ -237,19 +237,6 @@ CasesControllerTest {
     }
 
     @Test
-    public void shouldInitiateCaseAsCasewoker() throws Exception {
-        CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
-        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
-
-        mockMvc.perform(post(CASES_CASEWORKER_INITATE_URL)
-                .content(objectMapper.writeValueAsString(probateCaseDetails))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        verify(casesService, times(1)).initiateCaseAsCaseworker(any(ProbateCaseDetails.class));
-    }
-
-    @Test
     public void shouldSaveCaseAsCaseworker() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();

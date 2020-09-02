@@ -142,37 +142,6 @@ public class CcdClientApi implements CoreCaseDataService {
         return createCaseResponse(caseDetails);
     }
 
-
-    @Override
-    public ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDTO securityDTO) {
-        CaseType caseType = CaseType.getCaseType(caseData);
-        log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
-            caseType.getName(), eventId.getName());
-        log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
-                caseType.getName(), eventId.getName());
-        StartEventResponse startEventResponse = coreCaseDataApi.startForCaseworker(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
-                caseType.getName(),
-                eventId.getName()
-        );
-        CaseDataContent caseDataContent = createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
-        log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
-        CaseDetails caseDetails = coreCaseDataApi.submitForCaseworker(
-                securityDTO.getAuthorisation(),
-                securityDTO.getServiceAuthorisation(),
-                securityDTO.getUserId(),
-                JurisdictionId.PROBATE.name(),
-                caseType.getName(),
-                false,
-                caseDataContent
-        );
-        return createCaseResponse(caseDetails);
-    }
-
-
     @Override
     public Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType, SecurityDTO securityDTO) {
         log.info("Search for case in CCD for Citizen, caseType: {}", caseType.getName());

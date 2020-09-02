@@ -107,17 +107,6 @@ public class CasesController {
     }
 
 
-    @PostMapping(path = "/cases/initiate/caseworker", consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> initiateCaseAsCaseWorker(@RequestBody ProbateCaseDetails caseRequest) {
-        log.info("PRO-7946: ENDPOINT USED /cases/initiate/caseworker");
-
-        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
-        return new ResponseEntity(casesService.initiateCaseAsCaseworker(caseRequest), OK);
-    }
-
-
     @PostMapping(path = "/cases/caseworker/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

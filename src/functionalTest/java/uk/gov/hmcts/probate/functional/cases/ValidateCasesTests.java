@@ -22,7 +22,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     @Before
     public void init() throws InterruptedException {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+            String caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
             testCaseId = utils.createTestCase(caseData);
 
             setUp = true;
@@ -33,7 +33,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     public void validateCaseReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + testCaseId + "/validations")
@@ -52,7 +52,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + randomCaseId + "/validations")
@@ -63,12 +63,12 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
     @Test
     public void validateCaseWithInvalidDataReturns400() throws InterruptedException {
-        String invalidCaseData = utils.getJsonFromFile("failure.validateCaseData.json");
+        String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
         String invalidCaseId = utils.createTestCase(invalidCaseData);
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + invalidCaseId + "/validations")
@@ -82,7 +82,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     public void validateCaseWithMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .put("/cases/" + testCaseId + "/validations")
                 .then()

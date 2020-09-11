@@ -4,10 +4,12 @@ import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
+import uk.gov.hmcts.probate.functional.TestRetryRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -15,6 +17,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class GetCasesTests extends IntegrationTestBase {
+
+    @Rule
+    public TestRetryRule retryRule = new TestRetryRule(3);
 
     @Value("${idam.citizen.username}")
     private String email;
@@ -24,12 +29,15 @@ public class GetCasesTests extends IntegrationTestBase {
     private Boolean setUp = false;
 
     String caseId;
+    String inviteId;
 
     @Before
-    public void init() throws InterruptedException {
+    public void init() {
         if (!setUp) {
             String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
             caseId = utils.createTestCase(caseData);
+
+            inviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
 
             setUp = true;
         }
@@ -152,19 +160,19 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void getCaseByInviteIdReturns200() throws InterruptedException {
-        String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
-        String randomInviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
-
-        inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, randomInviteId);
-        utils.createTestCase(inviteCaseData);
+    public void getCaseByInviteIdReturns200() {
+        if (retryRule.firstAttempt) {
+            String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+            inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
+            utils.createTestCase(inviteCaseData);
+        }
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
                 .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
-                .get("/cases/invitation/" + randomInviteId)
+                .get("/cases/invitation/" + inviteId)
                 .then()
                 .assertThat()
                 .statusCode(200)

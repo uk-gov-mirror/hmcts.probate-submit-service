@@ -21,6 +21,19 @@ $ java -jar build/libs/submit-service-0.0.1.jar
 
 ## Developing
 
+### Local development environment
+
+```
+# rebuild every time you make changes
+./gradlew assemble
+
+# first time only
+npx @hmcts/probate-dev-env --create
+
+# start the dev env
+npx @hmcts/probate-dev-env
+```
+
 ### Unit tests
 
 To run all unit tests please execute the following command:

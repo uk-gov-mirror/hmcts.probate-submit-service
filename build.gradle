@@ -55,6 +55,10 @@ sonarqube {
     }
 }
 
+project.ext {
+  pactVersion = getCheckedOutGitCommitHash()
+}
+
 test.finalizedBy jacocoTestReport
 
 dependencyCheck {
@@ -314,4 +318,17 @@ run {
     if (debug == 'true') {
         jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005']
     }
+}
+
+pact {
+  publish {
+    pactDirectory = 'target/pacts'
+    pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?:'http://localhost:80'
+    tags = [System.getenv("PACT_BRANCH_NAME") ?:'Dev']
+    version = project.pactVersion
+  }
+}
+
+def getCheckedOutGitCommitHash() {
+  'git rev-parse --verify --short HEAD'.execute().text.trim()
 }

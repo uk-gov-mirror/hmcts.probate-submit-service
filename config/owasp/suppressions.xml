@@ -961,11 +961,13 @@
         <cpe>cpe:/Sa:oracle:jdk</cpe>
     </suppress>
     <suppress>
-    <notes><![CDATA[
+        <notes><![CDATA[
    file name: snakeyaml-1.23.jar
    ]]></notes>
-    <gav regex="true">^org\.yaml:snakeyaml:.*$</gav>
-    <cpe>cpe:/a:snakeyaml_project:snakeyaml</cpe>
-    <cve>CVE-2017-18640</cve>
-  </suppress>
+        <gav regex="true">^org\.yaml:snakeyaml:.*$</gav>
+        <cve>CVE-2017-18640</cve>
+    </suppress>
+    <suppress>
+        <cve>CVE-2020-24616</cve>
+    </suppress>
 </suppressions>

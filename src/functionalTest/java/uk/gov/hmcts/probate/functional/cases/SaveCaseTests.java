@@ -3,9 +3,12 @@ package uk.gov.hmcts.probate.functional.cases;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
+import uk.gov.hmcts.probate.functional.TestRetryRule;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -13,17 +16,37 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class SaveCaseTests extends IntegrationTestBase {
 
+    @Rule
+    public TestRetryRule retryRule = new TestRetryRule(3);
+
+    private Boolean setUp = false;
+
+    String gopCaseId;
+    String intestacyCaseId;
+
+    @Before
+    public void init() {
+        if (!setUp) {
+            String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
+            gopCaseId = utils.createTestCase(gopCaseData);
+
+            String intestacyCaseData =  utils.getJsonFromFile("intestacy.partial.json");
+            intestacyCaseId = utils.createTestCase(intestacyCaseData);
+
+            setUp = true;
+        }
+    }
+
     @Test
-    public void saveCaseAsCitizenReturns200() {
-        String caseData = utils.getJsonFromFile("success.saveCaseData.json");
-        String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
+    public void saveSingleExecutorGOPCaseReturns200() {
+        String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
-                .body(caseData)
+                .headers(utils.getCitizenHeaders())
+                .body(gopCaseData)
                 .when()
-                .post("/cases/" + caseId)
+                .post("/cases/" + gopCaseId)
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -34,12 +57,50 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
-    public void saveCaseAsCitizenWithInvalidDataReturns400() {
+    public void saveMultipleExecutorGOPCaseReturns200() {
+        String gopCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body(gopCaseData)
+                .when()
+                .post("/cases/" + gopCaseId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void saveIntestacyCaseReturns200() {
+        String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .body(intestacyCaseData)
+                .when()
+                .post("/cases/" + intestacyCaseId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void saveCaseWithInvalidDataReturns400() {
         String caseId = RandomStringUtils.randomNumeric(16).toLowerCase();
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .body("")
                 .when()
                 .post("/cases/" + caseId)
@@ -49,13 +110,13 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
-    public void initiateCaseAsCitizenReturns200() {
-        String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+    public void initiateGOPCaseReturns200() {
+        String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
-                .body(caseData)
+                .headers(utils.getCitizenHeaders())
+                .body(gopCaseData)
                 .when()
                 .post("/cases/initiate")
                 .then()
@@ -68,10 +129,29 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
-    public void initiateCaseAsCitizenWithInvalidDataReturns400() {
+    public void initiateIntestacyCaseReturns200() {
+        String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
+
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
+                .body(intestacyCaseData)
+                .when()
+                .post("/cases/initiate")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
+    }
+
+    @Test
+    public void initiateCaseWithInvalidDataReturns400() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
                 .body("")
                 .when()
                 .post("/cases/initiate")

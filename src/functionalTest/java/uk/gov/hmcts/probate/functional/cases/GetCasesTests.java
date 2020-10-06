@@ -4,10 +4,12 @@ import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
+import uk.gov.hmcts.probate.functional.TestRetryRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -16,18 +18,26 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class GetCasesTests extends IntegrationTestBase {
 
-    @Value("${idam.username}")
+    @Rule
+    public TestRetryRule retryRule = new TestRetryRule(3);
+
+    @Value("${idam.citizen.username}")
     private String email;
+
+    public static final String INVITE_ID_PLACEHOLDER = "inviteId";
 
     private Boolean setUp = false;
 
-    String testCaseId;
+    String caseId;
+    String inviteId;
 
     @Before
-    public void init() throws InterruptedException {
+    public void init() {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
-            testCaseId = utils.createTestCase(caseData);
+            String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+            caseId = utils.createTestCase(caseData);
+
+            inviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
 
             setUp = true;
         }
@@ -37,10 +47,10 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByIdAsPathVariableReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
-                .get("/cases/" + testCaseId)
+                .get("/cases/" + caseId)
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -54,9 +64,9 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
-                .get("/cases/" + testCaseId)
+                .get("/cases/" + caseId)
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -68,7 +78,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/" + randomCaseId)
@@ -82,7 +92,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByApplicantEmailReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + email)
@@ -99,7 +109,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getCaseByApplicantEmailMissingCaseTypeReturn400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .get("/cases/applicantEmail/" + email)
                 .then()
@@ -113,7 +123,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/applicantEmail/" + randomEmail)
@@ -127,7 +137,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getAllGOPCasesReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .get("/cases/all")
@@ -141,7 +151,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public void getAllGOPCasesMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .get("/cases/all")
                 .then()
@@ -151,18 +161,48 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByInviteIdReturns200() {
+        if (retryRule.firstAttempt) {
+            String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+            inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
+            utils.createTestCase(inviteCaseData);
+        }
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + inviteId)
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("caseData", notNullValue())
+                .body("caseInfo.caseId", notNullValue())
+                .body("caseInfo.state", equalTo("Pending"))
+                .extract().jsonPath().prettify();
     }
 
     @Test
     public void getCaseByIncorrectInviteIdReturns404() {
+        String randomInviteId = RandomStringUtils.randomAlphanumeric(12).toLowerCase();
+
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
+                .when()
+                .get("/cases/invitation/" + randomInviteId)
+                .then()
+                .assertThat()
+                .statusCode(404);
     }
 
     @Test
     public void getCaseByCaseIdAsRequestParamReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
-                .queryParam("caseId", testCaseId)
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseId", caseId)
                 .when()
                 .get("/cases")
                 .then()
@@ -181,7 +221,7 @@ public class GetCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseId", randomCaseId)
                 .when()
                 .get("/cases")

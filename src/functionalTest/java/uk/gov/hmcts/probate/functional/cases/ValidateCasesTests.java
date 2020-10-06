@@ -4,9 +4,11 @@ import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
+import uk.gov.hmcts.probate.functional.TestRetryRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -15,14 +17,18 @@ import static org.hamcrest.Matchers.notNullValue;
 @RunWith(SpringIntegrationSerenityRunner.class)
 public class ValidateCasesTests extends IntegrationTestBase {
 
+    @Rule
+    public TestRetryRule retryRule = new TestRetryRule(3);
+
     private Boolean setUp = false;
 
     String testCaseId;
+    String invalidCaseId;
 
     @Before
-    public void init() throws InterruptedException {
+    public void init() {
         if (!setUp) {
-            String caseData = utils.getJsonFromFile("success.saveCaseData.json");
+            String caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
             testCaseId = utils.createTestCase(caseData);
 
             setUp = true;
@@ -33,7 +39,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     public void validateCaseReturns200() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + testCaseId + "/validations")
@@ -52,7 +58,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + randomCaseId + "/validations")
@@ -62,13 +68,15 @@ public class ValidateCasesTests extends IntegrationTestBase {
     }
 
     @Test
-    public void validateCaseWithInvalidDataReturns400() throws InterruptedException {
-        String invalidCaseData = utils.getJsonFromFile("failure.validateCaseData.json");
-        String invalidCaseId = utils.createTestCase(invalidCaseData);
+    public void validateCaseWithInvalidDataReturns400() {
+        if (retryRule.firstAttempt) {
+            String invalidCaseData = utils.getJsonFromFile("intestacy.invalid.json");
+            invalidCaseId = utils.createTestCase(invalidCaseData);
+        }
 
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .queryParam("caseType", CaseType.GRANT_OF_REPRESENTATION)
                 .when()
                 .put("/cases/" + invalidCaseId + "/validations")
@@ -82,7 +90,7 @@ public class ValidateCasesTests extends IntegrationTestBase {
     public void validateCaseWithMissingCaseTypeReturns400() {
         RestAssured.given()
                 .relaxedHTTPSValidation()
-                .headers(utils.getHeaders())
+                .headers(utils.getCitizenHeaders())
                 .when()
                 .put("/cases/" + testCaseId + "/validations")
                 .then()

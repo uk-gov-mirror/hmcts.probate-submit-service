@@ -409,6 +409,7 @@
         <cve>CVE-2020-5408</cve>
         <cve>CVE-2020-11996</cve>
         <cve>CVE-2020-9484</cve>
+        <cve>CVE-2020-24750</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -746,6 +747,7 @@
     ]]></notes>
         <gav regex="true">^org\.springframework:spring-core:.*$</gav>
         <cve>CVE-2020-5398</cve>
+        <cve>CVE-2020-5421</cve>
     </suppress>
 
     <suppress>

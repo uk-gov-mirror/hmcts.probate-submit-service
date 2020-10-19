@@ -15,3 +15,5 @@ nb-configuration.xml
 out/
 bin/
 .DS_Store
+gradle-wrapper.jar
+gradlew.bat

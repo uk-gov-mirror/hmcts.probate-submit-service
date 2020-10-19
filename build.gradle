@@ -162,7 +162,7 @@ def versions = [
         logging                         : '5.1.1',
         serviceAuthProviderClient       : '3.0.0',
         authCheckerLib                  : '2.1.2',
-        ccdClient                       : '4.6.4',
+        ccdClient                       : '4.7.3',
         springCloudStarterNetflixHystrix: '2.1.1.RELEASE',
         springfoxSwagger                : '2.9.2',
         springCloudWiremock             : '1.2.4.RELEASE',

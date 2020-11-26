@@ -34,10 +34,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@PactTestFor(providerName = "ccd", port = "8893")
+@PactTestFor(providerName = "ccd", port = "8891")
 @PactFolder("pacts")
 @SpringBootTest({
-        "core_case_data.api.url : localhost:8893"
+        "core_case_data.api.url : localhost:8891"
 })
 public class ProbateSubmitServiceSubmitEventForCitizen extends AbstractProbateSubmitServicePact {
 
@@ -106,7 +106,6 @@ public class ProbateSubmitServiceSubmitEventForCitizen extends AbstractProbateSu
     @Test
     @PactTestFor(pactMethod = "submitEventForCitizen")
     public void verifySubmitEventForCitizen() throws Exception {
-
         caseDataContent = PactDslFixtureHelper.getCaseDataContent();
 
         CaseDetails caseDetailsReponse = coreCaseDataApi.submitEventForCitizen(SOME_AUTHORIZATION_TOKEN,

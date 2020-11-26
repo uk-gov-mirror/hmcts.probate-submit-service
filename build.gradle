@@ -55,6 +55,10 @@ sonarqube {
     }
 }
 
+project.ext {
+  pactVersion = getCheckedOutGitCommitHash()
+}
+
 test.finalizedBy jacocoTestReport
 
 dependencyCheck {
@@ -114,6 +118,7 @@ serenity {
 
 task pactTask(type: Test) {
     description = "Runs pact Tests"
+    useJUnitPlatform()
     testClassesDirs = sourceSets.testPact.output.classesDirs
     classpath = sourceSets.testPact.runtimeClasspath
 }
@@ -279,21 +284,12 @@ dependencies {
     testPactCompile sourceSets.test.runtimeClasspath
 
     testCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
-    testContractCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
-    testContractCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
-    testContractCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
-
-    testContractCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-    testContractCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
-    testContractCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-    testContractCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
-    testContractCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version : '2.9.8'
-
-
-
-    testContractCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testContractRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
-    testContractImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testPactCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
+    testPactCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
+    testPactCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
+    testPactCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+    testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 }
@@ -322,4 +318,17 @@ run {
     if (debug == 'true') {
         jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005']
     }
+}
+
+pact {
+  publish {
+    pactDirectory = 'target/pacts'
+    pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?:'http://localhost:80'
+    tags = [System.getenv("PACT_BRANCH_NAME") ?:'Dev']
+    version = project.pactVersion
+  }
+}
+
+def getCheckedOutGitCommitHash() {
+  'git rev-parse --verify --short HEAD'.execute().text.trim()
 }

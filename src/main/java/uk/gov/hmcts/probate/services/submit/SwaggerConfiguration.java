@@ -41,7 +41,7 @@ public class SwaggerConfiguration {
                 .useDefaultResponseMessages(false)
                 .apiInfo(draftsApiInfo())
                 .select()
-                .apis(packagesLike("uk.gov.hmcts.probate.services.submit.controllers.v2"))
+                //.apis(packagesLike("uk.gov.hmcts.probate.services.submit.controllers.v2"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -53,7 +53,8 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    private static Predicate<RequestHandler> packagesLike(final String pkg) {
-        return input -> input.declaringClass().getPackage().getName().equals(pkg);
+    private  Predicate<RequestHandler> packagesLike(final String pkg) {
+        return input -> getClass().getPackage().getName().equals(pkg);
+        //return true ;
     }
 }

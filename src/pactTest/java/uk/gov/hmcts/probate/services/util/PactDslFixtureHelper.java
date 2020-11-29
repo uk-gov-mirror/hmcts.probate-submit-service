@@ -23,7 +23,7 @@ public  class PactDslFixtureHelper {
     public static final String SOME_SERVICE_AUTHORIZATION_TOKEN = "ServiceToken";
 
 
-    private static final String VALID_PAYLOAD_PATH = "json/base-case.json";
+    private static final String VALID_PAYLOAD_PATH = "json/ccdCaseDetails.json";
 
     public static CaseDataContent getCaseDataContent() throws Exception {
 

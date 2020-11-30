@@ -24,9 +24,13 @@ import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.AssertionHelper.assertCaseDetails;
 import static uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ObjectMapperTestUtil.convertObjectToJsonString;
 import static uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.PactDslFixtureHelper.getCaseDataContent;
 import static uk.gov.hmcts.reform.probate.pact.dsl.PactDslBuilderForCaseDetailsList.buildCaseDetailsDsl;
@@ -104,17 +108,11 @@ public class ProbateSubmitServiceSubmitForCaseWorker {
     final CaseDetails caseDetails = coreCaseDataApi.submitForCaseworker(SOME_AUTHORIZATION_TOKEN,
       SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID, jurisdictionId,caseType,true, caseDataContent);
 
-    assertNotNull(caseDetails);
+    assertThat(caseDetails.getCaseTypeId() , is("GrantOfRepresentation"));
+    assertThat(caseDetails.getJurisdiction() , is("PROBATE"));
+    assertThat(caseDetails.getState(), is(notNullValue()));
 
-    // assertThat(startEventResponse.getEventId(), CoreMatchers.is("100"));
-    // assertThat(startEventResponse.getToken(), CoreMatchers.is("testServiceToken"));
-    //assertThat(startEventResponse.getCaseDetails().getId(), CoreMatchers.is((2000L)));
+    assertCaseDetails(caseDetails);
 
-    //TODO
-    assertThat(caseDetails.getJurisdiction(), is("DIVORCE"));
-    assertThat(caseDetails.getCaseTypeId(), is("AwaitingDecreeNisi"));//
-
-   // assertThat(caseDetails.getCaseTypeId(), is("GRANT_OF_REPRESENTATION"));
-//
   }
 }

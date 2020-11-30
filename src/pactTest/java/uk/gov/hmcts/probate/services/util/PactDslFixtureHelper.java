@@ -23,7 +23,7 @@ public  class PactDslFixtureHelper {
     public static final String SOME_SERVICE_AUTHORIZATION_TOKEN = "ServiceToken";
 
 
-    private static final String VALID_PAYLOAD_PATH = "json/ccdCaseDetails.json";
+    private static final String VALID_PAYLOAD_PATH = "json/probate-casedata-map.json";
 
     public static CaseDataContent getCaseDataContent() throws Exception {
 
@@ -39,8 +39,8 @@ public  class PactDslFixtureHelper {
             .event(
                 Event.builder()
                     .id(startEventResponse.getEventId())
-                    .summary("divSummary")
-                    .description("div")
+                    .summary("probateSummary")
+                    .description("probate")
                     .build()
             ).data(convertObjectToJsonString(caseData))
             .build();

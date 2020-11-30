@@ -5,7 +5,9 @@ import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody;
 import au.com.dius.pact.consumer.dsl.DslPart;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 
-public class CaseDataPactDslBuilder {
+public class
+
+CaseDataPactDslBuilder {
 
     public static final String REGEX_DATE = "^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$";
 

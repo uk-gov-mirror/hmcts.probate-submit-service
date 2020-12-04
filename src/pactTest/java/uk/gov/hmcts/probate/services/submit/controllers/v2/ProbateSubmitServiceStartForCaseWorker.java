@@ -15,7 +15,6 @@ import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.AssertionHelper.assertCaseDetails;
-import static uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.PactDslFixtureHelper.getCaseDataContent;
 import static uk.gov.hmcts.reform.probate.pact.dsl.PactDslBuilderForCaseDetailsList.buildStartEventReponse;
 
 public class ProbateSubmitServiceStartForCaseWorker extends AbstractProbateSubmitServicePact {
@@ -23,7 +22,6 @@ public class ProbateSubmitServiceStartForCaseWorker extends AbstractProbateSubmi
     public static final String SOME_AUTHORIZATION_TOKEN = "Bearer UserAuthToken";
     public static final String SOME_SERVICE_AUTHORIZATION_TOKEN = "ServiceToken";
     private static final String USER_ID = "123456";
-    private static final String CASE_ID = "2000";
     private static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
 
     @BeforeEach
@@ -38,7 +36,7 @@ public class ProbateSubmitServiceStartForCaseWorker extends AbstractProbateSubmi
 
 
     @Pact(provider = "ccd", consumer = "probate_start_for_caseworker")
-    RequestResponsePact startForCaseworker(PactDslWithProvider builder) throws Exception {
+    public RequestResponsePact startForCaseworker(PactDslWithProvider builder) throws Exception {
         // @formatter:off
         return builder
                 .given("A Start for caseworker is received")

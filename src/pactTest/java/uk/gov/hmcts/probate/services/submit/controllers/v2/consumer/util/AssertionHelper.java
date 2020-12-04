@@ -36,9 +36,5 @@ public final class AssertionHelper {
         assertThat(caseDataMap.get("deceasedAddress"),notNullValue());
         assertThat(caseDataMap.get("applicationSubmittedDate"), notNullValue());
         assertThat(caseDataMap.get("primaryApplicantEmailAddress"), notNullValue());
-        assertThat(caseDataMap.get("deceasedSurname"),notNullValue()) ;
     }
-
-
-
 }

@@ -2,22 +2,17 @@ package uk.gov.hmcts.probate.services.submit.controllers.v2.consumer;
 
 import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
 import au.com.dius.pact.consumer.junit5.PactTestFor;
-import au.com.dius.pact.model.RequestResponsePact;
 
+import au.com.dius.pact.model.RequestResponsePact;
 import org.apache.http.client.fluent.Executor;
 import org.junit.After;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 
 import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.PactDslFixtureHelper;
-import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -66,7 +61,7 @@ public class ProbateSubmitServiceSubmitEventForCaseWorker extends AbstractProbat
             .body(convertObjectToJsonString(getCaseDataContent()))
             .willRespondWith()
             .status(200)
-            .body(buildCaseDetailsDsl(100L, "someemailaddress.com", false, false, false))
+            .body(buildCaseDetailsDsl(Long.valueOf(CASE_ID),"emil@gmail.com",true,true,true))
             .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
             .toPact();
   }

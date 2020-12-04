@@ -4,19 +4,21 @@ import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.consumer.junit5.PactTestFor;
 import au.com.dius.pact.model.RequestResponsePact;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.http.client.fluent.Executor;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.junit.Assert.assertNotNull;
-import static uk.gov.hmcts.reform.probate.pact.dsl.PactDslBuilderForCaseDetailsList.buildNewListOfCaseDetailsDsl;
+import static uk.gov.hmcts.reform.probate.pact.dsl.PactDslBuilderForCaseDetailsList.buildListOfCaseDetailsDsl;
 
 public class ProbateSubmitServiceSearchForCaseWorker extends AbstractProbateSubmitServicePact {
     public static final String SOME_AUTHORIZATION_TOKEN = "Bearer UserAuthToken";
@@ -49,14 +51,13 @@ public class ProbateSubmitServiceSearchForCaseWorker extends AbstractProbateSubm
                         + "/case-types/"
                         + caseType
                         + "/cases")
-                .query("ignore-warning=true")
                 .method("GET")
                 .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION,
                         SOME_SERVICE_AUTHORIZATION_TOKEN)
                 .willRespondWith()
                 .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
                 .status(200)
-                .body(buildNewListOfCaseDetailsDsl(100L, "someemailaddress.com", false, false,false))
+                .body(buildListOfCaseDetailsDsl(100L, "someemailaddress.com",  false,false))
                 .toPact();
     }
 
@@ -67,10 +68,15 @@ public class ProbateSubmitServiceSearchForCaseWorker extends AbstractProbateSubm
         final Map<String, String> searchCriteria = Collections.EMPTY_MAP;
 
         List<CaseDetails> caseDetailsList = coreCaseDataApi.searchForCaseworker(SOME_AUTHORIZATION_TOKEN,
-                SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID, jurisdictionId,
-                caseType, searchCriteria);
-
+                SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID, jurisdictionId, caseType, searchCriteria);
               assertNotNull(caseDetailsList);
+
+        Assert.assertTrue(isNotEmpty(caseDetailsList));
+
+        CaseDetails caseDetails = caseDetailsList.get(0);
+        Map<String,Object> caseDatMap = caseDetails.getData();
+        caseDatMap.get("");
+
 
     }
 }

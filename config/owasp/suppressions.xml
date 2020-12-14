@@ -784,6 +784,7 @@
    ]]></notes>
         <gav regex="true">^org\.apache\.httpcomponents:httpclient:.*$</gav>
         <cpe>cpe:/a:apache:httpclient</cpe>
+        <cve>CVE-2020-13956</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[

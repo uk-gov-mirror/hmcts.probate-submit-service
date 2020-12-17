@@ -1,18 +1,11 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2.consumer;
 
-import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
 import au.com.dius.pact.consumer.junit5.PactTestFor;
 import au.com.dius.pact.model.RequestResponsePact;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import org.apache.http.client.fluent.Executor;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,13 +31,21 @@ import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.JurisdictionId;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import static io.pactfoundation.consumer.dsl.LambdaDsl.newJsonBody;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @PactTestFor(providerName = "ccd", port = "8891")
 @SpringBootTest({
-        "core_case_data.api.url : localhost:8891"
+    "core_case_data.api.url : localhost:8891"
 })
 public class CcdConsumerTest {
 
@@ -70,10 +71,10 @@ public class CcdConsumerTest {
     public void setUp() throws IOException, JSONException {
         caseDetails = getCaseDetails("ccdCaseDetails.json");
         StartEventResponse startEventResponse = StartEventResponse.builder()
-                .token(TOKEN)
-                .caseDetails(caseDetails)
-                .eventId(EventId.GOP_UPDATE_DRAFT.getName())
-                .build();
+            .token(TOKEN)
+            .caseDetails(caseDetails)
+            .eventId(EventId.GOP_UPDATE_DRAFT.getName())
+            .build();
 
         GrantOfRepresentationData grantOfRepresentationData = getGrantOfRepresentationData("success.pa.ccd.json");
         caseDataContent = createCaseDataContent(grantOfRepresentationData, EventId.GOP_UPDATE_DRAFT, startEventResponse);
@@ -89,72 +90,72 @@ public class CcdConsumerTest {
         Executor.closeIdleConnections();
     }
 
-    @Pact(state = "GrantOfRepresentation Case 654321 exists", provider = "ccd", consumer = "probate_submit_service")
+    @Pact(state = "GrantOfRepresentation Case 654321 exists", provider = "ccd_coreCaseDataApi_casesController", consumer = "probate_submitService")
     RequestResponsePact getCaseById(PactDslWithProvider builder) {
         // @formatter:off
         return builder
-                .given("A GrantOfRepresentation case exists")
-                .uponReceiving("a request for that case")
-                .path("/cases/" + CASE_ID)
-                .method("GET")
-                .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
-                .matchHeader("experimental", "true")
-                .willRespondWith()
-                .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
-                .status(200)
-                .body(CaseDataPactDslBuilder.build(CASE_ID, "someEmailAddress.com", true, true))
-                .toPact();
+            .given("A GrantOfRepresentation case exists")
+            .uponReceiving("a request for that case")
+            .path("/cases/" + CASE_ID)
+            .method("GET")
+            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
+            .matchHeader("experimental", "true")
+            .willRespondWith()
+            .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
+            .status(200)
+            .body(CaseDataPactDslBuilder.build(CASE_ID, "someEmailAddress.com", true, true))
+            .toPact();
     }
 
 
-    @Pact(state = "Start event for citizen", provider = "ccd", consumer = "probate_submit_service")
+    @Pact(state = "Start event for citizen", provider = "ccd_coreCaseDataApi_casesController", consumer = "probate_submitService")
     RequestResponsePact startEventForCitizen(PactDslWithProvider builder) {
 
         // @formatter:off
         return builder
-                .given("A start request for citizen is requested")
-                .uponReceiving("a request for a valid start event")
-                .path("/citizens/" + USER_ID + "/jurisdictions/"
-                        + JurisdictionId.PROBATE.name() + "/case-types/"
-                        + CaseType.GRANT_OF_REPRESENTATION.getName()
-                        + "/cases/" + CASE_ID
-                        + "/event-triggers/"
-                        + EventId.GOP_UPDATE_DRAFT.getName()
-                        + "/token")
-                .method("GET")
-                .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION,
-                        SOME_SERVICE_AUTHORIZATION_TOKEN)
-                .willRespondWith()
-                .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
-                .status(200)
-                .body(newJsonBody((o) -> {
-                    o.stringValue("event_id", EventId.GOP_UPDATE_DRAFT.name())
-                            .stringType("token", "123234543456");
-                }).build())
-                .toPact();
+            .given("A start request for citizen is requested")
+            .uponReceiving("a request for a valid start event")
+            .path("/citizens/" + USER_ID + "/jurisdictions/"
+                + JurisdictionId.PROBATE.name() + "/case-types/"
+                + CaseType.GRANT_OF_REPRESENTATION.getName()
+                + "/cases/" + CASE_ID
+                + "/event-triggers/"
+                + EventId.GOP_UPDATE_DRAFT.getName()
+                + "/token")
+            .method("GET")
+            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION,
+                SOME_SERVICE_AUTHORIZATION_TOKEN)
+            .willRespondWith()
+            .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
+            .status(200)
+            .body(newJsonBody((o) -> {
+                o.stringValue("event_id", EventId.GOP_UPDATE_DRAFT.name())
+                    .stringType("token", "123234543456");
+            }).build())
+            .toPact();
     }
 
-    @Pact(state = "Submit event for citizen", provider = "ccd", consumer = "probate_submit_service")
+    @Pact(state = "Submit event for citizen", provider = "ccd_coreCaseDataApi_casesController", consumer = "probate_submitService")
     RequestResponsePact submitEventForCitizen(PactDslWithProvider builder) throws IOException, JSONException {
         // @formatter:off
         return builder
-                .given("A submit request for citizen is requested")
-                .uponReceiving("a request for a valid submit event")
-                .path("/citizens/" + USER_ID + "/jurisdictions/"
-                        + JurisdictionId.PROBATE.name() + "/case-types/"
-                        + CaseType.GRANT_OF_REPRESENTATION.getName()
-                        + "/cases/" + CASE_ID
-                        + "/events")
-                .method("POST")
-                .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN,
-                        SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
-                .matchQuery("ignore-warning", Boolean.TRUE.toString())
-                .body(createJsonObject(caseDataContent))
-                .willRespondWith()
-                .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
-                .status(201)
-                .body(createJsonObject(caseDetails))
-                .toPact();
+            .given("A submit request for citizen is requested")
+            .uponReceiving("a request for a valid submit event")
+            .path("/citizens/" + USER_ID + "/jurisdictions/"
+                + JurisdictionId.PROBATE.name() + "/case-types/"
+                + CaseType.GRANT_OF_REPRESENTATION.getName()
+                + "/cases/" + CASE_ID
+                + "/events")
+            .method("POST")
+            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN,
+                SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
+            .matchQuery("ignore-warning", Boolean.TRUE.toString())
+            .body(createJsonObject(caseDataContent))
+            .willRespondWith()
+            .matchHeader(HttpHeaders.CONTENT_TYPE, "\\w+\\/[-+.\\w]+;charset=(utf|UTF)-8")
+            .status(201)
+            .body(createJsonObject(caseDetails))
+            .toPact();
     }
 
     @Test
@@ -162,7 +163,7 @@ public class CcdConsumerTest {
     public void verifyGetCaseByIdPact() throws IOException, JSONException {
 
         CaseDetails caseDetailsResponse = coreCaseDataApi.getCase(SOME_AUTHORIZATION_TOKEN,
-                SOME_SERVICE_AUTHORIZATION_TOKEN, CASE_ID.toString());
+            SOME_SERVICE_AUTHORIZATION_TOKEN, CASE_ID.toString());
         assertThat(caseDetailsResponse.getId(), equalTo(CASE_ID));
 
     }
@@ -172,8 +173,8 @@ public class CcdConsumerTest {
     public void verifyStartEventForCitizen() throws IOException, JSONException {
 
         StartEventResponse startEventResponse = coreCaseDataApi.startEventForCitizen(SOME_AUTHORIZATION_TOKEN,
-                SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID.toString(), JurisdictionId.PROBATE.name(),
-                CaseType.GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), EventId.GOP_UPDATE_DRAFT.getName());
+            SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID.toString(), JurisdictionId.PROBATE.name(),
+            CaseType.GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), EventId.GOP_UPDATE_DRAFT.getName());
         assertThat(startEventResponse.getEventId(), equalTo(EventId.GOP_UPDATE_DRAFT.name()));
 
     }
@@ -182,8 +183,8 @@ public class CcdConsumerTest {
     @PactTestFor(pactMethod = "submitEventForCitizen")
     public void verifySubmitEventForCitizen() throws IOException, JSONException {
         CaseDetails caseDetails = coreCaseDataApi.submitEventForCitizen(SOME_AUTHORIZATION_TOKEN,
-                SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID.toString(), JurisdictionId.PROBATE.name(),
-                CaseType.GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), Boolean.TRUE, caseDataContent);
+            SOME_SERVICE_AUTHORIZATION_TOKEN, USER_ID.toString(), JurisdictionId.PROBATE.name(),
+            CaseType.GRANT_OF_REPRESENTATION.getName(), CASE_ID.toString(), Boolean.TRUE, caseDataContent);
         assertThat(caseDetails.getId(), equalTo(CASE_ID));
 
     }
@@ -212,17 +213,17 @@ public class CcdConsumerTest {
 
     private CaseDataContent createCaseDataContent(CaseData caseData, EventId eventId, StartEventResponse startEventResponse) {
         return CaseDataContent.builder()
-                .event(createEvent(eventId))
-                .eventToken(startEventResponse.getToken())
-                .data(caseData)
-                .build();
+            .event(createEvent(eventId))
+            .eventToken(startEventResponse.getToken())
+            .data(caseData)
+            .build();
     }
 
     private Event createEvent(EventId eventId) {
         return Event.builder()
-                .id(eventId.getName())
-                .description("Probate application")
-                .summary("Probate application")
-                .build();
+            .id(eventId.getName())
+            .description("Probate application")
+            .summary("Probate application")
+            .build();
     }
 }

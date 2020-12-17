@@ -17,6 +17,7 @@ public abstract class IntegrationTestBase {
     @Autowired
     protected TestUtils utils;
 
+
     @Rule
     public SpringIntegrationMethodRule springIntegration;
 

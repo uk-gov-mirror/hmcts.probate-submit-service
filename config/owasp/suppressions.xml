@@ -995,5 +995,6 @@
    ]]></notes>
         <gav regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</gav>
         <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle</cpe>
+        <cve>CVE-2020-26939</cve>
     </suppress>
 </suppressions>

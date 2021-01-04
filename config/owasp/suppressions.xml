@@ -411,6 +411,7 @@
         <cve>CVE-2020-11996</cve>
         <cve>CVE-2020-9484</cve>
         <cve>CVE-2020-24750</cve>
+        <cve>CVE-2020-25649</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -558,6 +559,7 @@
    ]]></notes>
         <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
         <cve>CVE-2019-10072</cve>
+        <cve>CVE-2020-17527</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -785,6 +787,7 @@
    ]]></notes>
         <gav regex="true">^org\.apache\.httpcomponents:httpclient:.*$</gav>
         <cpe>cpe:/a:apache:httpclient</cpe>
+        <cve>CVE-2020-13956</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -991,27 +994,6 @@
    file name: bcprov-jdk15on-1.60.jar
    ]]></notes>
         <gav regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</gav>
-        <cve>CVE-2020-26939</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: httpclient-4.5.8.jar
-   ]]></notes>
-        <gav regex="true">^pkg:maven/org\.apache\.httpcomponents/httpclient@.*$</gav>
-        <cve>CVE-2020-13956</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: jackson-databind-2.9.8.jar
-   ]]></notes>
-        <gav regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</gav>
-        <cve>CVE-2020-25649</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: tomcat-embed-core-9.0.19.jar
-   ]]></notes>
-        <gav regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</gav>
-        <cve>CVE-2020-17527</cve>
+        <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle</cpe>
     </suppress>
 </suppressions>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
-
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd ">
     <suppress>
         <notes><![CDATA[
    file name: commons-beanutils-1.9.3.jar
@@ -426,11 +427,11 @@
         <cve>CVE-2019-14439</cve>
     </suppress>
     <suppress>
-    <notes><![CDATA[
+        <notes><![CDATA[
    file name: jackson-databind-2.9.8.jar
    ]]></notes>
-    <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-    <cve>CVE-2019-12814</cve>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cve>CVE-2019-12814</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[file name: tomcat-9.0.12.jar]]></notes>
@@ -989,28 +990,28 @@
         <notes><![CDATA[
    file name: bcprov-jdk15on-1.60.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
+        <gav regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</gav>
         <cve>CVE-2020-26939</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: httpclient-4.5.8.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.httpcomponents/httpclient@.*$</packageUrl>
+        <gav regex="true">^pkg:maven/org\.apache\.httpcomponents/httpclient@.*$</gav>
         <cve>CVE-2020-13956</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: jackson-databind-2.9.8.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
+        <gav regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</gav>
         <cve>CVE-2020-25649</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: tomcat-embed-core-9.0.19.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
+        <gav regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</gav>
         <cve>CVE-2020-17527</cve>
     </suppress>
-   </suppressions>
+</suppressions>

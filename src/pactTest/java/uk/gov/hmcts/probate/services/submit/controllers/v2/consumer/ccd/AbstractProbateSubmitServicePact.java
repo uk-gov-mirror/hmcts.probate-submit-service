@@ -1,4 +1,4 @@
-package uk.gov.hmcts.probate.services.submit.controllers.v2.consumer;
+package uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.ccd;
 
 import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ObjectMapperTestUtil;
 import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ResourceLoader;
@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
@@ -25,6 +26,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 
 @ExtendWith(PactConsumerTestExt.class)
 @ExtendWith(SpringExtension.class)
@@ -49,7 +53,7 @@ public abstract class AbstractProbateSubmitServicePact {
     public static final String APPLY_FOR_GRANT = "applyForGrant";
     public static final String PAYMENT_SUCCESS_APP = "paymentSuccessApp";
 
-    CaseDataContent caseDataContent;
+    protected CaseDataContent caseDataContent;
 
     public static final String CASEWOKER_PASSWORD = "casewokerPassword";
 
@@ -79,7 +83,7 @@ public abstract class AbstractProbateSubmitServicePact {
 
 
     protected Map<String, Object> setUpStateMapForProviderWithCaseData(String eventId) throws Exception {
-        Map<String, Object> caseDataContentMap = objectMapper.convertValue(setUpCaseDataContent("BaseStartJson.json", eventId), Map.class);
+        Map<String, Object> caseDataContentMap = objectMapper.convertValue(setUpCaseDataContent("caseWithExecsWelsh.json", eventId), Map.class);
         Map<String, Object> map = setUpStateMapForProvider(eventId);
         map.put(CASE_DATA_CONTENT, caseDataContentMap);
         return map;
@@ -122,14 +126,6 @@ public abstract class AbstractProbateSubmitServicePact {
         return map;
     }
 
-    protected Map<String, Object> getCaseDataContentAsMap(CaseDataContent caseDataContent) throws JSONException {
-        Map<String, Object> caseDataContentMap = objectMapper.convertValue(caseDataContent, Map.class);
-        Map<String, Object> map = new HashMap<>();
-        map.put(CASEWORKER_USERNAME, caseworkerUsername);
-        map.put(CASEWOKER_PASSWORD, caseworkerPwd);
-        map.put(CASE_DATA_CONTENT, caseDataContentMap);
-        return map;
-    }
 
     protected CaseDataContent getCaseDataContent(String eventId, String validPayloadPath) throws Exception {
 
@@ -157,6 +153,8 @@ public abstract class AbstractProbateSubmitServicePact {
     private File getFile(String fileName) throws FileNotFoundException {
         return org.springframework.util.ResourceUtils.getFile(this.getClass().getResource("/json/" + fileName));
     }
+
+
 
 
 }

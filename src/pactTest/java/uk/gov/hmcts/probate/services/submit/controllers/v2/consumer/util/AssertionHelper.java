@@ -4,6 +4,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertTrue;
 
 import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
@@ -15,7 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 public final class AssertionHelper {
 
-    public static void assertCaseDetails(final CaseDetails caseDetails, boolean isWelsh, boolean executorsApplying) {
+    public static void assertCaseDetails(final CaseDetails caseDetails) {
         assertTrue(caseDetails.getData().size() > 0);
         Map<String,Object> caseDataMap = caseDetails.getData();
         checkCaseData(caseDataMap);
@@ -36,5 +37,13 @@ public final class AssertionHelper {
         assertThat(caseDataMap.get("deceasedAddress"),notNullValue());
         assertThat(caseDataMap.get("applicationSubmittedDate"), notNullValue());
         assertThat(caseDataMap.get("primaryApplicantEmailAddress"), notNullValue());
+    }
+
+    public static void assertBackOfficeCaseData(final CaseDetails caseDetails) {
+
+        Map<String,Object> caseDataMap = caseDetails.getData();
+        assertThat(caseDataMap.get("legalStatement"), instanceOf(Map.class));
+        assertThat(caseDataMap.get("legalDeclarationJson"), instanceOf(String.class));
+        assertThat(caseDataMap.get("probateNotificationsGenerated"), instanceOf(List.class));
     }
 }

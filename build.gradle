@@ -177,7 +177,7 @@ def versions = [
         probateCommons                  : '1.1.0.2',
         feignHttpClient                 : '10.2.3',
         lombok                          : '1.18.8',
-        probatePactCommonsVersion       : '1.0.0'
+        probatePactCommonsVersion       : '1.0.1'
 
 ]
 

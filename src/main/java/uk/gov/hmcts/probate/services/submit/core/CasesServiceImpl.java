@@ -71,6 +71,7 @@ public class CasesServiceImpl implements CasesService {
     public List<ProbateCaseDetails> getAllCases(CaseType caseType) {
         log.info("Getting all cases of caseType: {}", caseType.getName());
         SecurityDTO securityDTO = securityUtils.getSecurityDTO();
+        log.info("getAllCases auth: {}, user: {}", securityDTO.getAuthorisation(), securityDTO.getUserId());
         return coreCaseDataService
                 .findCases(caseType, securityDTO);
     }
@@ -165,7 +166,7 @@ public class CasesServiceImpl implements CasesService {
 
     @Override
     public ProbateCaseDetails validate(String searchField, CaseType caseType) {
-        log.info("Validating case of caseType: {}", caseType.getName());
+        log.info("Validating case of caseType: {}, applicationId: {}", caseType.getName(), searchField);
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;

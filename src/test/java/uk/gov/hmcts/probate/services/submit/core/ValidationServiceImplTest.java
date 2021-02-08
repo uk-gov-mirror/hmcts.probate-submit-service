@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseValidationException;
+import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
@@ -58,9 +59,11 @@ public class ValidationServiceImplTest {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
             .grantType(GrantType.GRANT_OF_PROBATE)
             .build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(grantOfRepresentationData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(grantOfRepresentationData, PA_VALIDATION_GROUPS)).thenReturn(Sets.newHashSet());
@@ -75,9 +78,11 @@ public class ValidationServiceImplTest {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
             .grantType(GrantType.GRANT_OF_PROBATE)
             .build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(grantOfRepresentationData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(grantOfRepresentationData, PA_SUBMISSION_GROUPS)).thenReturn(Sets.newHashSet());
@@ -96,9 +101,11 @@ public class ValidationServiceImplTest {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
             .grantType(GrantType.GRANT_OF_PROBATE)
             .build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(grantOfRepresentationData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(grantOfRepresentationData, PA_VALIDATION_GROUPS)).thenReturn(constraintViolations);
@@ -113,9 +120,11 @@ public class ValidationServiceImplTest {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
             .grantType(GrantType.INTESTACY)
             .build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(grantOfRepresentationData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(grantOfRepresentationData, INTESTACY_VALIDATION_GROUPS)).thenReturn(Sets.newHashSet());
@@ -130,9 +139,11 @@ public class ValidationServiceImplTest {
         GrantOfRepresentationData grantOfRepresentationData = GrantOfRepresentationData.builder()
             .grantType(GrantType.INTESTACY)
             .build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(grantOfRepresentationData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(grantOfRepresentationData, INTESTACY_SUBMISSION_GROUPS)).thenReturn(Sets.newHashSet());
@@ -146,9 +157,11 @@ public class ValidationServiceImplTest {
     @Test
     public void shouldValidateForCaveat() {
         CaveatData caveatData = CaveatData.builder().build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(caveatData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(caveatData, CAVEAT_VALIDATION_GROUPS)).thenReturn(Sets.newHashSet());
@@ -161,9 +174,11 @@ public class ValidationServiceImplTest {
     @Test
     public void shouldValidateForSubmissionCaveat() {
         CaveatData caveatData = CaveatData.builder().build();
+        CaseInfo caseInfo = CaseInfo.builder().build();
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder()
             .caseData(caveatData)
+            .caseInfo(caseInfo)
             .build();
 
         when(validator.validate(caveatData, CAVEAT_SUBMISSION_GROUPS)).thenReturn(Sets.newHashSet());

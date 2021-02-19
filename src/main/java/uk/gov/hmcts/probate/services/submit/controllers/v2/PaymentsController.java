@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
-import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
 import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
@@ -36,34 +35,36 @@ public class PaymentsController {
 
     @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Draft save to CCD successful"),
-            @ApiResponse(code = 500, message = "Draft save to CCD  failed")
+        @ApiResponse(code = 200, message = "Draft save to CCD successful"),
+        @ApiResponse(code = 500, message = "Draft save to CCD  failed")
     })
     @PostMapping(path = "/payments/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> addPaymentToCase(@PathVariable("applicationId") String applicationId,
-                                                               @Valid @RequestBody ProbatePaymentDetails probatePaymentDetails) {
+                                                               @Valid @RequestBody
+                                                                   ProbatePaymentDetails probatePaymentDetails) {
         log.info("PRO-7946: ENDPOINT USED /payments/{applicationId}");
 
         log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
-        return new ResponseEntity(paymentsService.addPaymentToCase(applicationId.toLowerCase(), probatePaymentDetails), OK);
+        return new ResponseEntity(paymentsService.addPaymentToCase(applicationId.toLowerCase(), probatePaymentDetails),
+            OK);
     }
 
     @PostMapping(path = "/payments/{applicationId}/cases", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> createCase(@PathVariable("applicationId") String applicationId,
-                                                               @RequestBody ProbateCaseDetails probateCaseDetails) {
+                                                         @RequestBody ProbateCaseDetails probateCaseDetails) {
         log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
         return new ResponseEntity(paymentsService.createCase(applicationId.toLowerCase(), probateCaseDetails), OK);
     }
 
     @PostMapping(path = "/ccd-case-update/{caseId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> updateCaseByCaseId(@PathVariable("caseId") String caseId,
-                                                                    @RequestBody ProbateCaseDetails probateCaseDetails) {
+                                                                 @RequestBody ProbateCaseDetails probateCaseDetails) {
         return new ResponseEntity(paymentsService.updateCaseByCaseId(caseId, probateCaseDetails), OK);
     }
 }

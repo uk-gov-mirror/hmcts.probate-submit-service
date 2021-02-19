@@ -12,7 +12,7 @@ plugins {
     id 'application'
     id 'pmd'
     id 'org.springframework.boot' version '2.3.4.RELEASE'
-    id 'org.owasp.dependencycheck' version '6.1.1'
+    id 'uk.gov.hmcts.java' version '0.12.2'
     id 'com.github.ben-manes.versions' version '0.15.0'
     id 'com.gorylenko.gradle-git-properties' version '1.4.21'
     id 'info.solidsoft.pitest' version '1.5.2'
@@ -58,8 +58,7 @@ sonarqube {
 test.finalizedBy jacocoTestReport
 
 dependencyCheck {
-    failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
-    suppressionFile = "${project.rootDir}/config/owasp/suppressions.xml"
+    suppressionFile = "${project.rootDir}/suppressions.xml"
     scanConfigurations = ['compile']
 }
 

@@ -3,7 +3,7 @@ Microservice to handle submissions to probate registries
 
 ## Getting Started
 ### Prerequisites
-- Java 8
+- Java 11
 - Gradle
 - Docker
 
@@ -20,6 +20,19 @@ $ java -jar build/libs/submit-service-0.0.1.jar
 ```
 
 ## Developing
+
+### Local development environment
+
+```
+# rebuild every time you make changes
+./gradlew assemble
+
+# first time only
+npx @hmcts/probate-dev-env --create
+
+# start the dev env
+npx @hmcts/probate-dev-env
+```
 
 ### Unit tests
 

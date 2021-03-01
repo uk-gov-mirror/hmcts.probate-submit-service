@@ -1,6 +1,8 @@
 // Infrastructural variables
 variable "product" {}
 
-variable "env" {
-  type = "string"
+variable "env" {}
+
+variable "common_tags" {
+  type = map(string)
 }

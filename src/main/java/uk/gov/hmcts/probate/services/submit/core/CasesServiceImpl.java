@@ -103,16 +103,6 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
-    public ProbateCaseDetails initiateCaseAsCaseworker(ProbateCaseDetails probateCaseDetails) {
-        log.info("initiateCase as caseworker- Initiating case for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
-        CaseData caseData = probateCaseDetails.getCaseData();
-        CaseType caseType = CaseType.getCaseType(caseData);
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
-        return coreCaseDataService.createCaseAsCaseworker(caseData, caseEvents.getCreateDraftEventId(), securityDTO);
-    }
-
-    @Override
     public ProbateCaseDetails saveCaseAsCaseworker(String searchField, ProbateCaseDetails probateCaseDetails) {
         log.info("saveCaseAsCaseworker - Saving draft as caseworkefor case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
         return saveCase(searchField, probateCaseDetails, Boolean.TRUE);
@@ -170,13 +160,5 @@ public class CasesServiceImpl implements CasesService {
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;
-    }
-
-    @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String userId) {
-        log.info("Grant access for case of caseType: {}", caseType.getName());
-        SecurityDTO securityDTO = securityUtils.getSecurityDTO();
-        coreCaseDataService.grantAccessForCase(caseType, caseId, userId, securityDTO);
-
     }
 }

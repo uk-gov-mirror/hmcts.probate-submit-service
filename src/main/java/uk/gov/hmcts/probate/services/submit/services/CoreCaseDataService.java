@@ -23,8 +23,6 @@ public interface CoreCaseDataService {
 
     ProbateCaseDetails createCase(CaseData caseData, EventId eventId, SecurityDTO securityDTO);
 
-    ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDTO securityDTO);
-
     ProbateCaseDetails updateCaseAsCaseworker(String caseId, CaseData caseData, EventId eventId,
                                               SecurityDTO securityDTO);
 
@@ -32,6 +30,4 @@ public interface CoreCaseDataService {
                                                      SecurityDTO securityDTO, String eventDescriptor);
     
     Optional<ProbateCaseDetails> findCaseByApplicantEmail(String searchField, CaseType caseType, SecurityDTO securityDTO);
-
-    void grantAccessForCase(CaseType caseType, String caseId, String userId, SecurityDTO securityDTO);
 }

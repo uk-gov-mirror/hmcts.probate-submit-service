@@ -250,8 +250,6 @@ public class CasesControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
-=======
     public void shouldInitiateCaseAsCasewoker() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
@@ -265,7 +263,6 @@ public class CasesControllerTest {
     }
 
     @Test
->>>>>>> bff70b0f91d50590daa211170ebee9277d09b3e7
     public void shouldSaveCaseAsCaseworker() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();

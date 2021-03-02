@@ -36,6 +36,7 @@
         <gav regex="true">^org\.springframework\.security:spring-security-config:.*$</gav>
         <cpe>cpe:/a:security-framework_project:security-framework</cpe>
         <cve>CVE-2018-1258</cve>
+        <cve>CVE-2021-22112</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -44,6 +45,7 @@
         <gav regex="true">^org\.springframework\.security:spring-security-core:.*$</gav>
         <cpe>cpe:/a:pivotal_software:spring_security</cpe>
         <cve>CVE-2018-1258</cve>
+        <cve>CVE-2021-22112</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -51,6 +53,7 @@
     ]]></notes>
         <gav regex="true">^org\.springframework\.security:spring-security-crypto:.*$</gav>
         <cve>CVE-2018-1258</cve>
+        <cve>CVE-2021-22112</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -58,6 +61,7 @@
    ]]></notes>
         <gav regex="true">^org\.springframework\.security:spring-security-web:.*$</gav>
         <cve>CVE-2018-1258</cve>
+        <cve>CVE-2021-22112</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[

@@ -1,9 +1,9 @@
 package uk.gov.hmcts.probate.services.submit.core;
 
 import com.google.common.collect.ImmutableMap;
+import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.tuple.Pair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.CollectionMember;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -80,16 +79,6 @@ public class PaymentServiceImpl implements PaymentsService {
         return updateCase(caseId, securityDto, caseType, probateCaseDetails);
     }
 
-    @Override
-    public ProbateCaseDetails updateCaseByCaseId(String caseId, ProbateCaseDetails probateUpdateRequest) {
-        log.info("Updating payment details for case with id: {}", caseId);
-        SecurityDto securityDto = securityUtils.getSecurityDto();
-        ProbateCaseDetails caseResponse = findCaseById(caseId, securityDto);
-        CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());
-        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
-        return updateCase(caseId, probateUpdateRequest, securityDto, caseType, caseResponse);
-    }
-
     private ProbateCaseDetails updateCase(String caseId, SecurityDto securityDto, CaseType caseType,
                                           ProbateCaseDetails probateCaseDetails) {
         CasePayment payment = probateCaseDetails.getCaseData().getPayments().get(0).getValue();
@@ -116,6 +105,16 @@ public class PaymentServiceImpl implements PaymentsService {
         registryService.updateRegistry(caseData);
         log.info("Updating case as caseWorker with eventId:{}", eventId);
         return coreCaseDataService.updateCaseAsCaseworker(caseId, caseData, eventId, securityDto);
+    }
+
+    @Override
+    public ProbateCaseDetails updateCaseByCaseId(String caseId, ProbateCaseDetails probateUpdateRequest) {
+        log.info("Updating payment details for case with id: {}", caseId);
+        SecurityDto securityDto = securityUtils.getSecurityDto();
+        ProbateCaseDetails caseResponse = findCaseById(caseId, securityDto);
+        CaseType caseType = CaseType.getCaseType(caseResponse.getCaseData());
+        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
+        return updateCase(caseId, probateUpdateRequest, securityDto, caseType, caseResponse);
     }
 
     private ProbateCaseDetails findCase(String applicantEmail, CaseType caseType, SecurityDto securityDto) {

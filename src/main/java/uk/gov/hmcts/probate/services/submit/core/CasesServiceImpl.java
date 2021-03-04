@@ -88,31 +88,6 @@ public class CasesServiceImpl implements CasesService {
 
     @Override
     public ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails) {
-        log.info("saveDraft - Saving draft for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
-        return saveCase(searchField, probateCaseDetails, Boolean.FALSE);
-    }
-
-    @Override
-    public ProbateCaseDetails initiateCase(ProbateCaseDetails probateCaseDetails) {
-        log.info("initiateCase - Initiating case for case type: {}",
-            probateCaseDetails.getCaseData().getClass().getSimpleName());
-        CaseData caseData = probateCaseDetails.getCaseData();
-        CaseType caseType = CaseType.getCaseType(caseData);
-        SecurityDto securityDto = securityUtils.getSecurityDto();
-        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
-        return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDto);
-
-    }
-
-    @Override
-    public ProbateCaseDetails saveCaseAsCaseworker(String searchField, ProbateCaseDetails probateCaseDetails) {
-        log.info("saveCaseAsCaseworker - Saving draft as caseworkefor case type: {}",
-            probateCaseDetails.getCaseData().getClass().getSimpleName());
-        return saveCase(searchField, probateCaseDetails, Boolean.TRUE);
-    }
-
-    @Override
-    public ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails) {
         log.info("saveDraft - Saving draft for case type: {}",
             probateCaseDetails.getCaseData().getClass().getSimpleName());
         return saveCase(searchField, probateCaseDetails, Boolean.FALSE);
@@ -136,7 +111,6 @@ public class CasesServiceImpl implements CasesService {
 
     }
 
-
     private ProbateCaseDetails saveCase(SecurityDto securityDto, CaseType caseType, CaseData caseData,
                                         Optional<ProbateCaseDetails> caseResponseOptional, Boolean asCaseworker) {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
@@ -157,6 +131,24 @@ public class CasesServiceImpl implements CasesService {
         return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDto);
     }
 
+    @Override
+    public ProbateCaseDetails initiateCase(ProbateCaseDetails probateCaseDetails) {
+        log.info("initiateCase - Initiating case for case type: {}",
+            probateCaseDetails.getCaseData().getClass().getSimpleName());
+        CaseData caseData = probateCaseDetails.getCaseData();
+        CaseType caseType = CaseType.getCaseType(caseData);
+        SecurityDto securityDto = securityUtils.getSecurityDto();
+        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
+        return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDto);
+
+    }
+
+    @Override
+    public ProbateCaseDetails saveCaseAsCaseworker(String searchField, ProbateCaseDetails probateCaseDetails) {
+        log.info("saveCaseAsCaseworker - Saving draft as caseworkefor case type: {}",
+            probateCaseDetails.getCaseData().getClass().getSimpleName());
+        return saveCase(searchField, probateCaseDetails, Boolean.TRUE);
+    }
 
     @Override
     public ProbateCaseDetails getCaseByInvitationId(String invitationId, CaseType caseType) {

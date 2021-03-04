@@ -1,9 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
-
-import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 

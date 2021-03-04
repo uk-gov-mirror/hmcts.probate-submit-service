@@ -9,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.probate.security.SecurityDto;
 import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseNotFoundException;
-import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseStatePreconditionException;
 import uk.gov.hmcts.probate.services.submit.services.CoreCaseDataService;
 import uk.gov.hmcts.probate.services.submit.services.ValidationService;
 import uk.gov.hmcts.reform.probate.model.PaymentStatus;
@@ -102,8 +100,8 @@ public class PaymentServiceImplTest {
             .build();
         caseData = new GrantOfRepresentationData();
         caseData.setPayments(Lists.newArrayList(CollectionMember.<CasePayment>builder()
-                .value(payment)
-                .build()));
+            .value(payment)
+            .build()));
         caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(STATE);

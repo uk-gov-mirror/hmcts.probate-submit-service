@@ -256,19 +256,6 @@ public class CasesControllerTest {
     }
 
     @Test
-    public void shouldInitiateCaseAsCasewoker() throws Exception {
-        CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
-        ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
-
-        mockMvc.perform(post(CASES_CASEWORKER_INITATE_URL)
-            .content(objectMapper.writeValueAsString(probateCaseDetails))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
-
-        verify(casesService, times(1)).initiateCaseAsCaseworker(any(ProbateCaseDetails.class));
-    }
-
-    @Test
     public void shouldSaveCaseAsCaseworker() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
@@ -294,16 +281,5 @@ public class CasesControllerTest {
             .andExpect(status().isInternalServerError());
 
         verify(casesService, times(1)).saveCase(anyString(), any(ProbateCaseDetails.class));
-    }
-
-    @Test
-    public void shouldGrantCaseAccessToUser() throws Exception {
-
-        mockMvc.perform(post(CASES_URL + "/" + CASE_ID + "/caseworker/" + GRANT_ACCESS_ENDPOINT + USER_ID)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
-
-        verify(casesService, times(1))
-            .grantAccessForCase(eq(CaseType.GRANT_OF_REPRESENTATION), eq(CASE_ID), eq(USER_ID));
     }
 }

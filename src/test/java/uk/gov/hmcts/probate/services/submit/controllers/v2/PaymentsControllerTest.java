@@ -71,29 +71,6 @@ public class PaymentsControllerTest {
     }
 
     @Test
-    public void shouldAddPaymentToCase() throws Exception {
-        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
-        CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
-        CaseInfo caseInfo = new CaseInfo();
-        caseInfo.setCaseId(CASE_ID);
-        caseInfo.setState(CaseState.PA_APP_CREATED);
-        CasePayment payment = grantOfRepresentation.getPayments().get(0).getValue();
-        ProbateCaseDetails caseResponse =
-            ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        ProbatePaymentDetails paymentUpdateRequest = ProbatePaymentDetails.builder()
-            .payment(payment)
-            .caseType(CaseType.GRANT_OF_REPRESENTATION)
-            .build();
-        when(paymentsService.addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest))).thenReturn(caseResponse);
-
-        mockMvc.perform(post(PAYMENTS_URL + "/" + EMAIL_ADDRESS)
-            .content(objectMapper.writeValueAsString(paymentUpdateRequest))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
-        verify(paymentsService).addPaymentToCase(eq(EMAIL_ADDRESS), eq(paymentUpdateRequest));
-    }
-
-    @Test
     public void shouldCreateCase() throws Exception {
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);

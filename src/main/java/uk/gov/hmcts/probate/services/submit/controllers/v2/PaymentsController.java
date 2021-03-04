@@ -33,24 +33,6 @@ public class PaymentsController {
 
     private final PaymentsService paymentsService;
 
-    @ApiOperation(value = "Save case draft to CCD", notes = "Save case draft to CCD")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Draft save to CCD successful"),
-        @ApiResponse(code = 500, message = "Draft save to CCD  failed")
-    })
-    @PostMapping(path = "/payments/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> addPaymentToCase(@PathVariable("applicationId") String applicationId,
-                                                               @Valid @RequestBody
-                                                                   ProbatePaymentDetails probatePaymentDetails) {
-        log.info("PRO-7946: ENDPOINT USED /payments/{applicationId}");
-
-        log.info("Updating payment details for case type: {}", probatePaymentDetails.getCaseType().getName());
-        return new ResponseEntity(paymentsService.addPaymentToCase(applicationId.toLowerCase(), probatePaymentDetails),
-            OK);
-    }
-
     @PostMapping(path = "/payments/{applicationId}/cases", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

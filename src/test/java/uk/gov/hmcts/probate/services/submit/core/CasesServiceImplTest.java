@@ -254,35 +254,4 @@ public class CasesServiceImplTest {
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).createCase(caseData, CREATE_DRAFT, securityDto);
     }
-
-
-    @Test
-    public void shouldInitiateCaseAsCaseworker() {
-        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
-        CaseType caseType = CaseType.getCaseType(caseData);
-
-        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).build();
-        SecurityDto securityDto = SecurityDto.builder().build();
-        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
-        when(coreCaseDataService.createCaseAsCaseworker(caseData, CREATE_DRAFT, securityDto))
-            .thenReturn(caseRequest);
-
-        ProbateCaseDetails caseResponse = casesService.initiateCaseAsCaseworker(caseRequest);
-
-        assertThat(caseResponse.getCaseData(), is(caseData));
-        verify(securityUtils, times(1)).getSecurityDto();
-        verify(coreCaseDataService, times(1)).createCaseAsCaseworker(caseData, CREATE_DRAFT, securityDto);
-    }
-
-
-    @Test
-    public void shouldGrantAccessToCaseAsCaseworker() {
-
-        SecurityDto securityDto = SecurityDto.builder().build();
-        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
-        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, CASE_ID, EMAIL_ADDRESS);
-
-        verify(coreCaseDataService)
-            .grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, CASE_ID, EMAIL_ADDRESS, securityDto);
-    }
 }

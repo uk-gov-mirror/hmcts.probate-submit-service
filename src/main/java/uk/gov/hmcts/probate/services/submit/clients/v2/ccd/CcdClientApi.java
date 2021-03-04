@@ -144,38 +144,6 @@ public class CcdClientApi implements CoreCaseDataService {
         return createCaseResponse(caseDetails);
     }
 
-
-    @Override
-    public ProbateCaseDetails createCaseAsCaseworker(CaseData caseData, EventId eventId, SecurityDto securityDto) {
-        CaseType caseType = CaseType.getCaseType(caseData);
-        log.info("Create case for caseType: {}, caseType: {}, eventId: {}",
-            caseType.getName(), eventId.getName());
-        log.info("Retrieve event token from CCD for Citizen, caseType: {}, eventId: {}",
-            caseType.getName(), eventId.getName());
-        StartEventResponse startEventResponse = coreCaseDataApi.startForCaseworker(
-            securityDto.getAuthorisation(),
-            securityDto.getServiceAuthorisation(),
-            securityDto.getUserId(),
-            JurisdictionId.PROBATE.name(),
-            caseType.getName(),
-            eventId.getName()
-        );
-        CaseDataContent caseDataContent =
-            createCaseDataContent(caseData, eventId, startEventResponse, EVENT_DESCRIPTOR);
-        log.info("Submit event to CCD for Citizen, caseType: {}", caseType.getName());
-        CaseDetails caseDetails = coreCaseDataApi.submitForCaseworker(
-            securityDto.getAuthorisation(),
-            securityDto.getServiceAuthorisation(),
-            securityDto.getUserId(),
-            JurisdictionId.PROBATE.name(),
-            caseType.getName(),
-            false,
-            caseDataContent
-        );
-        return createCaseResponse(caseDetails);
-    }
-
-
     @Override
     public Optional<ProbateCaseDetails> findCaseByInviteId(String inviteId, CaseType caseType,
                                                            SecurityDto securityDto) {
@@ -256,17 +224,6 @@ public class CcdClientApi implements CoreCaseDataService {
             return Optional.empty();
         }
         return Optional.of(createCaseResponse(caseDetails));
-    }
-
-    @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String userId, SecurityDto securityDto) {
-        caseAccessApi.grantAccessToCase(
-            securityDto.getAuthorisation(),
-            securityDto.getServiceAuthorisation(),
-            securityDto.getUserId(),
-            JurisdictionId.PROBATE.name(),
-            caseType.getName(),
-            caseId, new UserId(userId));
     }
 
     private ProbateCaseDetails createCaseResponse(CaseDetails caseDetails) {

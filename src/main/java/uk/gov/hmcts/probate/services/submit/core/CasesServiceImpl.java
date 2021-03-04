@@ -87,6 +87,12 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
+    public ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails) {
+        log.info("saveDraft - Saving draft for case type: {}", probateCaseDetails.getCaseData().getClass().getSimpleName());
+        return saveCase(searchField, probateCaseDetails, Boolean.FALSE);
+    }
+
+    @Override
     public ProbateCaseDetails initiateCase(ProbateCaseDetails probateCaseDetails) {
         log.info("initiateCase - Initiating case for case type: {}",
             probateCaseDetails.getCaseData().getClass().getSimpleName());
@@ -96,17 +102,6 @@ public class CasesServiceImpl implements CasesService {
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         return coreCaseDataService.createCase(caseData, caseEvents.getCreateDraftEventId(), securityDto);
 
-    }
-
-    @Override
-    public ProbateCaseDetails initiateCaseAsCaseworker(ProbateCaseDetails probateCaseDetails) {
-        log.info("initiateCase as caseworker- Initiating case for case type: {}",
-            probateCaseDetails.getCaseData().getClass().getSimpleName());
-        CaseData caseData = probateCaseDetails.getCaseData();
-        CaseType caseType = CaseType.getCaseType(caseData);
-        SecurityDto securityDto = securityUtils.getSecurityDto();
-        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
-        return coreCaseDataService.createCaseAsCaseworker(caseData, caseEvents.getCreateDraftEventId(), securityDto);
     }
 
     @Override
@@ -179,13 +174,5 @@ public class CasesServiceImpl implements CasesService {
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;
-    }
-
-    @Override
-    public void grantAccessForCase(CaseType caseType, String caseId, String userId) {
-        log.info("Grant access for case of caseType: {}", caseType.getName());
-        SecurityDto securityDto = securityUtils.getSecurityDto();
-        coreCaseDataService.grantAccessForCase(caseType, caseId, userId, securityDto);
-
     }
 }

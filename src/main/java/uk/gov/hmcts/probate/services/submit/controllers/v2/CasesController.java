@@ -38,6 +38,19 @@ public class CasesController {
     private final CasesService casesService;
     private final CaveatExpiryService caveatExpiryService;
 
+    @ApiOperation(value = "Get case to CCD using session identifier", notes = "Get case to CCD")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+    })
+    @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam("caseType") CaseType caseType,
+                                                      @PathVariable("applicationId") String applicationId) {
+        log.info("Retrieving case of caseType: {}", caseType.getName());
+        return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
+    }
+
     @ApiOperation(value = "Get case to CCD using applicant email", notes = "Get case to CCD")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
@@ -95,17 +108,6 @@ public class CasesController {
     }
 
 
-    @PostMapping(path = "/cases/initiate/caseworker", consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> initiateCaseAsCaseWorker(@RequestBody ProbateCaseDetails caseRequest) {
-        log.info("PRO-7946: ENDPOINT USED /cases/initiate/caseworker");
-
-        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
-        return new ResponseEntity(casesService.initiateCaseAsCaseworker(caseRequest), OK);
-    }
-
-
     @PostMapping(path = "/cases/caseworker/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -113,19 +115,6 @@ public class CasesController {
                                                                    @RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCaseAsCaseworker(applicationId.toLowerCase(), caseRequest), OK);
-    }
-
-
-    @PostMapping(path = "/cases/{caseId}/caseworker/grantaccess/applicant/{userId}",
-        consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity grantCaseAccessToUser(@PathVariable("caseId") String caseId,
-                                                @PathVariable("userId") String userId) {
-        log.info("PRO-7946: ENDPOINT USED /cases/{caseId}/caseworker/grantaccess/applicant/{userId}");
-
-        log.info("Granting access to case for caseId: {} and userId : {}", caseId, userId);
-        casesService.grantAccessForCase(CaseType.GRANT_OF_REPRESENTATION, caseId, userId);
-        return new ResponseEntity(OK);
     }
 
 
@@ -148,19 +137,6 @@ public class CasesController {
     public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name = "caseId") String caseId) {
         log.info("Retrieving case using application id: {}", caseId.toLowerCase());
         return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
-    }
-
-    @ApiOperation(value = "Get case to CCD using session identifier", notes = "Get case to CCD")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
-    })
-    @GetMapping(path = "/cases/{applicationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam("caseType") CaseType caseType,
-                                                      @PathVariable("applicationId") String applicationId) {
-        log.info("Retrieving case of caseType: {}", caseType.getName());
-        return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
     @ApiOperation(value = "Caveat expire from CCD by expiryDate", notes = "Get expired caveats from CCD")

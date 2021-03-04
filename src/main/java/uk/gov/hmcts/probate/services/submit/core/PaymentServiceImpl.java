@@ -67,17 +67,6 @@ public class PaymentServiceImpl implements PaymentsService {
 
 
     @Override
-    public ProbateCaseDetails addPaymentToCase(String searchField, ProbatePaymentDetails paymentUpdateRequest) {
-        log.info("Updating payment details for case type: {}", paymentUpdateRequest.getCaseType().getName());
-        SecurityDto securityDto = securityUtils.getSecurityDto();
-        CaseType caseType = paymentUpdateRequest.getCaseType();
-        ProbateCaseDetails caseResponse = findCase(searchField, caseType, securityDto);
-        log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
-        String caseId = caseResponse.getCaseInfo().getCaseId();
-        return updateCasePayment(caseId, paymentUpdateRequest, securityDto, caseType, caseResponse);
-    }
-
-    @Override
     public ProbateCaseDetails createCase(String searchField, ProbateCaseDetails probateCaseDetails) {
         CaseType caseType = CaseType.getCaseType(probateCaseDetails.getCaseData());
         log.info("Updating payment details for case type: {}", CaseType.getCaseType(probateCaseDetails.getCaseData()));
@@ -89,21 +78,6 @@ public class PaymentServiceImpl implements PaymentsService {
         log.info("Found case with case Id: {}", caseResponse.getCaseInfo().getCaseId());
         String caseId = caseResponse.getCaseInfo().getCaseId();
         return updateCase(caseId, securityDto, caseType, probateCaseDetails);
-    }
-
-    private ProbateCaseDetails updateCasePayment(String caseId, ProbatePaymentDetails paymentUpdateRequest,
-                                                 SecurityDto securityDto, CaseType caseType,
-                                                 ProbateCaseDetails caseResponse) {
-        CaseState caseState = caseResponse.getCaseInfo().getState();
-        if (CaseState.CASE_CREATED.equals(caseState)) {
-            return caseResponse;
-        }
-        CasePayment payment = paymentUpdateRequest.getPayment();
-        CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
-        EventId eventId = getEventId(caseState, payment).apply(caseEvents);
-        CaseData caseData = createCaseData(caseResponse, payment);
-        registryService.updateRegistry(caseData);
-        return coreCaseDataService.updateCase(caseId, caseData, eventId, securityDto);
     }
 
     @Override

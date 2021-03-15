@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes><![CDATA[
+   file name: commons-beanutils-1.9.3.jar
+   ]]></notes>
+        <gav regex="true">^commons-beanutils:commons-beanutils:.*$</gav>
+        <cpe>cpe:/a:apache:commons_beanutils</cpe>
+        <cve>CVE-2019-10086</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: bcprov-jdk15on-1.60.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.bouncycastle/bcprov\-jdk15on@.*$</packageUrl>
+        <cve>CVE-2020-26939</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: httpclient-4.5.12.jar
+   ]]></notes>
+        <gav regex="true">^org\.apache\.httpcomponents:httpclient:.*$</gav>
+        <cve>CVE-2020-13956</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: junit-4.13.jar
+   ]]></notes>
+        <gav regex="true">^junit:junit:.*$</gav>
+        <cve>CVE-2020-15250</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+         Suppressing as it's a false positive (see: https://pivotal.io/security/cve-2018-1258)
+        ]]></notes>
+        <filePath regex="true">.*spring-security-(config|crypto|web|test|core)-5\.3\.4\.RELEASE\.jar</filePath>
+        <cpe>cpe:/a:pivotal_software:spring_security</cpe>
+        <cve>CVE-2018-1258</cve>
+        <cve>CVE-2021-22112</cve>
+    </suppress>
+     <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-websocket-9.0.38.jar
+   ]]></notes>
+        <filePath regex="true">.*tomcat-embed-(core|websocket)-9.0.38.jar</filePath>
+        <cve>CVE-2020-17527</cve>
+        <cve>CVE-2021-24122</cve>
+         <cve>CVE-2021-25122</cve>
+         <cve>CVE-2021-25329</cve>
+    </suppress>
+</suppressions>

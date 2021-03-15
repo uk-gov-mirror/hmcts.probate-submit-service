@@ -51,6 +51,18 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
+    @ApiOperation(value = "Get case to CCD using case Id", notes = "Get case to CCD")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
+        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
+    })
+    @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name = "caseId") String caseId) {
+        log.info("Retrieving case using application id: {}", caseId.toLowerCase());
+        return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
+    }
+
     @ApiOperation(value = "Get case to CCD using applicant email", notes = "Get case to CCD")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
@@ -59,7 +71,8 @@ public class CasesController {
     @GetMapping(path = "/cases/applicantEmail/{applicantEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCaseByApplicantEmail(@RequestParam("caseType") CaseType caseType,
-                                                                      @PathVariable("applicantEmail") String applicantEmail) {
+                                                                      @PathVariable("applicantEmail")
+                                                                          String applicantEmail) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
         return ResponseEntity.ok(casesService.getCaseByApplicantEmail(applicantEmail, caseType));
     }
@@ -124,18 +137,6 @@ public class CasesController {
                                              @RequestParam("caseType") CaseType caseType) {
         log.info("CasesController.validate() caseType: {}, applicationId: {}", caseType.getName(), applicationId);
         return new ResponseEntity(casesService.validate(applicationId, caseType), OK);
-    }
-
-    @ApiOperation(value = "Get case to CCD using case Id", notes = "Get case to CCD")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Case retrieval from CCD successful"),
-        @ApiResponse(code = 400, message = "Case retrieval from CCD successful")
-    })
-    @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name = "caseId") String caseId) {
-        log.info("Retrieving case using application id: {}", caseId.toLowerCase());
-        return ResponseEntity.ok(casesService.getCaseById(caseId.toLowerCase()));
     }
 
     @ApiOperation(value = "Caveat expire from CCD by expiryDate", notes = "Get expired caveats from CCD")

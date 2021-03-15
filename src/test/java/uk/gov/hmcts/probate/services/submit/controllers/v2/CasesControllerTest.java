@@ -28,18 +28,17 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
 import uk.gov.hmcts.reform.probate.model.client.ValidationErrorResponse;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -93,7 +92,8 @@ public class CasesControllerTest {
 
     @Test
     public void shouldExpireCaveats() throws Exception {
-        List<ProbateCaseDetails> expiredCaveats = Arrays.asList(ProbateCaseDetails.builder().build(), ProbateCaseDetails.builder().build());
+        List<ProbateCaseDetails> expiredCaveats =
+            Arrays.asList(ProbateCaseDetails.builder().build(), ProbateCaseDetails.builder().build());
         when(caveatExpiryService.expireCaveats(CAVEAT_EXPIRY_DATE)).thenReturn(expiredCaveats);
         mockMvc.perform(get(CASES_CAVEATS_EXPIRE)
             .param("expiryDate", CAVEAT_EXPIRY_DATE)
@@ -104,12 +104,13 @@ public class CasesControllerTest {
 
     @Test
     public void shouldGetCaseForIntestacyGrantOfRepresentation() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
-        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseResponse =
+            ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_URL + "/" + EMAIL_ADDRESS)
@@ -121,12 +122,13 @@ public class CasesControllerTest {
 
     @Test
     public void shouldGetCaseByApplicantEmailForIntestacyGrantOfRepresentation() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
-        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseResponse =
+            ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_BY_APPLICANT_EMAIL_URL + "/" + EMAIL_ADDRESS)
@@ -139,12 +141,13 @@ public class CasesControllerTest {
 
     @Test
     public void shouldGetAllCaseForGrantOfRepresentation() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
-        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseResponse =
+            ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         when(casesService.getAllCases(CaseType.GRANT_OF_REPRESENTATION)).thenReturn(Arrays.asList(caseResponse));
 
         mockMvc.perform(get(CASES_ALL_URL)
@@ -156,12 +159,13 @@ public class CasesControllerTest {
 
     @Test
     public void shouldGetCaseByIdForIntestacyGrantOfRepresentation() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.DRAFT);
-        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseResponse =
+            ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         when(casesService.getCaseById(CASE_ID)).thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_URL)
@@ -175,7 +179,8 @@ public class CasesControllerTest {
     public void shouldGetCaseForIntestacyGrantOfRepresentationByInvitationId() throws Exception {
 
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().build();
-        when(casesService.getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(probateCaseDetails);
+        when(casesService.getCaseByInvitationId(INVITATION_ID, CaseType.GRANT_OF_REPRESENTATION))
+            .thenReturn(probateCaseDetails);
 
         mockMvc.perform(get(CASES_INVITATION_URL + "/" + INVITATION_ID)
             .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())

@@ -17,11 +17,8 @@ import uk.gov.hmcts.probate.services.submit.services.PaymentsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
-import uk.gov.hmcts.reform.probate.model.cases.CasePayment;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
-import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
-import uk.gov.hmcts.reform.probate.model.cases.ProbatePaymentDetails;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -60,7 +57,7 @@ public class PaymentsControllerTest {
 
     @Test
     public void shouldUpdatePaymentByCaseId() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation_caseDetails.json");
+        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation_caseDetails.json");
         ProbateCaseDetails caseDetailsRequest = objectMapper.readValue(json, ProbateCaseDetails.class);
 
         mockMvc.perform(post(UPDATE_CASE_URL + "/" + CASE_ID)
@@ -72,12 +69,13 @@ public class PaymentsControllerTest {
 
     @Test
     public void shouldCreateCase() throws Exception {
-        String json = TestUtils.getJSONFromFile("files/v2/intestacyGrantOfRepresentation.json");
+        String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
         caseInfo.setState(CaseState.PA_APP_CREATED);
-        ProbateCaseDetails caseResponse = ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
+        ProbateCaseDetails caseResponse =
+            ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
         when(paymentsService.createCase(eq(EMAIL_ADDRESS), eq(caseResponse))).thenReturn(caseResponse);
 
         mockMvc.perform(post(PAYMENTS_URL + "/" + EMAIL_ADDRESS + "/" + CREATE_CASES_ENDPOINT)

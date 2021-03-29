@@ -25,7 +25,6 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
-
 @Provider("probate_submitService_cases")
 @RunWith(SpringRestPactRunner.class)
 @ExtendWith(SpringExtension.class)

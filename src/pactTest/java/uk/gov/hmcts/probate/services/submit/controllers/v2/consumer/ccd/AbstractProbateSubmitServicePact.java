@@ -1,43 +1,40 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.ccd;
 
-import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ObjectMapperTestUtil;
-import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ResourceLoader;
-import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
-import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
 import au.com.dius.pact.consumer.junit5.PactTestFor;
-import au.com.dius.pact.provider.junit.loader.PactFolder;
+import au.com.dius.pact.core.model.annotations.PactFolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ObjectMapperTestUtil;
+import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ResourceLoader;
+import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDataContent;
+import uk.gov.hmcts.reform.ccd.client.model.CaseDetails;
 import uk.gov.hmcts.reform.ccd.client.model.Event;
 import uk.gov.hmcts.reform.ccd.client.model.StartEventResponse;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @ExtendWith(PactConsumerTestExt.class)
-@ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@PactTestFor(providerName = "ccd", port = "8891")
+@PactTestFor(providerName = "ccdDataStoreAPI_Cases", port = "8891")
 @PactFolder("pacts")
 @SpringBootTest({
     "core_case_data.api.url : localhost:8891"
 })
+@TestPropertySource(locations = {"/application.properties"})
 public abstract class AbstractProbateSubmitServicePact {
     @Autowired
     private ObjectMapper objectMapper;
@@ -81,6 +78,13 @@ public abstract class AbstractProbateSubmitServicePact {
     protected static final String SOME_AUTHORIZATION_TOKEN = "Bearer UserAuthToken";
     protected static final String SOME_SERVICE_AUTHORIZATION_TOKEN = "ServiceToken";
 
+    private static final int SLEEP_TIME = 2000;
+
+    @BeforeEach
+    public void prepareTest() throws Exception {
+        Thread.sleep(SLEEP_TIME);
+    }
+
 
     protected Map<String, Object> setUpStateMapForProviderWithCaseData(String eventId) throws Exception {
         Map<String, Object> caseDataContentMap = objectMapper.convertValue(setUpCaseDataContent("caseWithExecsWelsh.json", eventId), Map.class);
@@ -103,25 +107,25 @@ public abstract class AbstractProbateSubmitServicePact {
     protected CaseDataContent setUpCaseDataContent(String fileName, String eventId) throws Exception {
         Map caseDetailsMap = getCaseDetailsAsMap(fileName);
         return CaseDataContent.builder()
-                .eventToken("someEventToken")
-                .event(
-                        Event.builder()
-                                .id(eventId)
-                                .summary("PROBATE")
-                                .description("probate")
-                                .build()
-                ).data(caseDetailsMap.get("case_data"))
-                .build();
+            .eventToken("someEventToken")
+            .event(
+                Event.builder()
+                    .id(eventId)
+                    .summary("PROBATE")
+                    .description("probate")
+                    .build()
+            ).data(caseDetailsMap.get("case_data"))
+            .build();
     }
 
     protected CaseDetails getCaseDetails(String fileName) throws JSONException, IOException {
         File file = getFile(fileName);
-        return  objectMapper.readValue(file, CaseDetails.class);
+        return objectMapper.readValue(file, CaseDetails.class);
     }
 
     protected Map<String, Object> getCaseDetailsAsMap(String fileName) throws JSONException, IOException {
         File file = getFile(fileName);
-        CaseDetails caseDetails =   objectMapper.readValue(file, CaseDetails.class);
+        CaseDetails caseDetails = objectMapper.readValue(file, CaseDetails.class);
         Map<String, Object> map = objectMapper.convertValue(caseDetails, Map.class);
         return map;
     }
@@ -132,20 +136,20 @@ public abstract class AbstractProbateSubmitServicePact {
         final String caseData = ResourceLoader.loadJson(validPayloadPath);
 
         final StartEventResponse startEventResponse = StartEventResponse.builder()
-                .eventId(createEventId)
-                .token(SOME_AUTHORIZATION_TOKEN)
-                .build();
+            .eventId(createEventId)
+            .token(SOME_AUTHORIZATION_TOKEN)
+            .build();
 
         final CaseDataContent caseDataContent = CaseDataContent.builder()
-                .eventToken(startEventResponse.getToken())
-                .event(
-                        Event.builder()
-                                .id(eventId)
-                                .summary("probateSummary")
-                                .description("probate")
-                                .build()
-                ).data(ObjectMapperTestUtil.convertStringToObject(caseData, Map.class))
-                .build();
+            .eventToken(startEventResponse.getToken())
+            .event(
+                Event.builder()
+                    .id(eventId)
+                    .summary("probateSummary")
+                    .description("probate")
+                    .build()
+            ).data(ObjectMapperTestUtil.convertStringToObject(caseData, Map.class))
+            .build();
 
         return caseDataContent;
     }
@@ -153,8 +157,6 @@ public abstract class AbstractProbateSubmitServicePact {
     private File getFile(String fileName) throws FileNotFoundException {
         return org.springframework.util.ResourceUtils.getFile(this.getClass().getResource("/json/" + fileName));
     }
-
-
 
 
 }

@@ -9,6 +9,9 @@ import java.util.Map;
 
 public class PactDslFixtureHelper {
 
+    private PactDslFixtureHelper() {
+    }
+
     @Value("${ccd.jurisdictionid}")
     String jurisdictionId;
 

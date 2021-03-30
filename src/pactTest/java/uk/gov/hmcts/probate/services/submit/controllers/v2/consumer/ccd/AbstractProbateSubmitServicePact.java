@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ObjectMapperTestUtil;
 import uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util.ResourceLoader;
 import uk.gov.hmcts.reform.ccd.client.CoreCaseDataApi;

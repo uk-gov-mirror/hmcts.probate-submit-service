@@ -1,7 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
 import au.com.dius.pact.provider.junit.target.HttpTarget;
-
 import au.com.dius.pact.provider.junitsupport.Provider;
 import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.target.Target;

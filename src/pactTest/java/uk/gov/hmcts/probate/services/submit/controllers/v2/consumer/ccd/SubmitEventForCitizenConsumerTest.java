@@ -39,7 +39,8 @@ public class SubmitEventForCitizenConsumerTest extends AbstractProbateSubmitServ
                 + "/events")
             .query("ignore-warning=true")
             .method("POST")
-            .body(ObjectMapperTestUtil.convertObjectToJsonString(getCaseDataContent(PAYMENT_SUCCESS_APP, BASECASE_PAYLOAD_PATH)))
+            .body(ObjectMapperTestUtil.convertObjectToJsonString(getCaseDataContent(PAYMENT_SUCCESS_APP,
+                    BASECASE_PAYLOAD_PATH)))
             .matchHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .willRespondWith()
             .status(HttpStatus.SC_CREATED)
@@ -55,7 +56,8 @@ public class SubmitEventForCitizenConsumerTest extends AbstractProbateSubmitServ
         CaseDataContent caseDataContent = getCaseDataContent(PAYMENT_SUCCESS_APP, BASECASE_PAYLOAD_PATH);
 
         final CaseDetails caseDetails = coreCaseDataApi.submitEventForCitizen(SOME_AUTHORIZATION_TOKEN,
-            SOME_SERVICE_AUTHORIZATION_TOKEN, caseworkerUsername, jurisdictionId, caseType, CASE_ID.toString(), true, caseDataContent);
+            SOME_SERVICE_AUTHORIZATION_TOKEN, caseworkerUsername, jurisdictionId, caseType,
+                CASE_ID.toString(), true, caseDataContent);
 
         assertNotNull(caseDetails);
         assertBackOfficeCaseData(caseDetails);

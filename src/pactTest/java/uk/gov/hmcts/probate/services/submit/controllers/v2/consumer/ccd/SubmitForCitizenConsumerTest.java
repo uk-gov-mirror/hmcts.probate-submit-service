@@ -38,8 +38,10 @@ public class SubmitForCitizenConsumerTest extends AbstractProbateSubmitServicePa
                 + "/cases")
             .query("ignore-warning=true")
             .method("POST")
-            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
-            .body(ObjectMapperTestUtil.convertObjectToJsonString(getCaseDataContent(APPLY_FOR_GRANT, BASECASE_PAYLOAD_PATH)))
+            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION,
+                    SOME_SERVICE_AUTHORIZATION_TOKEN)
+            .body(ObjectMapperTestUtil.convertObjectToJsonString(getCaseDataContent(APPLY_FOR_GRANT,
+                    BASECASE_PAYLOAD_PATH)))
             .matchHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .willRespondWith()
             .status(HttpStatus.SC_CREATED)

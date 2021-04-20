@@ -26,7 +26,8 @@ public class SubmitEventForCaseworkerConsumerTest extends AbstractProbateSubmitS
     RequestResponsePact submitEventForCaseWorker(PactDslWithProvider builder) throws Exception {
         // @formatter:off
         return builder
-            .given("A Submit Event for a Caseworker is requested", setUpStateMapForProviderWithCaseData(APPLY_FOR_GRANT))
+            .given("A Submit Event for a Caseworker is requested",
+                    setUpStateMapForProviderWithCaseData(APPLY_FOR_GRANT))
             .uponReceiving("A Submit Event for a Caseworker")
             .path("/caseworkers/" + caseworkerUsername
                 + "/jurisdictions/" + jurisdictionId
@@ -36,8 +37,10 @@ public class SubmitEventForCaseworkerConsumerTest extends AbstractProbateSubmitS
             )
             .query("ignore-warning=true")
             .method("POST")
-            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN)
-            .body(ObjectMapperTestUtil.convertObjectToJsonString(getCaseDataContent(PAYMENT_SUCCESS_APP, BASECASE_PAYLOAD_PATH)))
+            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION,
+                    SOME_SERVICE_AUTHORIZATION_TOKEN)
+            .body(ObjectMapperTestUtil.convertObjectToJsonString(getCaseDataContent(PAYMENT_SUCCESS_APP,
+                    BASECASE_PAYLOAD_PATH)))
             .matchHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .willRespondWith()
             .status(HttpStatus.SC_CREATED)
@@ -52,7 +55,8 @@ public class SubmitEventForCaseworkerConsumerTest extends AbstractProbateSubmitS
         CaseDataContent caseDataContent = getCaseDataContent(PAYMENT_SUCCESS_APP, BASECASE_PAYLOAD_PATH);
 
         final CaseDetails caseDetails = coreCaseDataApi.submitEventForCaseWorker(SOME_AUTHORIZATION_TOKEN,
-            SOME_SERVICE_AUTHORIZATION_TOKEN, caseworkerUsername, jurisdictionId, caseType, CASE_ID.toString(), true, caseDataContent);
+            SOME_SERVICE_AUTHORIZATION_TOKEN, caseworkerUsername, jurisdictionId, caseType, CASE_ID.toString(),
+                true, caseDataContent);
 
         assertNotNull(caseDetails);
         assertBackOfficeCaseData(caseDetails);

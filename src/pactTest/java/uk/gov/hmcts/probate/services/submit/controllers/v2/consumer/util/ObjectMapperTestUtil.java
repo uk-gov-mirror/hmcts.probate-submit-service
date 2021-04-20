@@ -6,9 +6,6 @@ public class ObjectMapperTestUtil {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private ObjectMapperUtil() {
-    }
-
     public static <T> T convertStringToObject(String data, Class<T> type) {
         try {
             return OBJECT_MAPPER.readValue(data, type);

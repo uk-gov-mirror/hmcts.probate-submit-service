@@ -110,6 +110,8 @@ withPipeline("java", product, component) {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
+    // Vars for Kubernetes
+    env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
     onMaster() {
         enablePactAs([AppPipelineDsl.PactRoles.CONSUMER])
     }

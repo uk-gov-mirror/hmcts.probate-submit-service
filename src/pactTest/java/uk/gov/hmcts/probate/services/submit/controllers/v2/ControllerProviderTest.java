@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.services.submit.controllers.v2;
 
-
 import au.com.dius.pact.provider.junitsupport.IgnoreNoPactsToVerify;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import com.fasterxml.jackson.databind.ObjectMapper;

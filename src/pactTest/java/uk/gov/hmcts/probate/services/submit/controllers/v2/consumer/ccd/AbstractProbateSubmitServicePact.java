@@ -84,9 +84,9 @@ public abstract class AbstractProbateSubmitServicePact {
         Thread.sleep(SLEEP_TIME);
     }
 
-
     protected Map<String, Object> setUpStateMapForProviderWithCaseData(String eventId) throws Exception {
-        Map<String, Object> caseDataContentMap = objectMapper.convertValue(setUpCaseDataContent("caseWithExecsWelsh.json", eventId), Map.class);
+        Map<String, Object> caseDataContentMap =
+            objectMapper.convertValue(setUpCaseDataContent("caseWithExecsWelsh.json", eventId), Map.class);
         Map<String, Object> map = setUpStateMapForProvider(eventId);
         map.put(CASE_DATA_CONTENT, caseDataContentMap);
         return map;
@@ -101,7 +101,6 @@ public abstract class AbstractProbateSubmitServicePact {
         map.put(CASE_TYPE, caseType);
         return map;
     }
-
 
     protected CaseDataContent setUpCaseDataContent(String fileName, String eventId) throws Exception {
         Map caseDetailsMap = getCaseDetailsAsMap(fileName);

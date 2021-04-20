@@ -2,7 +2,10 @@ package uk.gov.hmcts.probate.services.submit.controllers.v2.consumer.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ObjectMapperTestUtil {
+public final class ObjectMapperTestUtil {
+
+    private ObjectMapperTestUtil() {
+    }
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

@@ -26,12 +26,16 @@ public class GetCaseConsumerTest extends AbstractProbateSubmitServicePact {
             .uponReceiving("A Get for a Case is requested")
             .path("/cases/" + CASE_ID)
             .method("GET")
-            .headers(HttpHeaders.AUTHORIZATION, SOME_AUTHORIZATION_TOKEN, SERVICE_AUTHORIZATION, SOME_SERVICE_AUTHORIZATION_TOKEN, "experimental",
+            .headers(HttpHeaders.AUTHORIZATION,
+                SOME_AUTHORIZATION_TOKEN,
+                SERVICE_AUTHORIZATION,
+                SOME_SERVICE_AUTHORIZATION_TOKEN, "experimental",
                 "true")
             .willRespondWith()
             .status(200)
             .body(buildCaseResourcesDsl(100L, false, false))
-            .matchHeader(HttpHeaders.CONTENT_TYPE, "application/vnd\\.uk\\.gov\\.hmcts\\.ccd-data-store-api\\.case\\.v2\\+json;charset=UTF-8",
+            .matchHeader(HttpHeaders.CONTENT_TYPE,
+                "application/vnd\\.uk\\.gov\\.hmcts\\.ccd-data-store-api\\.case\\.v2\\+json;charset=UTF-8",
                 "application/vnd.uk.gov.hmcts.ccd-data-store-api.case.v2+json;charset=UTF-8")
             .toPact();
     }

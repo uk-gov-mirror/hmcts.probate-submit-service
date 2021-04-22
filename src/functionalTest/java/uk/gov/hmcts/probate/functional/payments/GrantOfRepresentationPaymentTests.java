@@ -57,6 +57,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .body("caseInfo.caseId", notNullValue())
             .body("caseInfo.state", equalTo("PAAppCreated"))
             .extract().jsonPath().prettify();
+        //
     }
 
 

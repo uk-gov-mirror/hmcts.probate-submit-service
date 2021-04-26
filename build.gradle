@@ -151,8 +151,8 @@ pitest {
 
 repositories {
     mavenLocal()
-    maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
     maven { url "https://repo.maven.apache.org/maven2" }
+    maven { url "https://jitpack.io" }
     mavenCentral()
     jcenter()
 }
@@ -169,7 +169,7 @@ def versions = [
         serenity                        : '2.0.23',
         serenityreporter                : '2.1.4',
         pact_version                    : '3.5.24',
-        probateCommons                  : '1.1.2.5',
+        probateCommons                  : '1.2.0',
         feignHttpClient                 : '10.2.3',
         lombok                          : '1.18.8'
 ]
@@ -230,7 +230,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
-    compile group: 'uk.gov.hmcts.reform.probate', name: 'probate-commons', version: versions.probateCommons
+    compile group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
 
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'

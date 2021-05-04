@@ -17,7 +17,7 @@ plugins {
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
     id 'info.solidsoft.pitest' version '1.5.2'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
-    id 'au.com.dius.pact' version '3.5.24'
+    id 'au.com.dius.pact' version '4.2.4'
     id 'jacoco'
 }
 
@@ -176,7 +176,7 @@ def versions = [
 
 dependencyManagement {
     dependencies {
-        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.67'
+        dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
         // CVE-2018-10237 - Unbounded memory allocation
 
         //CVE-2020-15250
@@ -186,7 +186,7 @@ dependencyManagement {
         dependency group: 'commons-io', name: 'commons-io', version: '2.8.0'
 
         //CVE-2021-22112
-        dependencySet(group: 'org.springframework.security', version: '5.3.8.RELEASE') {
+        dependencySet(group: 'org.springframework.security', version: '5.4.6') {
             entry 'spring-security-config'
             entry 'spring-security-core'
             entry 'spring-security-crypto'

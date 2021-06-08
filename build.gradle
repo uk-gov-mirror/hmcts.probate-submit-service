@@ -55,6 +55,11 @@ sonarqube {
     }
 }
 
+project.ext {
+  pacticipant = 'probate_submitService'
+  pacticipantVersion = getCheckedOutGitCommitHash()
+}
+
 test.finalizedBy jacocoTestReport
 
 dependencyCheck {
@@ -113,6 +118,7 @@ serenity {
 
 task pactTask(type: Test) {
     description = "Runs pact Tests"
+    useJUnitPlatform()
     testClassesDirs = sourceSets.testPact.output.classesDirs
     classpath = sourceSets.testPact.runtimeClasspath
 }
@@ -168,10 +174,11 @@ def versions = [
         springCloudWiremock             : '1.2.4.RELEASE',
         serenity                        : '2.0.23',
         serenityreporter                : '2.1.4',
-        pact_version                    : '3.5.24',
+        pact_version                    : '4.1.7',
         probateCommons                  : '1.2.0',
         feignHttpClient                 : '10.2.3',
-        lombok                          : '1.18.8'
+        lombok                          : '1.18.8',
+        probatePactCommonsVersion       : '1.0.1',
 ]
 
 dependencyManagement {
@@ -276,9 +283,9 @@ dependencies {
     testFunctionalCompile sourceSets.test.runtimeClasspath
 
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.2.0'
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
     testSmokeCompile sourceSets.main.runtimeClasspath
     testSmokeCompile sourceSets.test.runtimeClasspath
     testSmokeCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
@@ -294,6 +301,9 @@ dependencies {
     testContractCompile("com.fasterxml.jackson.core:jackson-databind:2.11.2") {
         force = true
     }
+    testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
+    testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
+
     testContractCompile sourceSets.main.runtimeClasspath
     testContractCompile sourceSets.test.runtimeClasspath
 
@@ -303,21 +313,22 @@ dependencies {
     testPactCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testPactCompile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
     testPactCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-    testPactCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
-    testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testPactCompile group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
+    testPactCompile group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
+    testPactCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+    testPactCompile group: 'au.com.dius.pact.consumer', name: 'java8', version: versions.pact_version
+    testPactCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    testPactRuntime group: 'au.com.dius.pact.consumer', name: 'java8',  version: versions.pact_version
+    testPactRuntime group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    testPactCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testPactRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    testPactImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
+    testPactRuntime group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.7.0'
+
+    testPactCompile group: 'uk.gov.hmcts.reform.probate', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
+
     testPactCompile sourceSets.main.runtimeClasspath
     testPactCompile sourceSets.test.runtimeClasspath
-
-    testCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
-    testContractCompile group: 'au.com.dius', name: 'pact-jvm-provider-spring_2.12', version: versions.pact_version
-    testContractCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
-    testContractCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
-    testContractCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    testContractRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
-    testContractImplementation('org.junit.jupiter:junit-jupiter-api:5.3.2')
-    testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
-    testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 }
 
 tasks.withType(JavaCompile) {
@@ -346,4 +357,30 @@ run {
     if (debug == 'true') {
         jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005']
     }
+}
+
+task runAndPublishConsumerPactTests(type: Test){
+    description = "Runs consumer pact Tests"
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.testPact.output.classesDirs
+    classpath = sourceSets.testPact.runtimeClasspath
+    include "uk/gov/hmcts/probate/services/submit/controllers/v2/consumer/**"
+
+}
+
+runAndPublishConsumerPactTests.finalizedBy pactPublish
+
+pact {
+  broker {
+      pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?:'http://localhost:80'
+  }
+  publish {
+    pactDirectory = 'pacts'
+    tags = [System.getenv("PACT_BRANCH_NAME") ?:'Dev']
+    version = project.pacticipantVersion
+  }
+}
+
+def getCheckedOutGitCommitHash() {
+  'git rev-parse --verify --short HEAD'.execute().text.trim()
 }

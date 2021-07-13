@@ -129,6 +129,12 @@ task smoke(type: Test) {
     classpath = sourceSets.testSmoke.runtimeClasspath
 }
 
+task fortifyScan(type: JavaExec)  {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 pmd {
     toolVersion = "6.3.0"
     ignoreFailures = true
@@ -276,6 +282,7 @@ dependencies {
     testCompile("com.fasterxml.jackson.core:jackson-databind:2.12.4") {
         force = true
     }
+    testCompile 'com.github.hmcts:fortify-client:1.0.1:all'
     testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
     testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient

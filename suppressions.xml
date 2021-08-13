@@ -16,4 +16,12 @@
         <cpe>cpe:/a:pivotal_software:spring_security</cpe>
         <cve>CVE-2021-22118</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+         Suppressing untill spring boot update
+        ]]></notes>
+        <filePath regex="true">.*jakarta.el-3.0.3.jar</filePath>
+        <cpe>cpe:/a:jakarta_expression_language</cpe>
+        <cve>CVE-2021-28170</cve>
+    </suppress>
 </suppressions>

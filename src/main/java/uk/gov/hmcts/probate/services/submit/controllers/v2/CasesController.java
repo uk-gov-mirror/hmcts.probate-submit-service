@@ -106,8 +106,9 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCase(@PathVariable("applicationId") String applicationId,
-                                                       @RequestBody ProbateCaseDetails caseRequest,
-                                                       @RequestBody String eventDescription) {
+                                                       @RequestParam(name = "eventDescription",
+                                                          defaultValue = "Probate Application") String eventDescription,
+                                                       @RequestBody ProbateCaseDetails caseRequest) {
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(),
             caseRequest, eventDescription), OK);

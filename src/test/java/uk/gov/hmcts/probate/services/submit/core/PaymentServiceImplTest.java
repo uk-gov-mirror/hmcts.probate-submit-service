@@ -168,7 +168,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_CREATE_CASE), eq(securityDto));
+            eq(GOP_CREATE_CASE), eq(securityDto), eq("event description"));
     }
 
     @Test
@@ -187,7 +187,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED), eq(securityDto));
+            eq(GOP_PAYMENT_FAILED), eq(securityDto), eq("event description"));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class PaymentServiceImplTest {
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
-            eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDto));
+            eq(GOP_PAYMENT_FAILED_AGAIN), eq(securityDto), eq("event description"));
     }
 
     @Test

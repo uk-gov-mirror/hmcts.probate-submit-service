@@ -181,8 +181,8 @@ public class CasesServiceImplTest {
         when(securityUtils.getSecurityDto()).thenReturn(securityDto);
         when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(caseResponseOptional);
-        when(coreCaseDataService.updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto),
-            "event description").thenReturn(caseRequest);
+        when(coreCaseDataService.updateCase(CASE_ID, caseData, UPDATE_DRAFT,
+            securityDto, "event description")).thenReturn(caseRequest);
 
         ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
 
@@ -230,7 +230,7 @@ public class CasesServiceImplTest {
             .thenReturn(Optional.empty());
         when(coreCaseDataService.createCase(caseData, CREATE_DRAFT, securityDto)).thenReturn(caseRequest);
 
-        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest);
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
 
         assertThat(caseResponse.getCaseData(), is(caseData));
         verify(securityUtils, times(1)).getSecurityDto();

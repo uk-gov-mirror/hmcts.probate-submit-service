@@ -165,7 +165,7 @@ public class CcdClientApiTest {
             .submitForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
                 eq(GRANT_OF_REPRESENTATION.getName()), eq(false), eq(caseDataContent))).thenReturn(caseDetails);
         when(caseContentBuilder.createCaseDataContent(caseData, CREATE_DRAFT, startEventResponse,
-            PROBATE_DESCRIPTOR, PROBATE_DESCRIPTOR))
+            PROBATE_DESCRIPTOR, "create case"))
             .thenReturn(caseDataContent);
         ProbateCaseDetails caseResponse = ccdClientApi.createCase(caseData, CREATE_DRAFT, securityDto);
 

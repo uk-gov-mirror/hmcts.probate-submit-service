@@ -49,7 +49,7 @@ public class PaymentServiceImplTest {
     private static final String CASE_ID = "12323213323";
     private static final CaseState STATE = CaseState.PA_APP_CREATED;
     private static final String APPLICANT_EMAIL = "test@test.com";
-    private static final String EVENT_DESCRIPTION = "event description";
+    private static final String EVENT_DESCRIPTION = "update case with payment details";
 
     @Mock
     private CoreCaseDataService mockCoreCaseDataService;

@@ -23,6 +23,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseWithEventDescription;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 import uk.gov.hmcts.reform.probate.model.client.AssertFieldException;
@@ -232,10 +233,10 @@ public class CasesControllerTest {
     public void shouldSaveCase() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
-
+        ProbateCaseWithEventDescription  probateCase = 
+            new ProbateCaseWithEventDescription(probateCaseDetails, anyString());
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
-            .content(objectMapper.writeValueAsString(probateCaseDetails))
-            .content(objectMapper.writeValueAsString("event description"))
+            .content(objectMapper.writeValueAsString(probateCase))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
@@ -272,11 +273,13 @@ public class CasesControllerTest {
     public void shouldGiveStatusOf500WhenAssertFieldExceptionThrown() throws Exception {
         CaseData caseData = GrantOfRepresentationData.builder().grantType(GrantType.GRANT_OF_PROBATE).build();
         ProbateCaseDetails probateCaseDetails = ProbateCaseDetails.builder().caseData(caseData).build();
+        ProbateCaseWithEventDescription  probateCase = 
+            new ProbateCaseWithEventDescription(probateCaseDetails, anyString());
         when(casesService.saveCase(anyString(), any(ProbateCaseDetails.class), anyString()))
             .thenThrow(new AssertFieldException(ValidationErrorResponse.builder().build()));
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
-            .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .content(objectMapper.writeValueAsString(probateCase))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());
 

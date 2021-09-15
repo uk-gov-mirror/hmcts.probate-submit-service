@@ -189,7 +189,8 @@ public class CasesServiceImplTest {
         assertThat(caseResponse.getCaseData(), is(caseData));
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
-        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto, "event description");
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto,
+            "event description");
     }
 
     @Test

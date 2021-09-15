@@ -235,6 +235,7 @@ public class CasesControllerTest {
 
         mockMvc.perform(post(CASES_URL + "/" + EMAIL_ADDRESS)
             .content(objectMapper.writeValueAsString(probateCaseDetails))
+            .content(objectMapper.writeValueAsString("event description"))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 

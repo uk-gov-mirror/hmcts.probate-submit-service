@@ -23,6 +23,7 @@ import uk.gov.hmcts.probate.services.submit.services.CaveatExpiryService;
 import uk.gov.hmcts.reform.probate.model.cases.CaseData;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseWithEventDescription;
 
 import java.util.List;
 
@@ -106,8 +107,10 @@ public class CasesController {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCase(@PathVariable("applicationId") String applicationId,
-                                                       @RequestBody ProbateCaseDetails caseRequest,
-                                                       @RequestBody String eventDescription) {
+                                                       @RequestBody ProbateCaseWithEventDescription
+                                                       probateCaseWithDescription) {
+        ProbateCaseDetails caseRequest = probateCaseWithDescription.getProbateCaseDetails();
+        String eventDescription = probateCaseWithDescription.getEventDescription();
         log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(),
             caseRequest, eventDescription), OK);

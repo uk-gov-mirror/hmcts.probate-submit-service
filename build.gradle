@@ -11,7 +11,7 @@ buildscript {
 plugins {
     id 'application'
     id 'pmd'
-    id 'org.springframework.boot' version '2.5.6'
+    id 'org.springframework.boot' version '2.5.9'
     id 'uk.gov.hmcts.java' version '0.12.12'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
@@ -175,7 +175,7 @@ def versions = [
         authCheckerLib                  : '2.1.4',
         ccdClient                       : '4.7.6',
         springCloudStarterNetflixHystrix: '3.0.3',
-        springBoot                      : '2.5.6',
+        springBoot                      : '2.5.9',
         springfoxSwagger                : '3.0.0',
         springCloudWiremock             : '3.0.3',
         serenity                        : '2.5.8',
@@ -209,11 +209,11 @@ configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
             if (details.requested.group in ['org.apache.tomcat.embed']) {
-                details.useVersion '9.0.54'
+                details.useVersion '9.0.58'
             }
 
             if (details.requested.group in ['org.apache.logging.log4j']) {
-                details.useVersion '2.16.0'
+                details.useVersion '2.17.1'
             }
         }
     }

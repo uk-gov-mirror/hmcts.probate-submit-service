@@ -176,7 +176,7 @@ def versions = [
         springCloudWiremock             : '3.0.3',
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : '1.3.4',
+        probateCommons                  : '1.3.5',
         feignHttpClient                 : '11.6',
         lombok                          : '1.18.20',
         probatePactCommonsVersion       : '1.0.2',
@@ -194,7 +194,7 @@ dependencyManagement {
 
         // CVE-2019-10086
         dependency group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
-        
+
         //CVE-2020-8908
         dependency group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
 
@@ -202,7 +202,7 @@ dependencyManagement {
         dependencySet(group: 'org.springframework.security', version: '5.6.1') {
             entry 'spring-security-core'
         }
-        
+
     }
 }
 
@@ -278,7 +278,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
-    testContractImplementation("com.fasterxml.jackson.core:jackson-databind:2.12.4") 
+    testContractImplementation("com.fasterxml.jackson.core:jackson-databind:2.12.4")
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.4'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.4'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok

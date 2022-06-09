@@ -129,7 +129,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.updateCaseByCaseId(CASE_ID, probateCaseDetailsRequest);
 
-        assertEquals(actualCaseResponse, actualCaseResponse);
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDto);
         verify(mockCoreCaseDataService).updateCaseAsCaseworker(eq(CASE_ID), eq(caseData),
@@ -146,7 +146,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.updateCaseByCaseId(CASE_ID, probateCaseDetailsRequest);
 
-        assertEquals(actualCaseResponse, actualCaseResponse);
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCaseById(CASE_ID, securityDto);
         verify(mockCoreCaseDataService, never()).updateCase(eq(CASE_ID), eq(caseData),
@@ -164,7 +164,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertEquals(actualCaseResponse, actualCaseResponse);
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
@@ -183,7 +183,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertEquals(actualCaseResponse, actualCaseResponse);
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
@@ -203,7 +203,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertEquals(actualCaseResponse, actualCaseResponse);
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),
@@ -223,7 +223,7 @@ public class PaymentServiceImplTest {
 
         ProbateCaseDetails actualCaseResponse = paymentService.createCase(APPLICANT_EMAIL, caseResponse);
 
-        assertEquals(actualCaseResponse, actualCaseResponse);
+        assertEquals(caseResponse, actualCaseResponse);
         verify(mockSecurityUtils).getSecurityDto();
         verify(mockCoreCaseDataService).findCase(APPLICANT_EMAIL, GRANT_OF_REPRESENTATION, securityDto);
         verify(mockCoreCaseDataService).updateCase(eq(CASE_ID), eq(caseData),

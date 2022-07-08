@@ -414,8 +414,8 @@ public class CcdClientApiTest {
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(INVITATION_ID, inviteField))
                 .thenReturn(INVIATION_QUERY);
 
-        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(INVIATION_QUERY)))
+        when(mockCoreCaseDataApi.searchCases(AUTHORIZATION, SERVICE_AUTHORIZATION,
+                GRANT_OF_REPRESENTATION.getName(), INVIATION_QUERY))
                 .thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails, caseDetails)).build());
 
 
@@ -432,8 +432,8 @@ public class CcdClientApiTest {
         when(mockInvitationElasticSearchQueryBuilder.buildQuery(APPLICANT_EMAIL, "primaryApplicantEmailAddress"))
                 .thenReturn(queryString);
 
-        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString)))
+        when(mockCoreCaseDataApi.searchCases(AUTHORIZATION, SERVICE_AUTHORIZATION,
+                GRANT_OF_REPRESENTATION.getName(), queryString))
                 .thenReturn(SearchResult.builder().cases(null).build());
 
 

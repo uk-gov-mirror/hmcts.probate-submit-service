@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @PactTestFor(providerName = "s2s_auth", port = "4502")
 @SpringBootTest(classes = ServiceAuthorisationApi.class)
-public class ServiceAuthenConsumerDetailTest {
+public class ServiceAuthConsumerDetailTest {
 
     private static final String AUTHORISATION_TOKEN = "Bearer someAuthorisationToken";
     public static final String SOME_MICRO_SERVICE_NAME = "someMicroServiceName";

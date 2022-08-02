@@ -23,13 +23,6 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 
 @FeignClient(name = "idam-api", url = "${auth.provider.client.user}", configuration = FeignClientConfiguration.class)
 public interface IdamApi {
-
-    /**
-     * User Authenticate method.
-     *
-     * @deprecated
-     * IDAM oauth2/authorize endpoint is deprecated
-     */
     @Deprecated
     @PostMapping(
             value = "/oauth2/authorize",

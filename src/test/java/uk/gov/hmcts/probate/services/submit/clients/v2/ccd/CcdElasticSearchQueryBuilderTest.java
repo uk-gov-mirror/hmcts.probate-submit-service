@@ -19,12 +19,6 @@ public class CcdElasticSearchQueryBuilderTest {
 
     }
 
-    @Test
-    public void shouldBuildAllCasesQuery() {
-        String result = ccdElasticSearchQueryBuilder.buildFindAllCasesQuery();
-        assertThat(result, Matchers.equalTo("{\"query\":{\"match_all\":{}},\"size\": 50}"));
-
-    }
 
     @Test
     public void shouldBuildCaveatExpiryQuery() {

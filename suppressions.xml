@@ -24,6 +24,7 @@
     </suppress>
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+        <cve>CVE-2022-1471</cve>
         <cve>CVE-2022-25857</cve>
         <cve>CVE-2022-38749</cve>
         <cve>CVE-2022-38750</cve>
@@ -37,14 +38,27 @@
         <cve>CVE-2022-42004</cve>
     </suppress>
     <suppress>
-        <notes>No update for apache commons yet</notes>
-        <cve>CVE-2021-37533</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: snakeyaml-1.30.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
-        <cve>CVE-2022-1471</cve>
-    </suppress>
+       <packageUrl regex="true">^pkg:maven/commons\-logging/commons\-logging@.*$</packageUrl>
+       <cve>CVE-2021-37533</cve>
+   </suppress>
+   <suppress>
+       <packageUrl regex="true">^pkg:maven/commons\-io/commons\-io@.*$</packageUrl>
+       <cve>CVE-2021-37533</cve>
+   </suppress>
+   <suppress>
+       <packageUrl regex="true">^pkg:maven/commons\-fileupload/commons\-fileupload@.*$</packageUrl>
+       <cve>CVE-2021-37533</cve>
+   </suppress>
+   <suppress>
+      <packageUrl regex="true">^pkg:maven/commons\-collections/commons\-collections@.*$</packageUrl>
+      <cve>CVE-2021-37533</cve>
+   </suppress>
+   <suppress>
+      <packageUrl regex="true">^pkg:maven/commons\-codec/commons\-codec@.*$</packageUrl>
+      <cve>CVE-2021-37533</cve>
+   </suppress>
+   <suppress>
+      <packageUrl regex="true">^pkg:maven/commons\-beanutils/commons\-beanutils@.*$</packageUrl>
+      <cve>CVE-2021-37533</cve>
+   </suppress>
 </suppressions>

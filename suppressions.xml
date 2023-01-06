@@ -38,6 +38,13 @@
         <cve>CVE-2022-42004</cve>
     </suppress>
     <suppress>
+        <notes><![CDATA[
+   file name: LatencyUtils-2.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.latencyutils/LatencyUtils@.*$</packageUrl>
+        <cve>CVE-2021-4277</cve>
+    </suppress>
+    <suppress>
        <packageUrl regex="true">^pkg:maven/commons\-logging/commons\-logging@.*$</packageUrl>
        <cve>CVE-2021-37533</cve>
    </suppress>
@@ -60,5 +67,13 @@
    <suppress>
       <packageUrl regex="true">^pkg:maven/commons\-beanutils/commons\-beanutils@.*$</packageUrl>
       <cve>CVE-2021-37533</cve>
-   </suppress>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: snakeyaml-1.30.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+        <cve>CVE-2022-1471</cve>
+        <cve>CVE-2022-41854</cve>
+    </suppress>
 </suppressions>

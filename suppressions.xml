@@ -38,6 +38,13 @@
         <cve>CVE-2022-42004</cve>
     </suppress>
     <suppress>
+        <notes><![CDATA[
+   file name: LatencyUtils-2.0.3.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.latencyutils/LatencyUtils@.*$</packageUrl>
+        <cve>CVE-2021-4277</cve>
+    </suppress>
+    <suppress>
        <packageUrl regex="true">^pkg:maven/commons\-logging/commons\-logging@.*$</packageUrl>
        <cve>CVE-2021-37533</cve>
    </suppress>

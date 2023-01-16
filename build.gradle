@@ -100,6 +100,14 @@ sourceSets {
         }
         resources.srcDir file('src/pactTest/resources')
     }
+    integrationTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/integrationTest/java')
+        }
+        resources.srcDir file('src/integrationTest/resources')
+    }
 }
 
 task functional(type: Test) {
@@ -107,6 +115,15 @@ task functional(type: Test) {
     testClassesDirs = sourceSets.testFunctional.output.classesDirs
     classpath = sourceSets.testFunctional.runtimeClasspath
     finalizedBy aggregate
+}
+
+task integration(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    failFast = true
+    useJUnitPlatform()
 }
 
 functional.finalizedBy(aggregate)
@@ -306,6 +323,9 @@ dependencies {
 
     testPactImplementation sourceSets.main.runtimeClasspath
     testPactImplementation sourceSets.test.runtimeClasspath
+
+    integrationTestImplementation sourceSets.main.runtimeClasspath
+    integrationTestImplementation sourceSets.test.runtimeClasspath
 }
 
 tasks.withType(JavaCompile) {

@@ -173,6 +173,8 @@ jacocoTestReport {
     }
 }
 
+check.dependsOn(integration)
+
 pitest {
     targetClasses = ['uk.gov.hmcts.probate.*']
     threads = 4
@@ -368,6 +370,7 @@ task runAndPublishConsumerPactTests(type: Test){
 }
 
 runAndPublishConsumerPactTests.finalizedBy pactPublish
+
 
 pact {
   broker {

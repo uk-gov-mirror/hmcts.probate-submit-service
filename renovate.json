@@ -3,6 +3,7 @@
   "extends": ["config:base", ":dependencyDashboard"],
   "enabledManagers": ["helm-requirements","gradle-wrapper", "gradle", "nvm", "npm"],
   "prConcurrentLimit": 6,
+  "prHourlyLimit": 3,
   "labels": ["dependencies"],
   "helm-requirements":
   {

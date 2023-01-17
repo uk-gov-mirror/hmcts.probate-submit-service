@@ -165,7 +165,7 @@ pmd {
 
 
 jacocoTestReport {
-    executionData(test)
+    executionData(test, integration)
     reports {
         xml.required = true
         csv.required = false

@@ -96,7 +96,7 @@ public class CasesControllerTest {
             Arrays.asList(ProbateCaseDetails.builder().build(), ProbateCaseDetails.builder().build());
         when(caveatExpiryService.expireCaveats(CAVEAT_EXPIRY_DATE)).thenReturn(expiredCaveats);
         mockMvc.perform(get(CASES_CAVEATS_EXPIRE)
-            .param("expiryDate", CAVEAT_EXPIRY_DATE)
+            .param("expiryDate TT", CAVEAT_EXPIRY_DATE)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string("[{},{}]"));

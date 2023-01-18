@@ -123,12 +123,9 @@ task integration(type: Test) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
     useJUnitPlatform()
-    finalizedBy aggregate
 }
 
 functional.finalizedBy(aggregate)
-integration.finalizedBy(aggregate)
-
 
 test {
     maxHeapSize = "1024m"
@@ -369,7 +366,6 @@ task runAndPublishConsumerPactTests(type: Test){
 }
 
 runAndPublishConsumerPactTests.finalizedBy pactPublish
-
 
 pact {
   broker {

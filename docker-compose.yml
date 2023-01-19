@@ -397,11 +397,7 @@ services:
       SERVICES_CORECASEDATA_BASEURL: http://ccd-data-store-api:4452
     ports:
       - 8181:8181
-    depends_on:
-      - sidam-api
-      - shared-database
-      - ccd-data-store-api
-      - service-auth-provider-api
+
 
   probate-frontend:
     image: hmctspublic.azurecr.io/probate/frontend:latest

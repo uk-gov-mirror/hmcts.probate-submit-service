@@ -30,6 +30,7 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepr
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,6 +90,7 @@ public class CcdClientApiTest {
 
     private ProbateCaseDetails probateCaseDetails;
 
+
     @Captor
     private ArgumentCaptor<UserId> userIdCaptor;
 
@@ -120,6 +122,7 @@ public class CcdClientApiTest {
         caseDetails = CaseDetails.builder()
             .id(CASE_ID)
             .state(STATE.getName())
+                .jurisdiction(PROBATE.name())
             .caseTypeId(GRANT_OF_REPRESENTATION.getName())
             .createdDate(LocalDateTime.now())
             .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
@@ -137,6 +140,7 @@ public class CcdClientApiTest {
             .build();
 
         searchResult = SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build();
+
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(caseDetails.getId().toString());
         caseInfo.setState(CaseState.getState(caseDetails.getState()));
@@ -285,21 +289,18 @@ public class CcdClientApiTest {
     @Test
     public void shouldFindAllCase() {
 
-        String queryString = "queryString";
-        when(mockInvitationElasticSearchQueryBuilder.buildFindAllCasesQuery()).thenReturn(queryString);
+        when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID),
+                eq(PROBATE.name()), eq(GRANT_OF_REPRESENTATION.getName()), eq(new HashMap<String, String>())))
+            .thenReturn(searchResult.getCases());
+        List<ProbateCaseDetails> listProbateCaseDetails = ccdClientApi.findCases(GRANT_OF_REPRESENTATION, securityDto);
 
-        when(mockCoreCaseDataApi.searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
-            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString)))
-            .thenReturn(SearchResult.builder().cases(Lists.newArrayList(caseDetails)).build());
-
-        List<ProbateCaseDetails> results = ccdClientApi.findCases(GRANT_OF_REPRESENTATION, securityDto);
-
-        CaseInfo caseInfo = results.stream().findFirst().get().getCaseInfo();
-        assertNotNull(results);
+        CaseInfo caseInfo = listProbateCaseDetails.stream().findFirst().get().getCaseInfo();
+        assertNotNull(listProbateCaseDetails);
         assertEquals(CASE_ID.toString(), caseInfo.getCaseId());
         assertEquals(STATE, caseInfo.getState());
-        verify(mockCoreCaseDataApi, times(1)).searchCases(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION),
-            eq(GRANT_OF_REPRESENTATION.getName()), eq(queryString));
+        verify(mockCoreCaseDataApi, times(1)).searchForCitizen(eq(AUTHORIZATION),
+                eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(new HashMap<String, String>()));
     }
 
     @Test

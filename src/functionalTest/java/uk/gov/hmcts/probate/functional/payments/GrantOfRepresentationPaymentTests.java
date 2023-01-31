@@ -101,7 +101,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .statusCode(200)
             .body("caseData", notNullValue())
             .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("CaseCreated"))
+            .body("caseInfo.state", equalTo("CasePrinted"))
             .extract().jsonPath().prettify();
     }
 

@@ -185,7 +185,7 @@ public class CcdClientApi implements CoreCaseDataService {
 
     @Override
     public Optional<ProbateCaseDetails> findCase(String searchValue, CaseType caseType, SecurityDto securityDto) {
-        log.info("Search for case in ElasticSearch for Citizen by searchCases caseType:{}, searchValue:{}",
+        log.info("Search for case in ES for Citizen by searchCases caseType:{}, searchValue:{}",
                 caseType.getName(), searchValue);
         String searchString =
             elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getEsSearchFieldName(caseType));
@@ -196,7 +196,7 @@ public class CcdClientApi implements CoreCaseDataService {
             caseType.getName(),
             searchString).getCases();
         long afterResponse = System.currentTimeMillis();
-        log.info("Time taken by ElasticSearch for searchCases: {}", (afterResponse - beforeRequest));
+        log.info("Time taken by ES for searchCases: {}", (afterResponse - beforeRequest));
         if (caseDetails == null) {
             return Optional.empty();
         }

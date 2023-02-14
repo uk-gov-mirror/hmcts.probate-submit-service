@@ -26,9 +26,4 @@ public class CcdElasticSearchQueryBuilder {
         return searchString;
     }
 
-    String buildFindAllCasesQuery() {
-        return "{\"query\":{\"match_all\":{}},\"size\": 50}";
-    }
-
-
 }

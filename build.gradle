@@ -257,8 +257,8 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
 
-    implementation group: 'org.pitest', name: 'pitest', version: '1.6.9'
-    implementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.11'
+    implementation group: 'org.pitest', name: 'pitest', version: '1.11.4'
+    implementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
     implementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
 
     compileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -268,7 +268,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.6.1'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
-    testImplementation 'com.github.hmcts:fortify-client:1.3.0:all'
+    testImplementation 'com.github.hmcts:fortify-client:1.2.1:all'
     testImplementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntimeOnly group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     testRuntimeOnly group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib

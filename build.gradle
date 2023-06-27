@@ -36,8 +36,11 @@ group = 'uk.gov.hmcts.probate'
 version = "4.1.0"
 mainClassName = 'uk.gov.hmcts.probate.SubmitApplication'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 jacoco {
     toolVersion = '0.8.8'
@@ -146,7 +149,7 @@ task smoke(type: Test) {
 }
 
 task fortifyScan(type: JavaExec)  {
-    mainClass = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    getMainClass().set("uk.gov.hmcts.fortifyclient.FortifyClientMainApp")
     classpath += sourceSets.test.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
@@ -165,7 +168,7 @@ jacocoTestReport {
     reports {
         xml.required = true
         csv.required = false
-        xml.destination = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        xml.outputLocation = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -198,7 +201,7 @@ def versions = [
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : '1.4.14',
+        probateCommons                  : '1.4.15',
         feignHttpClient                 : '11.6',
         lombok                          : '1.18.26',
         probatePactCommonsVersion       : '1.0.2',
@@ -296,7 +299,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
-    testContractImplementation("com.fasterxml.jackson.core:jackson-databind:2.13.2")
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.14.2'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.14.2'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -330,6 +333,11 @@ dependencies {
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-parameters'
+}
+
+// https://github.com/gradle/gradle/issues/16791
+tasks.withType(JavaExec).configureEach {
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
 }
 
 ext['rest-assured.version'] = '4.5.0'

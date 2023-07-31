@@ -6,11 +6,6 @@
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring-core@.*$</packageUrl>
         <vulnerabilityName>CVE-2016-1000027</vulnerabilityName>
-        <vulnerabilityName>CVE-2022-22970</vulnerabilityName>
-        <vulnerabilityName>CVE-2022-22971</vulnerabilityName>
-    </suppress>
-    <suppress until="2023-01-07">
-        <cve>CVE-2022-31569</cve>
     </suppress>
     <suppress>
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
@@ -90,76 +85,10 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: spring-security-config-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
-        <cpe>cpe:/a:vmware:spring_security</cpe>
-        <cve>CVE-2022-31692</cve>
-        <cve>CVE-2022-31690</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-core-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
-        <cve>CVE-2022-31692</cve>
-        <cve>CVE-2022-31690</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: spring-security-crypto-5.7.3.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
         <cpe>cpe:/a:vmware:spring_security</cpe>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-crypto-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
-        <cve>CVE-2022-31692</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-crypto-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
-        <cve>CVE-2022-31690</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-oauth2-client-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-oauth2\-client@.*$</packageUrl>
-        <cve>CVE-2022-31692</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-oauth2-client-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-oauth2\-client@.*$</packageUrl>
-        <cve>CVE-2022-31690</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-oauth2-core-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-oauth2\-core@.*$</packageUrl>
-        <cve>CVE-2022-31692</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-web-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
-        <cve>CVE-2022-31692</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-web-5.7.3.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
-        <cve>CVE-2022-31690</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -212,19 +141,7 @@
     </suppress><suppress>
     <notes><![CDATA[
    spring suppressions:
-   spring-aop-5.3.19.jar
-   spring-beans-5.3.19.jar
-   spring-context-5.3.19.jar
-   spring-core-5.3.19.jar
-   spring-expression-5.3.19.jar
-   spring-jcl-5.3.19.jar
-   spring-webmvc-5.3.19.jar
    ]]></notes>
-    <cve>CVE-2023-20861</cve>
-    <cve>CVE-2023-20860</cve>
-    <cve>CVE-2023-20863</cve>
-    <cve>CVE-2023-20862</cve>
-    <cve>CVE-2023-20873</cve>
-    <cve>CVE-2023-20883</cve>
+    <cve>CVE-2023-38286</cve>
 </suppress>
 </suppressions>

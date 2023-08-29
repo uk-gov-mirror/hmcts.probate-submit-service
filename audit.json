@@ -6,5 +6,7 @@
   "10038_Content Security Policy (CSP) Header Not Set_https://probate-submit-service-aat.service.core-compute-aat.internal/v2/api-docs_GET":"ignore",
   "40025_Proxy Disclosure_https://probate-submit-service-aat.service.core-compute-aat.internal_GET":"ignore",
   "40025_Proxy Disclosure_https://probate-submit-service-aat.service.core-compute-aat.internal/v2_GET":"ignore",
-  "40025_Proxy Disclosure_https://probate-submit-service-aat.service.core-compute-aat.internal/v2/api-docs_GET":"ignore"
+  "40025_Proxy Disclosure_https://probate-submit-service-aat.service.core-compute-aat.internal/v2/api-docs_GET":"ignore",
+  "10063_Permissions Policy Header Not Set_https://probate-submit-service-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore",
+  "10049_Storable and Cacheable Content_https://probate-submit-service-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore"
 }

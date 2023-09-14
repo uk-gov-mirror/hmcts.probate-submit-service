@@ -6,8 +6,6 @@ tags:
 java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_NAME}.preview.platform.hmcts.net
-  environment:
-    SERVICES_CORECASEDATA_BASEURL : http://probate-back-office-pr-2387-ccd-data-store-api
 
 ccd-elasticsearch:
   logstash:

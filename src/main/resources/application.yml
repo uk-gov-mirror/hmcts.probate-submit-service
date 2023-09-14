@@ -32,7 +32,7 @@ spring:
   thymeleaf.cache: false # set to false for hot refresh
   config:
     import: "optional:configtree:/mnt/secrets/probate/"
-    
+
   messages:
     basename: messages
     cache-seconds: -1
@@ -55,8 +55,6 @@ auth.provider.service.client:
   microservice: ${AUTH_S2S_CLIENT_ID:probate_backend}
   key: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
   tokenTimeToLiveInSeconds: '900'
-
-idam.s2s-auth.url: ${auth.provider.service.client.baseUrl}
 
 ccd:
   probate:
@@ -176,6 +174,16 @@ registries:
 authorised.services: probate_backend,probate_frontend
 
 auth.idam.client.baseUrl: http://localhost:5000
+AUTH_IDAM_CLIENT_BASEURL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
+
+idam:
+  s2s-auth:
+    url: ${auth.provider.service.client.baseUrl}
+    totp_secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
+    microservice: ${auth.provider.service.client.microservice}
+  s2s-authorised:
+    services: microservice1, microservice2
+
 s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}
 

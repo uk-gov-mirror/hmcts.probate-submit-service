@@ -174,7 +174,6 @@ registries:
 authorised.services: probate_backend,probate_frontend
 
 auth.idam.client.baseUrl: http://localhost:5000
-AUTH_IDAM_CLIENT_BASEURL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
 
 idam:
   s2s-auth:

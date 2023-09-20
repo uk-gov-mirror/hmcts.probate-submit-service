@@ -32,9 +32,7 @@ public class SecurityConfiguration {
                                 "/cases/**",
                                 "/submissions/**",
                                 "/payments/**",
-                                "/ccd-case-update/**",
-                                "/health",
-                                "/health/liveness")
+                                "/ccd-case-update/**")
                         .permitAll())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);

@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
 @Profile("!SECURITY_MOCK")
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     private final ServiceAuthFilter serviceAuthFilter;

@@ -23,37 +23,47 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    protected SecurityFilterChain allowedList(HttpSecurity http) throws Exception {
+        return http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/swagger-ui.html",
                     "/swagger-resources/**",
                     "/swagger-ui/**",
+                    "/v3/api-docs/**",
                     "/health",
                     "/health/liveness",
                     "/info",
                     "/").permitAll()
+                .anyRequest().authenticated())
+            .build();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable)
+            .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
+            .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
                     "/cases/**",
                     "/submissions/**",
                     "/payments/**",
                     "/ccd-case-update/**").authenticated())
-            .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
-            .formLogin(AbstractHttpConfigurer::disable)
-            .logout(AbstractHttpConfigurer::disable);
-        return http.build();
+            .build();
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/swagger-ui.html",
-                "/swagger-resources/**",
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/health",
-                "/health/liveness",
-                "/info",
-                "/");
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/health",
+            "/health/liveness",
+            "/info",
+            "/");
     }
 }

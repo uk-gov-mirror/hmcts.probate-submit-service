@@ -8,14 +8,19 @@ security:
   #      enabled: false
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-      base-path: /
   endpoint:
     health:
-      show-details: always
+      show-details: "always"
+      cache:
+        time-to-live: 10s
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info
+  health:
+    probes:
+      enabled: true
 
   # THYMELEAF (ThymeleafAutoConfiguration)
 spring:

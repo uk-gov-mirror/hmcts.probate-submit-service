@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
 @Profile("!SECURITY_MOCK")
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfiguration {
 
     private final ServiceAuthFilter serviceAuthFilter;
@@ -25,18 +25,23 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/cases/**",
-                                "/submissions/**",
-                                "/payments/**",
-                                "/ccd-case-update/**")
-                        .permitAll())
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable);
-
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/swagger-ui.html",
+                    "/swagger-resources/**",
+                    "/swagger-ui/**",
+                    "/health",
+                    "/health/liveness",
+                    "/info",
+                    "/").permitAll()
+                .requestMatchers(
+                    "/cases/**",
+                    "/submissions/**",
+                    "/payments/**",
+                    "/ccd-case-update/**").authenticated())
+            .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
@@ -45,6 +50,7 @@ public class SecurityConfiguration {
         return (web) -> web.ignoring().requestMatchers("/swagger-ui.html",
                 "/swagger-resources/**",
                 "/swagger-ui/**",
+                "/v3/api-docs/**",
                 "/health",
                 "/health/liveness",
                 "/info",

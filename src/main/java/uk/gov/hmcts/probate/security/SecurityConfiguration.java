@@ -33,6 +33,8 @@ public class SecurityConfiguration {
                     "/v3/api-docs/**",
                     "/health",
                     "/health/liveness",
+                    "/health/**",
+                    "/error",
                     "/info",
                     "/").permitAll()
                 .anyRequest().authenticated())

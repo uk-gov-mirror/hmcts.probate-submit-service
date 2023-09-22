@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -10,28 +11,29 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 @Profile("!SECURITY_MOCK")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final ServiceAuthFilter serviceAuthFilter;
-
-    public SecurityConfiguration(ServiceAuthFilter serviceAuthFilter) {
-        this.serviceAuthFilter = serviceAuthFilter;
-    }
+    @Autowired
+    private ServiceAuthFilter serviceAuthFilter;
 
     @Bean
-    protected SecurityFilterChain allowedList(HttpSecurity http) throws Exception {
+    public SecurityFilterChain allowedList(HttpSecurity http) throws Exception {
         return http
+            .sessionManagement(sm -> sm.sessionCreationPolicy(STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/swagger-ui.html",
                     "/swagger-resources/**",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/health",
-                    "/health/liveness",
                     "/health/**",
                     "/error",
                     "/info",

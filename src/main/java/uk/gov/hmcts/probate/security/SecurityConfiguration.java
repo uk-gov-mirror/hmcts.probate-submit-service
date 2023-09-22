@@ -23,6 +23,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+            .securityContext(securityContext -> securityContext
+                    .requireExplicitSave(true))
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .logout(AbstractHttpConfigurer::disable)
@@ -50,7 +52,7 @@ public class SecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/swagger-ui.html",
+        return web -> web.ignoring().requestMatchers("/swagger-ui.html",
                 "/swagger-resources/**",
                 "/swagger-ui/**",
                 "/v3/api-docs/**",

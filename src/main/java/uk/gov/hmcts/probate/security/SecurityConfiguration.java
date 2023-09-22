@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +22,7 @@ public class SecurityConfiguration {
     @Autowired
     private ServiceAuthFilter serviceAuthFilter;
 
+    @Order(0)
     @Bean
     public SecurityFilterChain allowedList(HttpSecurity http) throws Exception {
         return http
@@ -41,6 +43,7 @@ public class SecurityConfiguration {
             .build();
     }
 
+    @Order(1)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -53,8 +56,8 @@ public class SecurityConfiguration {
                     "/cases/**",
                     "/submissions/**",
                     "/payments/**",
-                    "/ccd-case-update/**").permitAll()
-                .anyRequest().authenticated())
+                    "/ccd-case-update/**").authenticated()
+                .anyRequest().permitAll())
             .build();
     }
 }

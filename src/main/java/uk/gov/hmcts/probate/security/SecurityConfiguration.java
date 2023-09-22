@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,8 +35,7 @@ public class SecurityConfiguration {
                     "/health/**",
                     "/error",
                     "/info",
-                    "/").permitAll()
-                .anyRequest().authenticated())
+                    "/").permitAll())
             .build();
     }
 
@@ -53,19 +51,8 @@ public class SecurityConfiguration {
                     "/cases/**",
                     "/submissions/**",
                     "/payments/**",
-                    "/ccd-case-update/**").authenticated())
+                    "/ccd-case-update/**").permitAll()
+                .anyRequest().authenticated())
             .build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/swagger-ui.html",
-            "/swagger-resources/**",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/health",
-            "/health/liveness",
-            "/info",
-            "/");
     }
 }

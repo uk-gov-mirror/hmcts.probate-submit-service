@@ -154,4 +154,11 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring\-cloud\-starter\-openfeign@.*$</packageUrl>
         <cve>CVE-2023-34040</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-plugin-core-1.2.0.RELEASE.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.plugin/spring\-plugin\-core@.*$</packageUrl>
+        <cve>CVE-2023-34047</cve>
+    </suppress>
 </suppressions>

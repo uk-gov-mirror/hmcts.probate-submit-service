@@ -178,6 +178,9 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
         <cve>CVE-2023-34034</cve>
         <cve>CVE-2023-34035</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
    file name: spring-plugin-core-1.2.0.RELEASE.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.plugin/spring\-plugin\-core@.*$</packageUrl>

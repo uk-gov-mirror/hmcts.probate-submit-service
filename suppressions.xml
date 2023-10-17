@@ -133,6 +133,8 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
         <cve>CVE-2023-41080</cve>
         <cve>CVE-2023-34981</cve>
+        <cve>CVE-2023-42795</cve>
+        <cve>CVE-2023-45648</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -142,6 +144,8 @@
         <cve>CVE-2023-28708</cve>
         <cve>CVE-2023-41080</cve>
         <cve>CVE-2023-34981</cve>
+        <cve>CVE-2023-42795</cve>
+        <cve>CVE-2023-45648</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[

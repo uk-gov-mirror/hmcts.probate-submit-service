@@ -114,7 +114,7 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: jackson-core-2.13.5.jar
+   file name: jackson-core-2.15.3.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-core@.*$</packageUrl>
         <cve>CVE-2022-45688</cve>

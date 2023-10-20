@@ -186,7 +186,7 @@ idam:
     totp_secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
     microservice: ${auth.provider.service.client.microservice}
   s2s-authorised:
-    services: probate_backend,probate_frontend
+    services: PROBATE_BACKEND,PROBATE_FRONTEND
 
 s2s.auth.totp.secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
 service.name: ${auth.provider.service.client.microservice}

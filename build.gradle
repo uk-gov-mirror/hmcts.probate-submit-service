@@ -230,7 +230,7 @@ configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
             if (details.requested.group in ['org.apache.tomcat.embed']) {
-                details.useVersion '9.0.69'
+                details.useVersion '9.0.82'
             }
 
             if (details.requested.group in ['org.apache.logging.log4j']) {
@@ -299,9 +299,9 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.14.2'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.14.2'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.3'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.3'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.3'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 

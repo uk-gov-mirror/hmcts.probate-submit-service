@@ -191,7 +191,7 @@ repositories {
 }
 
 def versions = [
-        logging                         : '5.1.7',
+        logging                         : '6.0.1',
         serviceAuthProviderClient       : '4.0.0',
         authCheckerLib                  : '2.1.4',
         ccdClient                       : '4.7.6',
@@ -251,10 +251,9 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: versions.springDocUi
 
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-spring', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-httpcomponents', version: versions.logging
+
+    implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.logging
+    implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.logging
     implementation group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
     implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient

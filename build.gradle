@@ -280,7 +280,7 @@ dependencies {
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.3'
     testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -296,7 +296,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.3'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.3'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.3'

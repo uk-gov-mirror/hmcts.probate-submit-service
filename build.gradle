@@ -192,9 +192,9 @@ repositories {
 
 def versions = [
         logging                         : '6.0.1',
-        serviceAuthProviderClient       : '4.0.0',
-        authCheckerLib                  : '2.1.4',
-        ccdClient                       : '4.7.6',
+        serviceAuthProviderClient       : '5.1.1',
+        authCheckerLib                  : '2.1.6',
+        ccdClient                       : '4.9.2',
         springCloudStarterNetflixHystrix: '3.0.3',
         springBoot                      : '2.7.14',
         springDocUi                     : '1.6.14',

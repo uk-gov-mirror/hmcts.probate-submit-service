@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.ccd.client",
-    "uk.gov.hmcts.probate.services"})
+    "uk.gov.hmcts.probate.services",
+    "uk.gov.hmcts.reform.authorisation"})
 @SpringBootApplication()
 public class SubmitApplication {
     public static void main(String[] args) {

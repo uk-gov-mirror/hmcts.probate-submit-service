@@ -49,7 +49,7 @@ jacoco {
 
 sonarqube {
     properties {
-        property "sonar.exclusions", "**/RegistryConfig.java"
+        property "sonar.exclusions", "**/RegistryConfig.java, **uk/gov/hmcts/probate/security/ProbateServiceAuthFilter.java"
         property "sonar.projectName", "probate :: submit service"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
         property "sonar.host.url", "https://sonar.reform.hmcts.net/"

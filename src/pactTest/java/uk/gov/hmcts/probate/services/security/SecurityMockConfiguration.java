@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
+import uk.gov.hmcts.probate.security.ProbateServiceAuthFilter;
 
 @Profile("SECURITY_MOCK")
 @Configuration
@@ -19,29 +19,27 @@ import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 @Order(1)
 public class SecurityMockConfiguration {
 
-    private final ServiceAuthFilter serviceAuthFilter;
+    private ProbateServiceAuthFilter probateServiceAuthFilter;
 
     @Autowired
-    public SecurityMockConfiguration(ServiceAuthFilter serviceAuthFilter) {
-        this.serviceAuthFilter = serviceAuthFilter;
+    public SecurityMockConfiguration(ProbateServiceAuthFilter probateServiceAuthFilter) {
+        this.probateServiceAuthFilter = probateServiceAuthFilter;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/cases/**",
-                                "/submissions/**",
-                                "/payments/**",
-                                "/ccd-case-update/**",
-                                "/health",
-                                "/health/liveness")
-                        .permitAll())
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable);
+            .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable)
+            .addFilterBefore(probateServiceAuthFilter, BearerTokenAuthenticationFilter.class)
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(
+                    "/cases/**",
+                    "/submissions/**",
+                    "/payments/**",
+                    "/ccd-case-update/**").authenticated()
+                    .anyRequest().permitAll());
 
         return http.build();
     }

@@ -33,8 +33,8 @@ public class SecurityConfiguration {
                     "/cases/**",
                     "/submissions/**",
                     "/payments/**",
-                    "/ccd-case-update/**").authenticated()
-                .anyRequest().permitAll())
+                    "/ccd-case-update/**").permitAll()
+                .anyRequest().authenticated())
             .build();
     }
 

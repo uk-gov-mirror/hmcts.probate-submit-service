@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
-import uk.gov.hmcts.reform.auth.checker.spring.AuthCheckerUserDetailsService;
 import uk.gov.hmcts.reform.authorisation.ServiceAuthorisationApi;
 import uk.gov.hmcts.reform.authorisation.validators.AuthTokenValidator;
 import uk.gov.hmcts.reform.authorisation.validators.ServiceAuthTokenValidator;
@@ -66,9 +66,12 @@ public class AuthCheckerConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = "preAuthenticatedAuthenticationProvider")
     public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
-        PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
-        authenticationProvider.setPreAuthenticatedUserDetailsService(new AuthCheckerUserDetailsService());
-        return authenticationProvider;
+        PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider =
+                new PreAuthenticatedAuthenticationProvider();
+        preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(
+                token -> new User((String) token.getPrincipal(), "N/A", Collections.emptyList())
+        );
+        return preAuthenticatedAuthenticationProvider;
     }
 
     @Bean

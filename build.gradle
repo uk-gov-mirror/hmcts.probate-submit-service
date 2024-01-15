@@ -11,8 +11,8 @@ plugins {
     id 'application'
     id 'pmd'
     id 'org.springframework.boot' version '2.7.14'
-    id 'uk.gov.hmcts.java' version '0.12.52'
-    id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'uk.gov.hmcts.java' version '0.12.55'
+    id 'com.github.ben-manes.versions' version '0.50.0'
     id 'com.gorylenko.gradle-git-properties' version '2.3.1'
     id 'info.solidsoft.pitest' version '1.6.0'
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
@@ -155,7 +155,7 @@ task fortifyScan(type: JavaExec)  {
 }
 
 pmd {
-    toolVersion = "6.3.0"
+    toolVersion = "6.55.0"
     ignoreFailures = true
     sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke, sourceSets.integrationTest]
     reportsDir = file("$project.buildDir/reports/pmd")
@@ -215,7 +215,7 @@ dependencyManagement {
 
     dependencies {
         // CVE-2021-29425
-        dependency group: 'commons-io', name: 'commons-io', version: '2.10.0'
+        dependency group: 'commons-io', name: 'commons-io', version: '2.15.1'
 
         // CVE-2019-10086
         dependency group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
@@ -298,9 +298,9 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.3'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.3'
-    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.3'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.16.1'
+    testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.16.1'
     testContractCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testContractAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
 

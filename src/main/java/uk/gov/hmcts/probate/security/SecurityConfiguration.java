@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -19,11 +20,12 @@ import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 @Order(1)
 public class SecurityConfiguration {
 
-    private final ServiceAuthFilter serviceAuthFilter;
+    @Autowired
+    private ServiceAuthFilter serviceAuthFilter;
 
-    public SecurityConfiguration(final ServiceAuthFilter serviceAuthFilter) {
+    /*public SecurityConfiguration(final ServiceAuthFilter serviceAuthFilter) {
         this.serviceAuthFilter = serviceAuthFilter;
-    }
+    }*/
 
     @Bean
     protected SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {

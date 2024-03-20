@@ -54,7 +54,7 @@ public class TestTokenGenerator {
     }
 
     public String generateAuthorisation(String email) {
-        return generateClientToken(email);
+        return generateOpenIdToken(email);
     }
 
     private String generateClientToken(String email) {
@@ -75,5 +75,19 @@ public class TestTokenGenerator {
             .post("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri)
             .body().path("code");
 
+    }
+
+    public String generateOpenIdToken(String email) {
+        JsonPath jp = RestAssured.given().relaxedHTTPSValidation().post(idamUserBaseUrl + "/o/token?"
+                        + "client_secret=" + secret
+                        + "&client_id==probate"
+                        + "&redirect_uri=" + redirectUri
+                        + "&username=" + email
+                        + "&password=" + password
+                        + "&grant_type=password&scope=openid")
+                .body().jsonPath();
+        String token = jp.get("access_token");
+
+        return token;
     }
 }

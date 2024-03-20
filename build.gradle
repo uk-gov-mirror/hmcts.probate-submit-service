@@ -388,3 +388,7 @@ pact {
 static def getCheckedOutGitCommitHash() {
   'git rev-parse --verify --short HEAD'.execute().text.trim()
 }
+
+rootProject.tasks.named("processResources") {
+    dependsOn("generateGitProperties")
+}

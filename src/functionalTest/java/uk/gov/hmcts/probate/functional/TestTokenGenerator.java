@@ -12,7 +12,6 @@ import uk.gov.hmcts.probate.functional.model.Role;
 import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
 
 import java.util.Arrays;
-import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
 

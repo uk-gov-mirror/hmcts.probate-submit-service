@@ -221,4 +221,11 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
         <cve>CVE-2023-34042</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-crypto-5.7.10.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-crypto@.*$</packageUrl>
+        <cve>CVE-2023-34042</cve>
+    </suppress>
 </suppressions>

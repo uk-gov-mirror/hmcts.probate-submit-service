@@ -66,7 +66,6 @@ test.finalizedBy jacocoTestReport
 
 dependencyCheck {
     suppressionFile = "${project.rootDir}/suppressions.xml"
-    scanConfigurations = ['compile']
 }
 
 sourceSets {

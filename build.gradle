@@ -10,8 +10,8 @@ buildscript {
 plugins {
     id 'application'
     id 'pmd'
-    id 'org.springframework.boot' version '2.7.14'
-    id 'uk.gov.hmcts.java' version '0.12.59'
+    id 'org.springframework.boot' version '2.7.18'
+    id 'uk.gov.hmcts.java' version '0.12.61'
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'com.gorylenko.gradle-git-properties' version '2.4.1'
     id 'info.solidsoft.pitest' version '1.15.0'
@@ -191,11 +191,11 @@ repositories {
 
 def versions = [
         logging                         : '6.1.4',
-        serviceAuthProviderClient       : '4.0.0',
-        authCheckerLib                  : '2.1.4',
-        ccdClient                       : '4.7.6',
+        serviceAuthProviderClient       : '4.1.2',
+        authCheckerLib                  : '2.3.0',
+        ccdClient                       : '4.9.2',
         springCloudStarterNetflixHystrix: '3.0.3',
-        springBoot                      : '2.7.14',
+        springBoot                      : '2.7.18',
         springDocUi                     : '1.8.0',
         springCloudWiremock             : '3.1.1',
         serenity                        : '2.5.8',
@@ -229,7 +229,7 @@ configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
             if (details.requested.group in ['org.apache.tomcat.embed']) {
-                details.useVersion '9.0.82'
+                details.useVersion '9.0.88'
             }
 
             if (details.requested.group in ['org.apache.logging.log4j']) {
@@ -253,14 +253,15 @@ dependencies {
 
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.logging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: versions.logging
-    implementation group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-    implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    implementation group: 'uk.gov.hmcts.reform', name: 'core-case-data-store-client', version: versions.ccdClient
+    implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
+    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
+    implementation group: 'com.github.hmcts', name: 'core-case-data-store-client', version: versions.ccdClient
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
 
     implementation group: 'org.pitest', name: 'pitest', version: '1.15.8'
     implementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
     implementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
 
     compileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     annotationProcessor group:'org.projectlombok', name:'lombok', version: versions.lombok
@@ -269,16 +270,18 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.6.1'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
+
     testImplementation 'com.github.hmcts:fortify-client:1.4.1:all'
-    testImplementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    testRuntimeOnly group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.serviceAuthProviderClient
-    testRuntimeOnly group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
-    testImplementation group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testImplementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
+    testRuntimeOnly group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
+    testRuntimeOnly group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
+    testImplementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
 
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+
     testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
     testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
@@ -295,6 +298,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
     testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.0'

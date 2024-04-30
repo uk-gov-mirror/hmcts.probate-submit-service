@@ -1,6 +1,6 @@
  # renovate: datasource=github-releases depName=microsoft/ApplicationInsights-Java
-ARG APP_INSIGHTS_AGENT_VERSION=3.4.12
-FROM hmctspublic.azurecr.io/base/java:17-distroless
+ARG APP_INSIGHTS_AGENT_VERSION=3.5.2
+FROM hmctspublic.azurecr.io/base/java:21-distroless
 LABEL maintainer="https://github.com/hmcts/probate-submit-service"
 
 COPY lib/applicationinsights.json /opt/app/

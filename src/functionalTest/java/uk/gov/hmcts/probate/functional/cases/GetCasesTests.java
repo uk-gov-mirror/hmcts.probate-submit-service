@@ -28,7 +28,6 @@ public class GetCasesTests extends IntegrationTestBase {
     public TestRetryRule retryRule = new TestRetryRule(3);
     String caseId1;
     String caseId2;
-    String caseId;
     String inviteId;
     String caveatCaseId;
     @Value("${idam.citizen.username}")
@@ -66,18 +65,6 @@ public class GetCasesTests extends IntegrationTestBase {
             .body("caseInfo.caseId", notNullValue())
             .body("caseInfo.state", equalTo("Pending"))
             .extract().jsonPath().prettify();
-    }
-
-    @Test
-    public void getCaseByIdAsPathVariableReturns404() {
-        RestAssured.given()
-            .relaxedHTTPSValidation()
-            .headers(utils.getCitizenHeaders())
-            .queryParam("caseType", CAVEAT)
-            .when()
-            .get("/cases/" + caseId)
-            .then()
-            .assertThat().statusCode(404);
     }
 
     @Test

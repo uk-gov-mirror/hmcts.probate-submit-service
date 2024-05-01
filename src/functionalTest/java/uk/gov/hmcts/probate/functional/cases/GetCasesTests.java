@@ -28,6 +28,7 @@ public class GetCasesTests extends IntegrationTestBase {
     public TestRetryRule retryRule = new TestRetryRule(3);
     String caseId1;
     String caseId2;
+    String caseId;
     String inviteId;
     String caveatCaseId;
     @Value("${idam.citizen.username}")
@@ -74,7 +75,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .headers(utils.getCitizenHeaders())
             .queryParam("caseType", CAVEAT)
             .when()
-            .get("/cases/" + caseId1)
+            .get("/cases/" + caseId)
             .then()
             .assertThat().statusCode(404);
     }

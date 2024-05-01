@@ -91,7 +91,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases/" + randomCaseId)
             .then()
             .assertThat()
-            .statusCode(404)
+            .statusCode(400)
             .extract().jsonPath().prettify();
     }
 

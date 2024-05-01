@@ -111,13 +111,13 @@ public class CasesControllerIT {
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseResponse =
             ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
+        when(casesService.getCaseById(CASE_ID)).thenReturn(caseResponse);
 
-        mockMvc.perform(get(CASES_URL + "/" + EMAIL_ADDRESS)
+        mockMvc.perform(get(CASES_URL + "/" + CASE_ID)
             .param("caseType", CaseType.GRANT_OF_REPRESENTATION.name())
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
-        verify(casesService, times(1)).getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION);
+        verify(casesService, times(1)).getCaseById(CASE_ID);
     }
 
     @Test

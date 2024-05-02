@@ -186,7 +186,6 @@ repositories {
     mavenLocal()
     maven { url "https://repo.maven.apache.org/maven2" }
     maven { url "https://jitpack.io" }
-    jcenter()
 }
 
 def versions = [
@@ -194,7 +193,7 @@ def versions = [
         serviceAuthProviderClient       : '4.1.2',
         authCheckerLib                  : '2.3.0',
         ccdClient                       : '4.9.2',
-        springCloudStarterNetflixHystrix: '3.0.3',
+        springCloudStarterNetflixHystrix: '3.1.9',
         springBoot                      : '2.7.18',
         springDocUi                     : '1.8.0',
         springCloudWiremock             : '3.1.1',
@@ -209,7 +208,7 @@ def versions = [
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.1"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.9"
     }
 
     dependencies {
@@ -268,7 +267,7 @@ dependencies {
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test' , version: versions.springBoot
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.6.1'
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.7.11'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: versions.springCloudWiremock
 
     testImplementation 'com.github.hmcts:fortify-client:1.4.1:all'
@@ -283,13 +282,13 @@ dependencies {
     testFunctionalImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
     testFunctionalImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
-    testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
+    testFunctionalImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testFunctionalCompileOnly group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalAnnotationProcessor group:'org.projectlombok', name: 'lombok', version: versions.lombok
     testFunctionalImplementation sourceSets.main.runtimeClasspath
     testFunctionalImplementation sourceSets.test.runtimeClasspath
 
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
     testSmokeImplementation sourceSets.main.runtimeClasspath
@@ -300,7 +299,7 @@ dependencies {
     testContractImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
     testContractImplementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
-    testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.0'
+    testContractImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.0'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.0'
     testContractImplementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.17.0'
@@ -342,7 +341,8 @@ tasks.withType(JavaExec).configureEach {
     javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
 }
 
-ext['rest-assured.version'] = '4.5.0'
+ext['rest-assured.version'] = '4.5.1'
+ext['snakeyaml.version'] = '2.2'
 
 bootJar {
     archiveFileName = 'submit-service.jar'

@@ -45,7 +45,7 @@ public class CasesController {
     public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam("caseType") CaseType caseType,
                                                       @PathVariable("applicationId") String applicationId) {
         log.info("Retrieving case of caseType: {}", caseType.getName());
-        return ResponseEntity.ok(casesService.getCaseById(applicationId.toLowerCase()));
+        return ResponseEntity.ok(casesService.getCase(applicationId.toLowerCase(), caseType));
     }
 
     @Operation(summary = "Get case to CCD using case Id", description = "Get case to CCD")

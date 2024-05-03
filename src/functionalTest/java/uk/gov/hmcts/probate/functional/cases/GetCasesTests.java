@@ -68,6 +68,18 @@ public class GetCasesTests extends IntegrationTestBase {
     }
 
     @Test
+    public void getCaseByIdAsPathVariableReturns404() {
+        RestAssured.given()
+                .relaxedHTTPSValidation()
+                .headers(utils.getCitizenHeaders())
+                .queryParam("caseType", CAVEAT)
+                .when()
+                .get("/cases/" + caseId1)
+                .then()
+                .assertThat().statusCode(404);
+    }
+
+    @Test
     public void getCaseMissingCaseTypeReturns400() {
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -91,7 +103,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases/" + randomCaseId)
             .then()
             .assertThat()
-            .statusCode(400)
+            .statusCode(404)
             .extract().jsonPath().prettify();
     }
 

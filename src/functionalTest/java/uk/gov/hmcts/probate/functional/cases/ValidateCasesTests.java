@@ -1,12 +1,12 @@
 package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
-import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 import uk.gov.hmcts.probate.functional.TestRetryRule;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@RunWith(SpringIntegrationSerenityRunner.class)
+@ExtendWith(SerenityJUnit5Extension.class)
 public class ValidateCasesTests extends IntegrationTestBase {
 
     @Rule

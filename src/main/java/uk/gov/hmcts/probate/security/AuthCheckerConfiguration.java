@@ -1,6 +1,5 @@
 package uk.gov.hmcts.probate.security;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +20,12 @@ public class AuthCheckerConfiguration {
     @Value("#{'${authorised.services}'.split(',\\s*')}")
     private List<String> authorisedServices;
 
-    @Bean
-    @Qualifier("authorizedServiceExtractor")
+    @Bean(value = "authorizedServiceExtractor")
     public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
         return request -> authorisedServices;
     }
 
-    @Bean
-    @Qualifier("authorizedRolesExtractor")
+    @Bean(value = "authorizedRolesExtractor")
     public Function<HttpServletRequest, Collection<String>> authorizedRolesExtractor() {
         return any -> Collections.emptyList();
     }

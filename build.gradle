@@ -1,26 +1,20 @@
-buildscript {
-    dependencies {
-        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '4.3.0.3225'
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.5.8")
-    }
-}
 
 plugins {
     id 'application'
-    id 'org.springframework.boot' version '3.2.5'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.6'
     id 'uk.gov.hmcts.java' version '0.12.61'
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'com.gorylenko.gradle-git-properties' version '2.4.2'
     id 'info.solidsoft.pitest' version '1.15.0'
     id 'io.spring.dependency-management' version '1.1.5'
-    id 'au.com.dius.pact' version '4.1.7' // do not change, otherwise serenity report fails
+    id 'au.com.dius.pact' version '4.6.9'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '4.0.1'
+    id 'org.sonarqube' version '4.4.1.3373'
+    id 'project-report'
     id 'jacoco'
 }
 
-apply plugin: 'java'
-apply plugin: 'org.sonarqube'
-apply plugin: 'jacoco'
-apply plugin: 'net.serenity-bdd.aggregator'
 
 gitProperties {
     gitPropertiesDir = new File("${project.rootDir}/src/main/resources/uk/gov/hmcts/probate/services/submit")
@@ -176,13 +170,13 @@ repositories {
 def versions = [
         logging                         : '6.1.4',
         serviceAuthProviderClient       : '5.1.2',
-        authCheckerLib                  : '3.0.0',
+        authCheckerLib                  : '3.0.1',
         ccdClient                       : '5.0.1',
         springCloudStarterNetflixHystrix: '4.1.1',
         springBoot                      : '3.2.5',
         springCloudWiremock             : '4.1.2',
         springDocUi                     : '2.5.0',
-        springSecurityTesting           : '6.2.4',
+        springSecurityTesting           : '6.3.0',
         serenity                        : '4.1.6',
         restAssured                     : '5.4.0',
         pact_version                    : '4.1.7',

@@ -176,7 +176,7 @@ def versions = [
         springBoot                      : '3.2.5',
         springCloudWiremock             : '4.1.2',
         springDocUi                     : '2.5.0',
-        springSecurityTesting           : '6.2.4',
+        springSecurityTesting           : '6.3.0',
         springSecurityVersion           : '6.3.0',
         serenity                        : '4.1.6',
         restAssured                     : '5.4.0',

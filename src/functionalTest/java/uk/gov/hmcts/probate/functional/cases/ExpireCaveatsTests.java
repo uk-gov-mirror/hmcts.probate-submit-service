@@ -2,7 +2,7 @@ package uk.gov.hmcts.probate.functional.cases;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 

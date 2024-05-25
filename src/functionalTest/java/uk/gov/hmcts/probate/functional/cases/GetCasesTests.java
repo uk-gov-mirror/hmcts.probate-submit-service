@@ -3,13 +3,11 @@ package uk.gov.hmcts.probate.functional.cases;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
-import uk.gov.hmcts.probate.functional.TestRetryRule;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,8 +22,6 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseType.WILL_LODGEMENT;
 public class GetCasesTests extends IntegrationTestBase {
 
     public static final String INVITE_ID_PLACEHOLDER = "inviteId";
-    @Rule
-    public TestRetryRule retryRule = new TestRetryRule(3);
     String caseId1;
     String caseId2;
     String inviteId;
@@ -34,7 +30,7 @@ public class GetCasesTests extends IntegrationTestBase {
     private String email;
     private Boolean setUp = false;
 
-    @Before
+    @BeforeEach
     public void init() {
         if (!setUp) {
             String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
@@ -252,11 +248,9 @@ public class GetCasesTests extends IntegrationTestBase {
 
     @Test
     public void getCaseByInviteIdReturns200() {
-        if (retryRule.firstAttempt) {
-            String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
-            inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
-            utils.createTestCase(inviteCaseData);
-        }
+        String inviteCaseData = utils.getJsonFromFile("gop.multipleExecutors.full.json");
+        inviteCaseData = inviteCaseData.replace(INVITE_ID_PLACEHOLDER, inviteId);
+        utils.createTestCase(inviteCaseData);
 
         RestAssured.given()
             .relaxedHTTPSValidation()

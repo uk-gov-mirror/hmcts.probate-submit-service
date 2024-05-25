@@ -2,21 +2,16 @@ package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
-import uk.gov.hmcts.probate.functional.TestRetryRule;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(SerenityJUnit5Extension.class)
 public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
-
-    @Rule
-    public TestRetryRule retryRule = new TestRetryRule(3);
 
     private Boolean setUp = false;
 
@@ -26,7 +21,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
     private String caseId;
 
-    @Before
+    @BeforeEach
     public void init() {
         if (!setUp) {
             caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
@@ -37,9 +32,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             setUp = true;
         }
 
-        if (retryRule.firstAttempt) {
-            caseId = utils.createTestCase(caseData);
-        }
+        caseId = utils.createTestCase(caseData);
     }
 
     @Test

@@ -1,8 +1,8 @@
 package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -17,7 +17,7 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
 
     private String caveatId;
 
-    @Before
+    @BeforeEach
     public void init() {
         if (!setUp) {
             caveatData = utils.getJsonFromFile("caveat.partial.json");

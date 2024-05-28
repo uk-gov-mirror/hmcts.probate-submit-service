@@ -31,17 +31,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher(
+                        "/cases/**",
+                        "/submissions/**",
+                        "/payments/**",
+                        "/ccd-case-update/**",
+                        "/health",
+                        "/health/liveness"
+                )
                 .addFilter(filter)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/cases/**",
-                                "/submissions/**",
-                                "/payments/**",
-                                "/ccd-case-update/**",
-                                "/health",
-                                "/health/liveness"
-                        ).permitAll()
                         .anyRequest().authenticated()
             );
         return http.build();

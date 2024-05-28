@@ -193,3 +193,11 @@ feign:
 springdoc:
   packagesToScan: uk.gov.hmcts.probate
   pathsToMatch: /**
+
+idam:
+  s2s-auth:
+    url: ${auth.provider.service.client.baseUrl}
+    totp_secret: ${S2S_AUTH_TOTP_SECRET:'AAAAAAAAAAAAAAAA'}
+    microservice: ${auth.provider.service.client.microservice}
+  s2s-authorised:
+    services: PROBATE_BACKEND,PROBATE_FRONTEND

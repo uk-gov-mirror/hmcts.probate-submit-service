@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                                 "/ccd-case-update/**",
                                 "/health",
                                 "/health/liveness"
-                        ).authenticated()
+                        ).permitAll()
                         .anyRequest().authenticated()
             );
         return http.build();

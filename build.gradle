@@ -149,7 +149,7 @@ jacocoTestReport {
     reports {
         xml.required = true
         csv.required = false
-        xml.outputLocation = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        xml.outputLocation = file("${project.rootDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
@@ -320,8 +320,6 @@ task runAndPublishConsumerPactTests(type: Test){
 
 }
 
-runAndPublishConsumerPactTests.finalizedBy pactPublish
-
 pact {
   broker {
       pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?:'http://localhost:80'
@@ -332,6 +330,8 @@ pact {
     version = project.pacticipantVersion
   }
 }
+
+runAndPublishConsumerPactTests.finalizedBy pactPublish
 
 static def getCheckedOutGitCommitHash() {
   'git rev-parse --verify --short HEAD'.execute().text.trim()

@@ -28,22 +28,17 @@ public class GetCasesTests extends IntegrationTestBase {
     String caveatCaseId;
     @Value("${idam.citizen.username}")
     private String email;
-    private Boolean setUp = false;
 
     @BeforeEach
     public void init() {
-        if (!setUp) {
-            String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
-            caseId1 = utils.createTestCase(caseData);
-            caseData = caseData.replace("gop", "intestacy");
-            caseId2 = utils.createTestCase(caseData);
+        String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+        caseId1 = utils.createTestCase(caseData);
+        caseData = caseData.replace("gop", "intestacy");
+        caseId2 = utils.createTestCase(caseData);
 
-            inviteId = randomAlphanumeric(12).toLowerCase();
-            String caveatCaseData = utils.getJsonFromFile("caveat.full.json");
-            caveatCaseId = utils.createTestCase(caveatCaseData);
-
-            setUp = true;
-        }
+        inviteId = randomAlphanumeric(12).toLowerCase();
+        String caveatCaseData = utils.getJsonFromFile("caveat.full.json");
+        caveatCaseId = utils.createTestCase(caveatCaseData);
     }
 
     @Test

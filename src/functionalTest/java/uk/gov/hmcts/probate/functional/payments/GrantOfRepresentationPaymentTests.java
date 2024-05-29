@@ -13,8 +13,6 @@ import static org.hamcrest.Matchers.notNullValue;
 @ExtendWith(SerenityJUnit5Extension.class)
 public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
-    private Boolean setUp = false;
-
     private String caseData;
     private String paymentInitiatedData;
     private String paymentSuccessData;
@@ -23,14 +21,10 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
     @BeforeEach
     public void init() {
-        if (!setUp) {
-            caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
+        caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
 
-            paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
-            paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
-
-            setUp = true;
-        }
+        paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
+        paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
 
         caseId = utils.createTestCase(caseData);
     }

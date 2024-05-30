@@ -9,9 +9,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class CaveatsPaymentTests extends IntegrationTestBase {
-
-    private Boolean setUp = false;
-
     private String caveatData;
     private String paymentCaveatData;
 
@@ -19,15 +16,10 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
 
     @BeforeEach
     public void init() {
-        if (!setUp) {
-            caveatData = utils.getJsonFromFile("caveat.partial.json");
-            paymentCaveatData = utils.getJsonFromFile("caveat.full.json");
-
-            setUp = true;
-        }
+        caveatData = utils.getJsonFromFile("caveat.partial.json");
+        paymentCaveatData = utils.getJsonFromFile("caveat.full.json");
 
         caveatId = utils.createCaveatTestCase(caveatData);
-
     }
 
     @Test

@@ -13,22 +13,16 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(SerenityJUnit5Extension.class)
 public class SaveCaseTests extends IntegrationTestBase {
-
     String gopCaseId;
     String intestacyCaseId;
-    private Boolean setUp = false;
 
     @BeforeEach
     public void init() {
-        if (!setUp) {
-            String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
-            gopCaseId = utils.createTestCase(gopCaseData);
+        String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
+        gopCaseId = utils.createTestCase(gopCaseData);
 
-            String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
-            intestacyCaseId = utils.createTestCase(intestacyCaseData);
-
-            setUp = true;
-        }
+        String intestacyCaseData = utils.getJsonFromFile("intestacy.partial.json");
+        intestacyCaseId = utils.createTestCase(intestacyCaseData);
     }
 
     @Test

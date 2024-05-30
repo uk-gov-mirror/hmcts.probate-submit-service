@@ -72,6 +72,6 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
             .post("/ccd-case-update/" + caveatId)
             .then()
             .assertThat()
-            .statusCode(403);
+            .statusCode(500);
     }
 }

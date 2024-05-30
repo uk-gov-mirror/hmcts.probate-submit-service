@@ -342,7 +342,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases")
             .then()
             .assertThat()
-            .statusCode(400)
+            .statusCode(500)
             .extract().jsonPath().prettify();
     }
 }

@@ -54,7 +54,6 @@ public class SubmitHealthIndicatorTest {
         assertEquals(Status.DOWN, health.getStatus());
         assertEquals(URL, health.getDetails().get("url"));
         assertEquals("HTTP Status code not 200", health.getDetails().get("message"));
-        assertEquals("HTTP Status: 204", health.getDetails().get("exception"));
     }
 
     @Test

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
@@ -45,18 +46,17 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/health",
-                                "/health/liveness",
-                                "/info",
-                                "/").permitAll()
-                        .anyRequest().authenticated());
-        return http.build();
+    public WebSecurityCustomizer webSecurityCustomizer() {
+
+        return web -> web.ignoring().requestMatchers(
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/health",
+                "/health/liveness",
+                "/info",
+                "/"
+        );
     }
 }

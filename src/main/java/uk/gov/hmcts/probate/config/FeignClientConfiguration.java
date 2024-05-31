@@ -36,7 +36,6 @@ public class FeignClientConfiguration {
 
     private CloseableHttpClient getHttpClient() {
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(Timeout.ofMilliseconds(timeout))
                 .setResponseTimeout(Timeout.ofMilliseconds(timeout))
                 .build();
 

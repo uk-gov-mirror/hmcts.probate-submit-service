@@ -49,7 +49,6 @@ public class SubmitHealthIndicatorTest {
     public void shouldReturnStatusOfDownWhenHttpStatusIsNotOK() {
         when(mockRestTemplate.getForEntity(URL + "/health", String.class)).thenReturn(mockResponseEntity);
         when(mockResponseEntity.getStatusCode()).thenReturn(HttpStatus.NO_CONTENT);
-        when(mockResponseEntity.getStatusCodeValue()).thenReturn(HttpStatus.NO_CONTENT.value());
         Health health = submitHealthIndicator.health();
 
         assertEquals(Status.DOWN, health.getStatus());

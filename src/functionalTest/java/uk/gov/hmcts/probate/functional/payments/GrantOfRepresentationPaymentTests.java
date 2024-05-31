@@ -121,7 +121,6 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .assertThat()
             .statusCode(422);
 
-            //.statusCode(200);
     }
 
 

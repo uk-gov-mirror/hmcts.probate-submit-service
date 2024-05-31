@@ -40,7 +40,7 @@ public class SecurityConfiguration {
                         "/health/liveness"
                 )
                 .addFilter(filter)
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
             );

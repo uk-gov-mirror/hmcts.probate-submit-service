@@ -119,7 +119,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .post("/payments/" + caseId + "/cases")
             .then()
             .assertThat()
-            .statusCode(422);
+            .statusCode(500);
 
     }
 

@@ -34,9 +34,7 @@ public class SecurityConfiguration {
                         "/cases/**",
                         "/submissions/**",
                         "/payments/**",
-                        "/ccd-case-update/**",
-                        "/health",
-                        "/health/liveness"
+                        "/ccd-case-update/**"
                 )
                 .addFilter(filter)
                 .csrf(AbstractHttpConfigurer::disable)

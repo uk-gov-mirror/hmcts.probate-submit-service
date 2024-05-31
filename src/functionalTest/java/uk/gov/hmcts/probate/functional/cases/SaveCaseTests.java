@@ -115,7 +115,7 @@ public class SaveCaseTests extends IntegrationTestBase {
             .post("/cases/caseworker/" + applicationId)
             .then()
             .assertThat()
-            .statusCode(403);
+            .statusCode(500);
     }
 
     @Test

@@ -154,7 +154,7 @@ task fortifyScan(type: JavaExec)  {
 }
 
 pmd {
-    toolVersion = "7.2.0"
+    toolVersion = "7.3.0"
     ignoreFailures = true
     sourceSets = [sourceSets.main, sourceSets.test, sourceSets.testFunctional, sourceSets.testSmoke, sourceSets.integrationTest]
     reportsDir = file("$project.buildDir/reports/pmd")
@@ -201,7 +201,7 @@ def versions = [
         pact_version                    : '4.1.7',
         probateCommons                  : '1.4.49',
         feignHttpClient                 : '13.3',
-        lombok                          : '1.18.32',
+        lombok                          : '1.18.34',
         probatePactCommonsVersion       : '1.0.2',
         junitJupiter                    : '5.8.0-M1'
 ]

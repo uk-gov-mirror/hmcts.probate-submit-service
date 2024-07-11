@@ -30,7 +30,6 @@ import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepr
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantType;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +59,7 @@ public class CcdClientApiTest {
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
     private static final EventId UPDATE_DRAFT = EventId.GOP_UPDATE_DRAFT;
     private static final String PROBATE_DESCRIPTOR = "Probate application";
+    private final ImmutableMap<String, String> searchCriteria = ImmutableMap.of("applicationType","Personal");
 
     @Mock
     private CoreCaseDataApi mockCoreCaseDataApi;
@@ -290,7 +290,7 @@ public class CcdClientApiTest {
     public void shouldFindAllCase() {
 
         when(mockCoreCaseDataApi.searchForCitizen(eq(AUTHORIZATION), eq(SERVICE_AUTHORIZATION), eq(USER_ID),
-                eq(PROBATE.name()), eq(GRANT_OF_REPRESENTATION.getName()), eq(new HashMap<String, String>())))
+                eq(PROBATE.name()), eq(GRANT_OF_REPRESENTATION.getName()), eq(searchCriteria)))
             .thenReturn(searchResult.getCases());
         List<ProbateCaseDetails> listProbateCaseDetails = ccdClientApi.findCases(GRANT_OF_REPRESENTATION, securityDto);
 
@@ -300,7 +300,7 @@ public class CcdClientApiTest {
         assertEquals(STATE, caseInfo.getState());
         verify(mockCoreCaseDataApi, times(1)).searchForCitizen(eq(AUTHORIZATION),
                 eq(SERVICE_AUTHORIZATION), eq(USER_ID), eq(PROBATE.name()),
-                eq(GRANT_OF_REPRESENTATION.getName()), eq(new HashMap<String, String>()));
+                eq(GRANT_OF_REPRESENTATION.getName()), eq(searchCriteria));
     }
 
     @Test

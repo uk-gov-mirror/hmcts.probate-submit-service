@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,8 @@ public class CcdClientApi implements CoreCaseDataService {
     private final SearchFieldFactory searchFieldFactory;
 
     private final CcdElasticSearchQueryBuilder elasticSearchQueryBuilder;
+
+    private final ImmutableMap<String, String> searchCriteria = ImmutableMap.of("applicationType","Personal");
 
     @Override
     public ProbateCaseDetails updateCase(String caseId, CaseData caseData, EventId eventId,
@@ -215,7 +218,7 @@ public class CcdClientApi implements CoreCaseDataService {
                 securityDto.getUserId(),
                 JurisdictionId.PROBATE.name(),
                 caseType.getName(),
-                new java.util.HashMap<String, String>());
+                searchCriteria);
         return caseDetails.stream().map(this::createCaseResponse).collect(Collectors.toList());
     }
 

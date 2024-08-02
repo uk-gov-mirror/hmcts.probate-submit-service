@@ -3,20 +3,22 @@ package uk.gov.hmcts.probate.functional.cases;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SerenityJUnit5Extension.class)
 public class SaveCaseTests extends IntegrationTestBase {
     String gopCaseId;
     String intestacyCaseId;
 
-    @BeforeEach
+    @BeforeAll
     public void init() {
         String gopCaseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
         gopCaseId = utils.createTestCase(gopCaseData);
@@ -115,7 +117,7 @@ public class SaveCaseTests extends IntegrationTestBase {
             .post("/cases/caseworker/" + applicationId)
             .then()
             .assertThat()
-            .statusCode(500);
+            .statusCode(403);
     }
 
     @Test

@@ -3,8 +3,9 @@ package uk.gov.hmcts.probate.functional.cases;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
@@ -18,6 +19,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESEN
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.STANDING_SEARCH;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.WILL_LODGEMENT;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SerenityJUnit5Extension.class)
 public class GetCasesTests extends IntegrationTestBase {
 
@@ -29,7 +31,7 @@ public class GetCasesTests extends IntegrationTestBase {
     @Value("${idam.citizen.username}")
     private String email;
 
-    @BeforeEach
+    @BeforeAll
     public void init() {
         String caseData = utils.getJsonFromFile("gop.singleExecutor.full.json");
         caseId1 = utils.createTestCase(caseData);
@@ -337,7 +339,7 @@ public class GetCasesTests extends IntegrationTestBase {
             .get("/cases")
             .then()
             .assertThat()
-            .statusCode(500)
+            .statusCode(400)
             .extract().jsonPath().prettify();
     }
 }

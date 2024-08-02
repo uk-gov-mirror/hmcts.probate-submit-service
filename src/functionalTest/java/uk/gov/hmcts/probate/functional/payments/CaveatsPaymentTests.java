@@ -1,20 +1,22 @@
 package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CaveatsPaymentTests extends IntegrationTestBase {
     private String caveatData;
     private String paymentCaveatData;
 
     private String caveatId;
 
-    @BeforeEach
+    @BeforeAll
     public void init() {
         caveatData = utils.getJsonFromFile("caveat.partial.json");
         paymentCaveatData = utils.getJsonFromFile("caveat.full.json");
@@ -64,6 +66,6 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
             .post("/ccd-case-update/" + caveatId)
             .then()
             .assertThat()
-            .statusCode(500);
+            .statusCode(403);
     }
 }

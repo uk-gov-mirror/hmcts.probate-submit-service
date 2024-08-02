@@ -2,14 +2,16 @@ package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SerenityJUnit5Extension.class)
 public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
@@ -19,7 +21,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
 
     private String caseId;
 
-    @BeforeEach
+    @BeforeAll
     public void init() {
         caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
 
@@ -70,7 +72,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .post("/payments/" + caseId + "/cases")
             .then()
             .assertThat()
-            .statusCode(500);
+            .statusCode(422);
     }
 
     @Test
@@ -119,7 +121,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .post("/payments/" + caseId + "/cases")
             .then()
             .assertThat()
-            .statusCode(500);
+            .statusCode(422);
 
     }
 

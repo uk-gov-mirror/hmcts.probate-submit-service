@@ -57,7 +57,7 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
 
 
     @Test
-    public void updateCaveatAsCitizenReturns403() {
+    public void updateCaveatAsCitizenReturns400() {
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
@@ -66,6 +66,6 @@ public class CaveatsPaymentTests extends IntegrationTestBase {
             .post("/ccd-case-update/" + caveatId)
             .then()
             .assertThat()
-            .statusCode(403);
+            .statusCode(400);
     }
 }

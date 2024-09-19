@@ -1,45 +1,36 @@
 package uk.gov.hmcts.probate.functional.payments;
 
 import io.restassured.RestAssured;
-import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import uk.gov.hmcts.probate.functional.IntegrationTestBase;
-import uk.gov.hmcts.probate.functional.TestRetryRule;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@RunWith(SpringIntegrationSerenityRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SerenityJUnit5Extension.class)
 public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
-
-    @Rule
-    public TestRetryRule retryRule = new TestRetryRule(3);
-
-    private Boolean setUp = false;
 
     private String caseData;
     private String paymentInitiatedData;
     private String paymentSuccessData;
 
     private String caseId;
+    private static final int SLEEP_TIME = 2000;
 
-    @Before
-    public void init() {
-        if (!setUp) {
-            caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
+    @BeforeAll
+    public void init() throws Exception {
+        caseData = utils.getJsonFromFile("gop.singleExecutor.partial.json");
 
-            paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
-            paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
+        paymentInitiatedData = utils.getJsonFromFile("gop.paymentInitiated.json");
+        paymentSuccessData = utils.getJsonFromFile("gop.singleExecutor.full.json");
 
-            setUp = true;
-        }
-
-        if (retryRule.firstAttempt) {
-            caseId = utils.createTestCase(caseData);
-        }
+        caseId = utils.createTestCase(caseData);
+        Thread.sleep(SLEEP_TIME);
     }
 
     @Test
@@ -133,6 +124,7 @@ public class GrantOfRepresentationPaymentTests extends IntegrationTestBase {
             .then()
             .assertThat()
             .statusCode(422);
+
     }
 
 

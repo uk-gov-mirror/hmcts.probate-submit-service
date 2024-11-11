@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseType.GRANT_OF_REPRESENTATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CREATE_CASE_WITHOUT_PAYMENT;
@@ -40,6 +41,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_PAYMENT_FAILED
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_APPLICATION;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.UPDATE_GOP_PAYMENT_FAILED;
+
 
 @ExtendWith(SpringExtension.class)
 public class CasesServiceImplTest {
@@ -85,6 +87,7 @@ public class CasesServiceImplTest {
             .createCaseWithoutPaymentId(GOP_CREATE_CASE_WITHOUT_PAYMENT)
             .updatePaymentFailedEventId(UPDATE_GOP_PAYMENT_FAILED)
             .citizenHubResponseId(GOP_CITIZEN_HUB_RESPONSE)
+            .citizenHubResponseDraftId(GOP_CITIZEN_HUB_RESPONSE_DRAFT)
             .build());
     }
 

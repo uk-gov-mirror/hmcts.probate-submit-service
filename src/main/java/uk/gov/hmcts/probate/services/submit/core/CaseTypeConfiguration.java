@@ -25,6 +25,7 @@ import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_APPLICA
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_UPDATE_DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.UPDATE_GOP_PAYMENT_FAILED;
 import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE;
+import static uk.gov.hmcts.reform.probate.model.cases.EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT;
 
 @Configuration
 public class CaseTypeConfiguration {
@@ -44,6 +45,7 @@ public class CaseTypeConfiguration {
                 .createCaseWithoutPaymentId(GOP_CREATE_CASE_WITHOUT_PAYMENT)
                 .updatePaymentFailedEventId(UPDATE_GOP_PAYMENT_FAILED)
                 .citizenHubResponseId(GOP_CITIZEN_HUB_RESPONSE)
+                .citizenHubResponseDraftId(GOP_CITIZEN_HUB_RESPONSE_DRAFT)
                 .build())
             .put(CAVEAT, CaseEvents.builder()
                 .createCaseApplicationEventId(CAVEAT_APPLY_FOR_CAVEAT)

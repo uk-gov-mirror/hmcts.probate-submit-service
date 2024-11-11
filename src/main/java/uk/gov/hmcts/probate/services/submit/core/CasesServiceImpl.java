@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,8 @@ public class CasesServiceImpl implements CasesService {
             .put(DRAFT, CaseEvents::getUpdateDraftEventId)
             .put(PA_APP_CREATED, CaseEvents::getUpdateCaseApplicationEventId)
             .put(CASE_PAYMENT_FAILED, CaseEvents::getUpdatePaymentFailedEventId)
-            .put(DORMANT, CaseEvents::getCitizenHubResponseId)
-            .put(BO_CASE_STOPPED, CaseEvents::getCitizenHubResponseId)
+            .put(DORMANT, CaseEvents::getCitizenHubResponseDraftId)
+            .put(BO_CASE_STOPPED, CaseEvents::getCitizenHubResponseDraftId)
             .build();
 
     @Override
@@ -128,6 +129,9 @@ public class CasesServiceImpl implements CasesService {
             log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(),
                 state.getName());
             EventId eventId = eventMap.get(state).apply(caseEvents);
+            if (EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT.equals(eventId) && isSubmitHubResponse(caseData)) {
+                eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
+            }
             if (asCaseworker) {
                 return coreCaseDataService
                     .updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDto);
@@ -178,5 +182,17 @@ public class CasesServiceImpl implements CasesService {
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;
+    }
+
+    private boolean isSubmitHubResponse(CaseData caseData) {
+        if (!(caseData instanceof GrantOfRepresentationData data)) {
+            log.error("Invalid caseData type: {}", caseData.getClass().getSimpleName());
+            return false;
+        }
+
+        boolean noResponseOrUploadedDocs = (data.getCitizenResponse() == null || data.getCitizenResponse().isEmpty())
+                && (data.getCitizenDocumentsUploaded() == null || data.getCitizenDocumentsUploaded().isEmpty());
+        return data.getCitizenResponseCheckbox()
+            || (data.getDocumentUploadIssue() && noResponseOrUploadedDocs);
     }
 }

@@ -195,7 +195,8 @@ public class CasesServiceImpl implements CasesService {
         boolean hasDocumentUploadIssue = data.getDocumentUploadIssue() != null && data.getDocumentUploadIssue();
         boolean noResponseOrUploadedDocs = (data.getCitizenResponse() == null || data.getCitizenResponse().isEmpty())
                 && (data.getCitizenDocumentsUploaded() == null || data.getCitizenDocumentsUploaded().isEmpty());
+        boolean isSaveAndClose = data.getIsSaveAndClose() != null && data.getIsSaveAndClose();
         return hasCitizenResponseCheckbox
-            || (hasDocumentUploadIssue && noResponseOrUploadedDocs);
+            || (hasDocumentUploadIssue && !isSaveAndClose && noResponseOrUploadedDocs);
     }
 }

@@ -49,6 +49,7 @@ public class CasesServiceImplTest {
     private static final String EMAIL_ADDRESS = "test@test.com";
     private static final String INVITATION_ID = "inviationId";
     private static final String CASE_ID = "1343242352";
+    private static final String EVENT_DESCRIPTION = "event description";
     private static final CaseType CASE_TYPE = CaseType.GRANT_OF_REPRESENTATION;
 
     private static final EventId CREATE_DRAFT = EventId.GOP_CREATE_DRAFT;
@@ -189,15 +190,15 @@ public class CasesServiceImplTest {
         when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
             .thenReturn(caseResponseOptional);
         when(coreCaseDataService.updateCase(CASE_ID, caseData, UPDATE_DRAFT,
-            securityDto, "event description")).thenReturn(caseRequest);
+            securityDto, EVENT_DESCRIPTION)).thenReturn(caseRequest);
 
-        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, EVENT_DESCRIPTION);
 
         assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
         verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, UPDATE_DRAFT, securityDto,
-            "event description");
+            EVENT_DESCRIPTION);
     }
 
     @Test
@@ -238,7 +239,7 @@ public class CasesServiceImplTest {
             .thenReturn(Optional.empty());
         when(coreCaseDataService.createCase(caseData, CREATE_DRAFT, securityDto)).thenReturn(caseRequest);
 
-        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description");
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest, EVENT_DESCRIPTION);
 
         assertEquals(caseData, caseResponse.getCaseData());
         verify(securityUtils, times(1)).getSecurityDto();
@@ -276,8 +277,82 @@ public class CasesServiceImplTest {
         when(searchFieldFactory.getSearchFieldValuePair(CaseType.CAVEAT, caseData)).thenReturn(searchFieldValuePair);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                casesService.saveCase(EMAIL_ADDRESS, caseRequest, "event description"));
+                casesService.saveCase(EMAIL_ADDRESS, caseRequest, EVENT_DESCRIPTION));
 
         assertEquals("Applicant email on path must match case data", exception.getMessage());
+    }
+
+    @Test
+    void shouldUpdateCaseForCitizenHubResponseDraft() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.BO_CASE_STOPPED);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService.updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE_DRAFT, securityDto, EVENT_DESCRIPTION))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest,EVENT_DESCRIPTION);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE_DRAFT, securityDto, EVENT_DESCRIPTION);
+    }
+
+    @Test
+    void shouldUpdateCaseForCitizenHubResponse() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setCitizenResponseCheckbox(Boolean.TRUE);
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.BO_CASE_STOPPED);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService.updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest,EVENT_DESCRIPTION);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION);
+    }
+
+    @Test
+    void shouldUpdateCaseForCitizenHubResponseWithUploadIssue() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setDocumentUploadIssue(Boolean.TRUE);
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.BO_CASE_STOPPED);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService.updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest,EVENT_DESCRIPTION);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION);
     }
 }

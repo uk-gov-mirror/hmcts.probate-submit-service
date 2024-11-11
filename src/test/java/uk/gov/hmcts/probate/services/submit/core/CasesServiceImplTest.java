@@ -16,11 +16,17 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseEvents;
 import uk.gov.hmcts.reform.probate.model.cases.CaseInfo;
 import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
+import uk.gov.hmcts.reform.probate.model.cases.CollectionMember;
+import uk.gov.hmcts.reform.probate.model.cases.DocumentLink;
+import uk.gov.hmcts.reform.probate.model.cases.DocumentType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.UploadDocument;
 import uk.gov.hmcts.reform.probate.model.cases.caveat.CaveatData;
 import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -311,8 +317,13 @@ public class CasesServiceImplTest {
 
     @Test
     void shouldUpdateCaseForCitizenHubResponse() {
+        List<CollectionMember<UploadDocument>> documents = new ArrayList<>();
+        documents.add(createUploadDocuments("0"));
+
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setCitizenResponseCheckbox(Boolean.TRUE);
+        caseData.setCitizenResponse("response");
+        caseData.setCitizenDocumentsUploaded(documents);
         caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
         CaseInfo caseInfo = new CaseInfo();
         caseInfo.setCaseId(CASE_ID);
@@ -366,6 +377,36 @@ public class CasesServiceImplTest {
     }
 
     @Test
+    void shouldUpdateCaseForCitizenHubResponseWithUploadIssueEmptyFields() {
+        GrantOfRepresentationData caseData = new GrantOfRepresentationData();
+        caseData.setDocumentUploadIssue(Boolean.TRUE);
+        caseData.setCitizenResponse("");
+        caseData.setCitizenDocumentsUploaded(new ArrayList<>());
+        caseData.setPrimaryApplicantEmailAddress(EMAIL_ADDRESS);
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setCaseId(CASE_ID);
+        caseInfo.setState(CaseState.BO_CASE_STOPPED);
+        ProbateCaseDetails caseRequest = ProbateCaseDetails.builder().caseData(caseData).caseInfo(caseInfo).build();
+        SecurityDto securityDto = SecurityDto.builder().build();
+        Optional<ProbateCaseDetails> caseResponseOptional = Optional.of(caseRequest);
+        when(securityUtils.getSecurityDto()).thenReturn(securityDto);
+        when(coreCaseDataService.findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION, securityDto))
+                .thenReturn(caseResponseOptional);
+        when(coreCaseDataService
+                .updateCase(CASE_ID, caseData, GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION))
+                .thenReturn(caseRequest);
+
+        ProbateCaseDetails caseResponse = casesService.saveCase(EMAIL_ADDRESS, caseRequest,EVENT_DESCRIPTION);
+
+        assertEquals(caseData, caseResponse.getCaseData());
+        verify(securityUtils, times(1)).getSecurityDto();
+        verify(coreCaseDataService, times(1)).findCase(EMAIL_ADDRESS, GRANT_OF_REPRESENTATION,
+                securityDto);
+        verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
+                GOP_CITIZEN_HUB_RESPONSE, securityDto, EVENT_DESCRIPTION);
+    }
+
+    @Test
     void shouldUpdateCaseForCitizenHubResponseDraftWithUploadIssueIsSaveAndClose() {
         GrantOfRepresentationData caseData = new GrantOfRepresentationData();
         caseData.setDocumentUploadIssue(Boolean.TRUE);
@@ -392,5 +433,19 @@ public class CasesServiceImplTest {
                 securityDto);
         verify(coreCaseDataService, times(1)).updateCase(CASE_ID, caseData,
                 GOP_CITIZEN_HUB_RESPONSE_DRAFT, securityDto, EVENT_DESCRIPTION);
+    }
+
+    private CollectionMember<UploadDocument> createUploadDocuments(String id) {
+        DocumentLink docLink = DocumentLink.builder()
+                .documentBinaryUrl("")
+                .documentFilename("")
+                .documentUrl("")
+                .build();
+
+        UploadDocument doc = UploadDocument.builder()
+                .comment("comment")
+                .documentLink(docLink)
+                .documentType(DocumentType.CITIZEN_HUB_UPLOAD).build();
+        return new CollectionMember<>(id, doc);
     }
 }

@@ -87,9 +87,6 @@ public class CasesServiceImpl implements CasesService {
         SecurityDto securityDto = securityUtils.getSecurityDto();
         Optional<ProbateCaseDetails> caseResponseOptional = coreCaseDataService
             .findCaseById(caseId, securityDto);
-        //TODO need to remove
-        log.info("caseResponseOptional: {}",
-                caseResponseOptional.isPresent() ? caseResponseOptional.get().getCaseData() : "empty");
         return caseResponseOptional.orElseThrow(CaseNotFoundException::new);
     }
 

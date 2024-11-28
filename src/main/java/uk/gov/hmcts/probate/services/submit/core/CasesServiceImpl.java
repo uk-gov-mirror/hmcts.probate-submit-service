@@ -18,13 +18,16 @@ import uk.gov.hmcts.reform.probate.model.cases.CaseState;
 import uk.gov.hmcts.reform.probate.model.cases.CaseType;
 import uk.gov.hmcts.reform.probate.model.cases.EventId;
 import uk.gov.hmcts.reform.probate.model.cases.ProbateCaseDetails;
+import uk.gov.hmcts.reform.probate.model.cases.grantofrepresentation.GrantOfRepresentationData;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static uk.gov.hmcts.reform.probate.model.cases.CaseState.BO_CASE_STOPPED;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.CASE_PAYMENT_FAILED;
+import static uk.gov.hmcts.reform.probate.model.cases.CaseState.DORMANT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.DRAFT;
 import static uk.gov.hmcts.reform.probate.model.cases.CaseState.PA_APP_CREATED;
 
@@ -48,6 +51,8 @@ public class CasesServiceImpl implements CasesService {
             .put(DRAFT, CaseEvents::getUpdateDraftEventId)
             .put(PA_APP_CREATED, CaseEvents::getUpdateCaseApplicationEventId)
             .put(CASE_PAYMENT_FAILED, CaseEvents::getUpdatePaymentFailedEventId)
+            .put(DORMANT, CaseEvents::getCitizenHubResponseDraftId)
+            .put(BO_CASE_STOPPED, CaseEvents::getCitizenHubResponseDraftId)
             .build();
 
     @Override
@@ -118,9 +123,12 @@ public class CasesServiceImpl implements CasesService {
         if (caseResponseOptional.isPresent()) {
             ProbateCaseDetails caseResponse = caseResponseOptional.get();
             CaseState state = caseResponse.getCaseInfo().getState();
-            log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(), 
+            log.info("Found case with case Id: {} at state: {}", caseResponse.getCaseInfo().getCaseId(),
                 state.getName());
             EventId eventId = eventMap.get(state).apply(caseEvents);
+            if (EventId.GOP_CITIZEN_HUB_RESPONSE_DRAFT.equals(eventId) && isSubmitHubResponse(caseData)) {
+                eventId = EventId.GOP_CITIZEN_HUB_RESPONSE;
+            }
             if (asCaseworker) {
                 return coreCaseDataService
                     .updateCaseAsCaseworker(caseResponse.getCaseInfo().getCaseId(), caseData, eventId, securityDto);
@@ -143,7 +151,7 @@ public class CasesServiceImpl implements CasesService {
         SecurityDto securityDto = securityUtils.getSecurityDto();
         CaseEvents caseEvents = eventFactory.getCaseEvents(caseType);
         final EventId eventId =
-            CaseType.CAVEAT == caseType 
+            CaseType.CAVEAT == caseType
                 ? caseEvents.getCreateCaseApplicationEventId() : caseEvents.getCreateDraftEventId();
         return coreCaseDataService.createCase(caseData, eventId, securityDto);
     }
@@ -171,5 +179,21 @@ public class CasesServiceImpl implements CasesService {
         ProbateCaseDetails probateCaseDetails = getCase(searchField, caseType);
         validationService.validate(probateCaseDetails);
         return probateCaseDetails;
+    }
+
+    private boolean isSubmitHubResponse(CaseData caseData) {
+        if (!(caseData instanceof GrantOfRepresentationData data)) {
+            log.error("Invalid caseData type: {}", caseData.getClass().getSimpleName());
+            return false;
+        }
+
+        boolean hasCitizenResponseCheckbox = data.getCitizenResponseCheckbox() != null
+                && data.getCitizenResponseCheckbox();
+        boolean hasDocumentUploadIssue = data.getDocumentUploadIssue() != null && data.getDocumentUploadIssue();
+        boolean noResponseOrUploadedDocs = (data.getCitizenResponse() == null || data.getCitizenResponse().isEmpty())
+                && (data.getCitizenDocumentsUploaded() == null || data.getCitizenDocumentsUploaded().isEmpty());
+        boolean isSaveAndClose = data.getIsSaveAndClose() != null && data.getIsSaveAndClose();
+        return hasCitizenResponseCheckbox
+            || (hasDocumentUploadIssue && !isSaveAndClose && noResponseOrUploadedDocs);
     }
 }

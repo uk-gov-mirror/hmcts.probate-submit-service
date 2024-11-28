@@ -179,7 +179,7 @@ def versions = [
         lombok                          : '1.18.36',
         logging                         : '6.1.7',
         pact_version                    : '4.1.7',
-        probateCommons                  : '2.0.27',
+        probateCommons                  : '2.0.31',
         probatePactCommonsVersion       : '1.0.2',
         restAssured                     : '5.5.0',
         serenity                        : '4.2.9',
@@ -310,6 +310,19 @@ task printVersion {
 }
 
 run {
+    if (new Boolean(System.getenv("POINT_TO_AAT"))) {
+        println 'Exporting AAT env vars--->'
+        println 'Exporting AAT env vars' +project.file('./.aat-env').exists()
+        if (project.file('./.aat-env').exists()) {
+            project.file('./.aat-env').readLines().each() {
+                def index = it.indexOf("=")
+                def key = it.substring(0, index)
+                def value = it.substring(index + 1)
+                println 'key:' + key +'--value:' +value
+                environment key, value
+            }
+        }
+    }
     if (debug == 'true') {
         jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005']
     }

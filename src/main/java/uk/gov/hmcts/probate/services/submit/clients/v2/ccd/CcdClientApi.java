@@ -189,14 +189,11 @@ public class CcdClientApi implements CoreCaseDataService {
                 caseType.getName(), searchValue);
         String searchString =
             elasticSearchQueryBuilder.buildQuery(searchValue, searchFieldFactory.getEsSearchFieldName(caseType));
-        long beforeRequest = System.currentTimeMillis();
         List<CaseDetails> caseDetails = coreCaseDataApi.searchCases(
             securityDto.getAuthorisation(),
             securityDto.getServiceAuthorisation(),
             caseType.getName(),
             searchString).getCases();
-        long afterResponse = System.currentTimeMillis();
-        log.info("Time taken by ES for searchCases: {}", (afterResponse - beforeRequest));
         if (caseDetails == null) {
             return Optional.empty();
         }

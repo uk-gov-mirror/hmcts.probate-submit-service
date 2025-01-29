@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate;
 
+import com.microsoft.applicationinsights.attach.ApplicationInsights;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication()
 public class SubmitApplication {
     public static void main(String[] args) {
+        ApplicationInsights.attach();
         SpringApplication.run(SubmitApplication.class, args);
     }
 

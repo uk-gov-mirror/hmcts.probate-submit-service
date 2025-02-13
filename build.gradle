@@ -177,9 +177,9 @@ def versions = [
         jackson                         : '2.18.2',
         junitJupiter                    : '5.9.1',
         lombok                          : '1.18.36',
-        logging                         : '6.1.7',
+        logging                         : '6.1.8',
         pact_version                    : '4.1.7',
-        probateCommons                  : '2.0.43',
+        probateCommons                  : '2.0.44',
         probatePactCommonsVersion       : '1.0.2',
         restAssured                     : '5.5.0',
         serenity                        : '4.2.16',
@@ -219,7 +219,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.0'
     implementation group: 'com.microsoft.azure', name: 'applicationinsights-runtime-attach', version: '3.7.0'
-    implementation group: 'org.pitest', name: 'pitest', version: '1.17.4'
+    implementation group: 'org.pitest', name: 'pitest', version: '1.18.0'
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.0'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.0'

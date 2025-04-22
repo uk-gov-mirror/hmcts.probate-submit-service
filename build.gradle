@@ -1,14 +1,14 @@
 plugins {
     id 'application'
     id 'java'
-    id 'org.springframework.boot' version '3.3.5'
+    id 'org.springframework.boot' version '3.3.10'
     id 'uk.gov.hmcts.java' version '0.12.65'
     id 'com.github.ben-manes.versions' version '0.52.0'
     id 'com.gorylenko.gradle-git-properties' version '2.5.0'
     id 'info.solidsoft.pitest' version '1.15.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'au.com.dius.pact' version '4.6.17'
-    id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.16'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.22'
     id 'org.sonarqube' version '6.1.0.5360'
     id 'project-report'
     id 'jacoco'
@@ -170,7 +170,7 @@ repositories {
 }
 
 def versions = [
-        authCheckerLib                  : '3.0.6',
+        authCheckerLib                  : '3.1.0',
         ccdClient                       : '5.0.5',
         feignHttpClient                 : '13.5',
         httpclient5                     : '5.3.1',
@@ -182,13 +182,13 @@ def versions = [
         probateCommons                  : '2.0.58',
         probatePactCommonsVersion       : '1.0.2',
         restAssured                     : '5.5.1',
-        serenity                        : '4.2.17',
+        serenity                        : '4.2.22',
         serviceAuthProviderClient       : '5.3.0',
-        springBoot                      : '3.3.5',
+        springBoot                      : '3.3.10',
         springCloudStarterNetflixHystrix: '4.2.1',
         springCloudWiremock             : '4.2.1',
         springDocUi                     : '2.6.0',
-        springSecurityTesting           : '6.4.4',
+        springSecurityTesting           : '6.4.5',
         springSecurityVersion           : '6.3.0',
 ]
 
@@ -217,8 +217,8 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient
     implementation group: 'com.github.hmcts', name: 'core-case-data-store-client', version: versions.ccdClient
     implementation group: 'com.github.hmcts', name: 'probate-commons', version: versions.probateCommons
-    implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.1'
-    implementation group: 'com.microsoft.azure', name: 'applicationinsights-runtime-attach', version: '3.7.1'
+    implementation group: 'com.microsoft.azure', name: 'applicationinsights-core', version: '3.7.2'
+    implementation group: 'com.microsoft.azure', name: 'applicationinsights-runtime-attach', version: '3.7.2'
     implementation group: 'org.pitest', name: 'pitest', version: '1.19.1'
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
@@ -270,7 +270,7 @@ dependencies {
     testPactImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testPactImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
     testPactImplementation group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probatePactCommonsVersion
-    testPactImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    testPactImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0'
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
     testPactImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version

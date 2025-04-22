@@ -60,9 +60,9 @@ public class CcdClientApi implements CoreCaseDataService {
             caseId,
             eventId.getName()
         );
-        if (startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
-                .isAfter(lastModifiedDateTime)) {
-            log.info("updateCase  caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
+        if (!startEventResponse.getCaseDetails().getLastModified().truncatedTo(ChronoUnit.MILLIS)
+                .equals(lastModifiedDateTime.truncatedTo(ChronoUnit.MILLIS))) {
+            log.info("updateCase caseId : {}, lastModifiedDateTime: {}", caseId,lastModifiedDateTime);
             throw new ConcurrentDataUpdateException(caseId);
         }
         CaseDataContent caseDataContent =

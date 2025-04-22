@@ -125,8 +125,8 @@ public class CcdClientApiTest {
             .state(STATE.getName())
                 .jurisdiction(PROBATE.name())
             .caseTypeId(GRANT_OF_REPRESENTATION.getName())
-            .createdDate(LocalDateTime.now())
-            .lastModified(LocalDateTime.now())
+            .createdDate(LAST_MODIFIED_DATE_TIME)
+            .lastModified(LAST_MODIFIED_DATE_TIME)
             .data(ImmutableMap.of("applicationType", ApplicationType.PERSONAL,
                 "caseType", GrantType.INTESTACY))
             .build();

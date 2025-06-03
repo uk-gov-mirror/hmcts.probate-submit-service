@@ -87,15 +87,13 @@ public class SaveCaseTests extends IntegrationTestBase {
     @Test
     public void saveCasesWorkerIntestacyCaseReturns200() {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
-        String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
-        intestacyCaseData = intestacyCaseData.replace("appId", applicationId);
 
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCitizenHeaders())
             .body(intestacyCaseData)
             .when()
-            .post("/cases/caseworker/" + applicationId)
+            .post("/cases/caseworker/" + intestacyCaseId)
             .then()
             .assertThat()
             .body("caseData", notNullValue())
@@ -106,15 +104,14 @@ public class SaveCaseTests extends IntegrationTestBase {
     @Test
     public void saveCasesWorkerIntestacyCaseReturns403() {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
-        String applicationId = RandomStringUtils.randomNumeric(16).toLowerCase();
-        intestacyCaseData = intestacyCaseData.replace("appId", applicationId);
+
 
         RestAssured.given()
             .relaxedHTTPSValidation()
             .headers(utils.getCaseworkerHeaders())
             .body(intestacyCaseData)
             .when()
-            .post("/cases/caseworker/" + applicationId)
+            .post("/cases/caseworker/"  + intestacyCaseId)
             .then()
             .assertThat()
             .statusCode(403);

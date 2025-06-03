@@ -85,7 +85,7 @@ public class SaveCaseTests extends IntegrationTestBase {
     }
 
     @Test
-    public void saveCasesWorkerIntestacyCaseReturns200() {
+    public void saveCasesWorkerIntestacyCaseReturns403() {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
 
         RestAssured.given()
@@ -96,15 +96,12 @@ public class SaveCaseTests extends IntegrationTestBase {
             .post("/cases/caseworker/" + intestacyCaseId)
             .then()
             .assertThat()
-            .body("caseData", notNullValue())
-            .body("caseInfo.caseId", notNullValue())
-            .body("caseInfo.state", equalTo("Pending"));
+            .statusCode(403);
     }
 
     @Test
-    public void saveCasesWorkerIntestacyCaseReturns403() {
+    public void saveCasesWorkerIntestacyCaseReturns404() {
         String intestacyCaseData = utils.getJsonFromFile("intestacy.full.json");
-
 
         RestAssured.given()
             .relaxedHTTPSValidation()
@@ -114,7 +111,7 @@ public class SaveCaseTests extends IntegrationTestBase {
             .post("/cases/caseworker/"  + intestacyCaseId)
             .then()
             .assertThat()
-            .statusCode(403);
+            .statusCode(404);
     }
 
     @Test

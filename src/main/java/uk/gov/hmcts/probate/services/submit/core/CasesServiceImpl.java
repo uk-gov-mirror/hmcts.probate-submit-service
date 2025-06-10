@@ -101,15 +101,18 @@ public class CasesServiceImpl implements CasesService {
     private ProbateCaseDetails saveCase(String searchField, ProbateCaseDetails probateCaseDetails,
                                         Boolean asCaseworker, String eventDescription) {
         log.info("saveDraft - Saving draft for case type: {}",
-            probateCaseDetails.getCaseData().getClass().getSimpleName());
+                probateCaseDetails.getCaseData().getClass().getSimpleName());
         CaseData caseData = probateCaseDetails.getCaseData();
         CaseType caseType = CaseType.getCaseType(caseData);
         if (!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
             Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
             String searchValue = searchFieldValuePair.getRight();
+            System.out.println("searchValue---> " + searchValue);
             Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
         }
         SecurityDto securityDto = securityUtils.getSecurityDto();
+        //for Grant of Representation, we need to find the case by id to CCD
+        //for other case types, we can search by applicant email or other search fields
         Optional<ProbateCaseDetails> caseInfoOptional = caseType.equals(CaseType.GRANT_OF_REPRESENTATION)
                 ? coreCaseDataService.findCaseById(searchField,securityDto)
                 : coreCaseDataService.findCase(searchField, caseType, securityDto);

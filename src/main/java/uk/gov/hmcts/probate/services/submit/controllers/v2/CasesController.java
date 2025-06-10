@@ -106,7 +106,8 @@ public class CasesController {
                                                        @RequestParam(name = "eventDescription",
                                                           defaultValue = "Probate Application") String eventDescription,
                                                        @RequestBody ProbateCaseDetails caseRequest) {
-        log.info("Saving case for case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        log.info("Saving case for case type: {} id {}", caseRequest.getCaseData().getClass().getSimpleName(),
+                applicationId);
         return new ResponseEntity(casesService.saveCase(applicationId.toLowerCase(),
             caseRequest, eventDescription), OK);
     }
@@ -125,7 +126,8 @@ public class CasesController {
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> saveCaseAsCaseworker(@PathVariable("applicationId") String applicationId,
                                                                    @RequestBody ProbateCaseDetails caseRequest) {
-        log.info("Saving case for caseworker case type: {}", caseRequest.getCaseData().getClass().getSimpleName());
+        log.info("Saving case for caseworker case type: {} id {}",
+                caseRequest.getCaseData().getClass().getSimpleName(), applicationId);
         return new ResponseEntity(casesService.saveCaseAsCaseworker(applicationId.toLowerCase(), caseRequest), OK);
     }
 

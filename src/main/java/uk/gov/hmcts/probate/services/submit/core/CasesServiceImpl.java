@@ -107,7 +107,6 @@ public class CasesServiceImpl implements CasesService {
         if (!caseType.equals(CaseType.GRANT_OF_REPRESENTATION)) {
             Pair<String, String> searchFieldValuePair = searchFieldFactory.getSearchFieldValuePair(caseType, caseData);
             String searchValue = searchFieldValuePair.getRight();
-            System.out.println("searchValue---> " + searchValue);
             Assert.isTrue(searchValue.equals(searchField), "Applicant email on path must match case data");
         }
         SecurityDto securityDto = securityUtils.getSecurityDto();

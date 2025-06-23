@@ -104,14 +104,14 @@ sourceSets {
     }
 }
 
-task integration(type: Test) {
+tasks.register('integration', Test) {
     description = "Runs integration tests"
     group = "Verification"
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-task functional(type: Test) {
+tasks.register('functional', Test) {
     description = "Runs functional Tests"
     testClassesDirs = sourceSets.testFunctional.output.classesDirs
     classpath = sourceSets.testFunctional.runtimeClasspath
@@ -121,25 +121,25 @@ task functional(type: Test) {
 functional.finalizedBy(aggregate)
 
 
-task pactTask(type: Test) {
+tasks.register('pactTask', Test) {
     description = "Runs pact Tests"
     testClassesDirs = sourceSets.testPact.output.classesDirs
     classpath = sourceSets.testPact.runtimeClasspath
 }
 
-task smoke(type: Test) {
+tasks.register('smoke', Test) {
     description = "Runs Smoke Tests"
     testClassesDirs = sourceSets.testSmoke.output.classesDirs
     classpath = sourceSets.testSmoke.runtimeClasspath
 }
 
-task fortifyScan(type: JavaExec)  {
+tasks.register('fortifyScan', JavaExec) {
     getMainClass().set("uk.gov.hmcts.fortifyclient.FortifyClientMainApp")
     classpath += sourceSets.test.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     maxHeapSize = "1024m"
     useJUnitPlatform()
 }
@@ -175,10 +175,10 @@ def versions = [
         feignHttpClient                 : '13.6',
         httpclient5                     : '5.5',
         jackson                         : '2.19.1',
-        junitJupiter                    : '5.13.1',
+        junitJupiter                    : '5.12.2',
         lombok                          : '1.18.38',
         logging                         : '6.1.9',
-        pact_version                    : '4.6.17',
+        pact_version                    : '4.1.34',
         probateCommons                  : '2.2.3',
         restAssured                     : '5.5.5',
         serenity                        : '4.2.34',
@@ -188,7 +188,6 @@ def versions = [
         springCloudWiremock             : '4.3.0',
         springDocUi                     : '2.8.9',
         springSecurityTesting           : '6.5.1',
-        springSecurityVersion           : '6.3.0',
         fortifyClient                   : '1.4.9',
 ]
 
@@ -277,7 +276,7 @@ dependencies {
     testPactImplementation group: 'au.com.dius.pact.consumer', name: 'java8',  version: versions.pact_version
     testPactRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     testPactRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junitJupiter
-    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.13.1'
+    testPactRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.12.2'
     testPactImplementation sourceSets.main.runtimeClasspath
     testPactImplementation sourceSets.test.runtimeClasspath
 
@@ -285,7 +284,7 @@ dependencies {
     integrationTestImplementation sourceSets.test.runtimeClasspath
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'
 }
 
@@ -305,7 +304,7 @@ bootJar {
     }
 }
 
-task printVersion {
+tasks.register('printVersion') {
     doLast {
         print project.version
     }
@@ -330,7 +329,7 @@ run {
     }
 }
 
-task runAndPublishConsumerPactTests(type: Test){
+tasks.register('runAndPublishConsumerPactTests', Test) {
     description = "Runs consumer pact Tests"
     testClassesDirs = sourceSets.testPact.output.classesDirs
     classpath = sourceSets.testPact.runtimeClasspath

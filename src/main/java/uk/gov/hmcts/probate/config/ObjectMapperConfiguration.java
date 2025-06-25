@@ -17,10 +17,9 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class ObjectMapperConfiguration {
 
-
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = JsonMapper
+        return JsonMapper
                 .builder()
                 .addModule(new JavaTimeModule())
                 .addModule(new Jdk8Module())
@@ -29,8 +28,5 @@ public class ObjectMapperConfiguration {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .disable(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT)
                 .build();
-
-        return objectMapper;
     }
-
 }

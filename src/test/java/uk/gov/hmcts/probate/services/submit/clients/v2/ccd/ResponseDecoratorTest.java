@@ -47,7 +47,7 @@ public class ResponseDecoratorTest {
             .body("hello world", UTF_8)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
         String body = responseDecorator.bodyToString();
 
         assertThat(body).isEqualTo("hello world");
@@ -62,7 +62,7 @@ public class ResponseDecoratorTest {
             .headers(headers)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
         String body = responseDecorator.bodyToString();
 
         assertNull(response.body());
@@ -84,7 +84,7 @@ public class ResponseDecoratorTest {
                 }, 1)
                 .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
 
         String body = responseDecorator.bodyToString();
 
@@ -105,7 +105,7 @@ public class ResponseDecoratorTest {
             .body(validApiClientErrorResponse, UTF_8)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
         Field objectMapperField = ResponseDecorator.class.getDeclaredField("objectMapper");
         objectMapperField.setAccessible(true);
         objectMapperField.set(responseDecorator, objectMapper);
@@ -129,7 +129,7 @@ public class ResponseDecoratorTest {
             .headers(headers)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response);
         Field objectMapperField = ResponseDecorator.class.getDeclaredField("objectMapper");
         objectMapperField.setAccessible(true);
         objectMapperField.set(responseDecorator, objectMapper);

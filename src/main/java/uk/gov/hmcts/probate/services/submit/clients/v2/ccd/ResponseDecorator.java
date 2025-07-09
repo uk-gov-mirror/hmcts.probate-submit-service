@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.Util;
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.probate.config.ApplicationContextProvider;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientError;
 import uk.gov.hmcts.reform.probate.model.client.ApiClientErrorResponse;
 import uk.gov.hmcts.reform.probate.model.client.ErrorResponse;
@@ -20,10 +19,10 @@ class ResponseDecorator {
 
     private ObjectMapper objectMapper;
 
-    ResponseDecorator(Response response) {
+    ResponseDecorator(Response response,ObjectMapper objectMapper) {
 
         this.response = response;
-        this.objectMapper = ApplicationContextProvider.getApplicationContext().getBean(ObjectMapper.class);
+        this.objectMapper = objectMapper;
     }
 
     String bodyToString() {

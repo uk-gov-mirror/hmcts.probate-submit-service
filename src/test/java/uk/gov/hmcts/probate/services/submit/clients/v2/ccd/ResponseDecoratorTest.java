@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.probate.model.client.ApiClientException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -47,7 +46,7 @@ public class ResponseDecoratorTest {
             .body("hello world", UTF_8)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
         String body = responseDecorator.bodyToString();
 
         assertThat(body).isEqualTo("hello world");
@@ -62,7 +61,7 @@ public class ResponseDecoratorTest {
             .headers(headers)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
         String body = responseDecorator.bodyToString();
 
         assertNull(response.body());
@@ -84,7 +83,7 @@ public class ResponseDecoratorTest {
                 }, 1)
                 .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
 
         String body = responseDecorator.bodyToString();
 
@@ -105,10 +104,7 @@ public class ResponseDecoratorTest {
             .body(validApiClientErrorResponse, UTF_8)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
-        Field objectMapperField = ResponseDecorator.class.getDeclaredField("objectMapper");
-        objectMapperField.setAccessible(true);
-        objectMapperField.set(responseDecorator, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
 
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
 
@@ -129,10 +125,7 @@ public class ResponseDecoratorTest {
             .headers(headers)
             .build();
 
-        ResponseDecorator responseDecorator = new ResponseDecorator(response);
-        Field objectMapperField = ResponseDecorator.class.getDeclaredField("objectMapper");
-        objectMapperField.setAccessible(true);
-        objectMapperField.set(responseDecorator, objectMapper);
+        ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
         ApiClientError apiClientError = errorResponse.getError();
 

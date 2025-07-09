@@ -1,5 +1,6 @@
 package uk.gov.hmcts.probate.services.submit.clients.v2.ccd;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import feign.Util;
@@ -16,6 +17,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +33,20 @@ public class CcdClientApiErrorDecoderTest {
     private CcdClientApiErrorDecoder errorDecoder;
 
 
+    @Test
+    public void initializesObjectMapperWhenProvided() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        CcdClientApiErrorDecoder errorDecoder = new CcdClientApiErrorDecoder(objectMapper);
 
+        assertNotNull(errorDecoder);
+    }
+
+    @Test
+    public void initializesWithoutObjectMapperWhenNotProvided() {
+        CcdClientApiErrorDecoder errorDecoder = new CcdClientApiErrorDecoder();
+
+        assertNotNull(errorDecoder);
+    }
 
     @Test
     public void throwsApiClientExceptionWhenResponseIs500() throws ReflectiveOperationException  {
@@ -45,6 +62,9 @@ public class CcdClientApiErrorDecoderTest {
         when(errorDecoder.decode("Service#foo()", response)).thenThrow(apiClientException);
 
         assertThrows(ApiClientException.class, () -> errorDecoder.decode("Service#foo()", response));
+        assertEquals(500, apiClientException.getStatus());
+        assertNull(apiClientException.getErrorResponse());
     }
+
 
 }

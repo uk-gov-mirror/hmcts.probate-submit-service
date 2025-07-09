@@ -25,6 +25,7 @@ import java.util.Map;
 import static feign.Util.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
@@ -84,7 +85,7 @@ public class ResponseDecoratorTest {
                 .build();
 
         ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
-
+        assertNotNull(responseDecorator);
         String body = responseDecorator.bodyToString();
 
         assertEquals("", body);
@@ -105,6 +106,7 @@ public class ResponseDecoratorTest {
             .build();
 
         ResponseDecorator responseDecorator = new ResponseDecorator(response,objectMapper);
+        assertNotNull(responseDecorator);
 
         ApiClientErrorResponse errorResponse = (ApiClientErrorResponse) responseDecorator.mapBodyToErrorResponse();
 

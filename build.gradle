@@ -211,6 +211,7 @@ dependencies {
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: versions.httpclient5
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: versions.springDocUi
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.35")
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.logging
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient

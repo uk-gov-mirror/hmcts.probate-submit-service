@@ -187,6 +187,7 @@ def versions = [
         springCloudStarterNetflixHystrix: '4.3.0',
         springCloudWiremock             : '4.3.0',
         springDocUi                     : '2.8.9',
+        swaggerAnnotations              : '2.2.35',
         springSecurityTesting           : '6.5.2',
         fortifyClient                   : '1.4.10',
 ]
@@ -211,6 +212,7 @@ dependencies {
     implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: versions.httpclient5
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: versions.springCloudStarterNetflixHystrix
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: versions.springDocUi
+    implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: versions.swaggerAnnotations
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.logging
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: versions.authCheckerLib
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: versions.serviceAuthProviderClient

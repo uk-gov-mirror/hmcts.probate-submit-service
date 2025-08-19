@@ -190,6 +190,7 @@ def versions = [
         swaggerAnnotations              : '2.2.35',
         springSecurityTesting           : '6.5.2',
         fortifyClient                   : '1.4.10',
+        tomcat                          : '10.1.44'
 ]
 
 dependencyManagement {
@@ -224,6 +225,11 @@ dependencies {
     implementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.2'
+
+    //Solves CVE-2025-48989
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: versions.tomcat
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: versions.tomcat
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: versions.tomcat
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: versions.springSecurityTesting

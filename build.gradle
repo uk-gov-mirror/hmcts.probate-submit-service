@@ -3,11 +3,11 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.16'
     id 'uk.gov.hmcts.java' version '0.12.70'
-    id 'io.github.ben-manes.versions' version '0.59.0'
+    id 'io.github.ben-manes.versions' version '0.61.0'
     id 'com.gorylenko.gradle-git-properties' version '4.0.1'
     id 'info.solidsoft.pitest' version '1.19.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'au.com.dius.pact' version '4.7.4'
+    id 'au.com.dius.pact' version '4.7.5'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '5.3.9'
     id 'org.sonarqube' version '7.4.0.8496'
     id 'project-report'
@@ -175,7 +175,7 @@ def versions = [
         ccdClient                       : '5.3.0',
         commonsFileuploadVersion        : '1.6.0',
         feignHttpClient                 : '13.13',
-        httpclient5                     : '5.6.3',
+        httpclient5                     : '5.6.4',
         jackson                         : '2.22.1',
         junitJupiter                    : '5.12.2',
         lombok                          : '1.18.46',
@@ -299,7 +299,7 @@ dependencies {
     testPactImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testPactImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junitJupiter
     testPactImplementation group: 'com.github.hmcts', name: 'probate-pact-commons', version: versions.probateCommons
-    testPactImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0'
+    testPactImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.6.0'
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     testPactImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
     testPactImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version

@@ -8,5 +8,5 @@ maintainers:
     email: probate-action-group@HMCTS.NET
 dependencies:
   - name: java
-    version: 6.0.0
+    version: 6.1.1
     repository: 'oci://hmctsprod.azurecr.io/helm'

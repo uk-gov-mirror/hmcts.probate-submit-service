@@ -40,6 +40,7 @@ import java.util.Set;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -126,7 +127,6 @@ public class CasesControllerIT {
     @Test
     public void shouldGetCaseByApplicantEmailForIntestacyGrantOfRepresentation() throws Exception {
         when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -134,7 +134,8 @@ public class CasesControllerIT {
         caseInfo.setState(CaseState.DRAFT);
         ProbateCaseDetails caseResponse =
             ProbateCaseDetails.builder().caseInfo(caseInfo).caseData(grantOfRepresentation).build();
-        when(casesService.getCase(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION)).thenReturn(caseResponse);
+        when(casesService.getCaseByApplicantEmail(EMAIL_ADDRESS, CaseType.GRANT_OF_REPRESENTATION))
+                .thenReturn(caseResponse);
 
         mockMvc.perform(get(CASES_BY_APPLICANT_EMAIL_URL + "/" + EMAIL_ADDRESS)
             .header("ServiceAuthorization", "Bearer dummy-s2s-token")
@@ -149,6 +150,8 @@ public class CasesControllerIT {
 
     @Test
     public void shouldGetAllCaseForGrantOfRepresentation() throws Exception {
+        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
+        when(ccdDataStoreService.isCasesOwner(anyList())).thenReturn(true);
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();

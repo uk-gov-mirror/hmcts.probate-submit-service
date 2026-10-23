@@ -21,7 +21,9 @@ public class CcdDataStoreService {
     private final CaseRoleClient caseRoleClient;
 
     public boolean isCaseOwner(String caseId) {
-
+        if (caseId == null || caseId.isEmpty()) {
+            return true;
+        }
         log.info("isCaseOwner caseId:: {}", caseId.toLowerCase());
         FindUserCaseRolesResponse response = findUserCaseRoles(caseId.toLowerCase());
         return response.getCaseUsers().stream()
@@ -30,7 +32,6 @@ public class CcdDataStoreService {
 
     public boolean isCasesOwner(List<ProbateCaseDetails> caseDetails) {
         if (caseDetails == null || caseDetails.isEmpty()) {
-            log.info("isCasesOwner null or empty");
             return true;
         }
 

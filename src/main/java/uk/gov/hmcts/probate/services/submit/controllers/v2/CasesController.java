@@ -66,8 +66,7 @@ public class CasesController {
         @ApiResponse(responseCode = "200", description = "Case retrieval from CCD successful"),
         @ApiResponse(responseCode = "400", description = "Case retrieval from CCD successful")
     })
-    //@PostAuthorize("hasAuthority('citizen') and
-    // @ccdDataStoreService.isCaseOwner(returnObject.body?.caseInfo?.caseId)")
+    @PostAuthorize("hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(returnObject.body?.caseInfo?.caseId)")
     @GetMapping(path = "/cases/applicantEmail/{applicantEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCaseByApplicantEmail(@RequestParam("caseType") CaseType caseType,

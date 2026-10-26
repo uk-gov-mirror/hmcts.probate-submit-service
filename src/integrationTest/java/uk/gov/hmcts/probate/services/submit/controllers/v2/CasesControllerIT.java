@@ -127,7 +127,7 @@ public class CasesControllerIT {
     @Test
     public void shouldGetCaseByApplicantEmailForIntestacyGrantOfRepresentation() throws Exception {
         when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(CASE_ID)).thenReturn(true);
+        //when(ccdDataStoreService.isCaseOwner(CASE_ID)).thenReturn(true);
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();

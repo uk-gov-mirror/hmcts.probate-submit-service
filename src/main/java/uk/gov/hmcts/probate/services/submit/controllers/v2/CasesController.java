@@ -103,7 +103,7 @@ public class CasesController {
         return ResponseEntity.ok(casesService.getCaseByInvitationId(invitationId, caseType));
     }
 
-    //@PreAuthorize("hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(#applicationId)")
+    @PreAuthorize("hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(#applicationId)")
     @PostMapping(path = "/cases/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

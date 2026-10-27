@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,6 @@ public class SubmissionsController {
         @ApiResponse(responseCode = "200", description = "Draft save to CCD successful"),
         @ApiResponse(responseCode = "400", description = "Draft save to CCD  failed")
     })
-    @PreAuthorize("hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(#applicationId)")
     @PostMapping(path = "/submissions/{applicationId}", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

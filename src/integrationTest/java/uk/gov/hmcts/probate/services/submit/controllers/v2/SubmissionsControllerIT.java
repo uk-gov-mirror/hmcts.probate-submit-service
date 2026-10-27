@@ -12,14 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.probate.security.SecurityUtils;
-import uk.gov.hmcts.probate.services.caseaccess.CcdDataStoreService;
 import uk.gov.hmcts.probate.services.submit.model.v2.exception.CaseValidationException;
 import uk.gov.hmcts.probate.services.submit.services.SubmissionsService;
 import uk.gov.hmcts.probate.services.submit.utils.TestUtils;
@@ -38,8 +35,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,12 +52,6 @@ public class SubmissionsControllerIT {
     @MockitoBean
     private SubmissionsService submissionsService;
 
-    @MockitoBean
-    private SecurityUtils securityUtils;
-
-    @MockitoBean
-    private CcdDataStoreService ccdDataStoreService;
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -77,14 +66,11 @@ public class SubmissionsControllerIT {
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
-                .apply(springSecurity())
                 .build();
     }
 
     @Test
     public void shouldCreateCase() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -98,9 +84,6 @@ public class SubmissionsControllerIT {
             .thenReturn(new SubmitResult(caseResponse, validatorResults));
 
         mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
-            .header("ServiceAuthorization", "Bearer dummy-s2s-token")
-            .header("Authorization", "Bearer dummy-user-token")
-            .with(user("test-user@email.com").authorities(new SimpleGrantedAuthority("citizen")))
             .content(objectMapper.writeValueAsString(caseRequest))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
@@ -109,8 +92,6 @@ public class SubmissionsControllerIT {
 
     @Test
     public void shouldThrowBadRequestOnCreateCaseWithInvalidPayload() throws Exception {
-        when(securityUtils.getUserId()).thenReturn("test-citizen-user-id");
-        when(ccdDataStoreService.isCaseOwner(EMAIL_ADDRESS)).thenReturn(true);
         String json = TestUtils.getJsonFromFile("files/v2/intestacyGrantOfRepresentation.json");
         CaseData grantOfRepresentation = objectMapper.readValue(json, CaseData.class);
         CaseInfo caseInfo = new CaseInfo();
@@ -133,9 +114,6 @@ public class SubmissionsControllerIT {
         when(submissionsService.createCase(eq(EMAIL_ADDRESS), eq(caseRequest))).thenThrow(caseValidationException);
 
         mockMvc.perform(post(SUBMISSIONS_URL + "/" + EMAIL_ADDRESS)
-            .header("ServiceAuthorization", "Bearer dummy-s2s-token")
-            .header("Authorization", "Bearer dummy-user-token")
-            .with(user("test-user@email.com").authorities(new SimpleGrantedAuthority("citizen")))
             .content(objectMapper.writeValueAsString(caseRequest))
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.errors", hasSize(1)))

@@ -53,7 +53,8 @@ public class CasesController {
         @ApiResponse(responseCode = "200", description = "Case retrieval from CCD successful"),
         @ApiResponse(responseCode = "400", description = "Case retrieval from CCD successful")
     })
-    @PreAuthorize("hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(#caseId)")
+    @PreAuthorize("hasAuthority('caseworker-probate') "
+            + "or (hasAuthority('citizen') and @ccdDataStoreService.isCaseOwner(#caseId))")
     @GetMapping(path = "/cases", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ProbateCaseDetails> getCase(@RequestParam(name = "caseId") String caseId) {
